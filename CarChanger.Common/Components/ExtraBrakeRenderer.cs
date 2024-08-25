@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CarChanger.Common
+namespace CarChanger.Common.Components
 {
     /// <summary>
     /// Add this to a bogie prefab to include the <see cref="Renderer"/> in the same <see cref="GameObject"/> in the glowy bits.

@@ -1,4 +1,5 @@
 ﻿using CarChanger.Common;
+using CarChanger.Common.Components;
 using CarChanger.Common.Configs;
 using CarChanger.Game.HeadlightChanges;
 using CarChanger.Game.InteriorChanges;

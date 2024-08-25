@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CarChanger.Common
+namespace CarChanger.Common.Components
 {
     [RequireComponent(typeof(Renderer))]
     public class UseBodyMaterial : MonoBehaviour

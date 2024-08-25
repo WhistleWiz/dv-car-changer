@@ -27,11 +27,13 @@ namespace CarChanger.Game
                 }
                 else
                 {
+                    CarChangerMod.Error("Failure loading default configs file.");
                     DefaultConfigSettings = new DefaultConfigSettings();
                 }
             }
             else
             {
+                CarChangerMod.Log("Default configs file not found, creating new one...");
                 CreateEmptySettings();
             }
         }
