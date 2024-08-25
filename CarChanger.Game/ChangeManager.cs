@@ -9,10 +9,11 @@ using UnityModManagerNet;
 
 namespace CarChanger.Game
 {
-    public class ChangeManager
+    public static class ChangeManager
     {
         internal static Dictionary<TrainCarLivery, List<ModelConfig>> LoadedConfigs = new Dictionary<TrainCarLivery, List<ModelConfig>>();
         internal static DefaultConfigSettings DefaultConfigSettings = new DefaultConfigSettings();
+        internal static Dictionary<string, List<string>> SaveData = new Dictionary<string, List<string>>();
 
         internal static void LoadConfigFile()
         {
@@ -144,7 +145,13 @@ namespace CarChanger.Game
         /// <returns>True if the livery has a modification with the supplied ID, false otherwise.</returns>
         public static bool TryGetConfig(TrainCarLivery livery, string id, out ModelConfig config)
         {
-            return LoadedConfigs[livery].TryFind(x => x.ModificationId == id, out config);
+            if (LoadedConfigs.TryGetValue(livery, out var configs))
+            {
+                return configs.TryFind(x => x.ModificationId == id, out config);
+            }
+
+            config = null!;
+            return false;
         }
     }
 }
