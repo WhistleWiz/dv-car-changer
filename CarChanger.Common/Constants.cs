@@ -5,6 +5,7 @@
         public const string MainModId = "DVCarChanger";
         public const string ModInfo = "Info.json";
         public const string Bundle = "change_bundle";
+        public const string ConfigFile = "config.json";
 
         public const string BogieName = "bogie_car";
         public const string BogieF = "BogieF";

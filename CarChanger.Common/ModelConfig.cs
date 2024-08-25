@@ -1,6 +1,5 @@
 ﻿using CarChanger.Common.Configs;
 using DVLangHelper.Data;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +20,13 @@ namespace CarChanger.Common
         [SerializeField, HideInInspector]
         private string? _jsonName = null;
 
+        /// <summary>
+        /// Called when this config is applied. Receives itself and the <see cref="GameObject"/> of the car.
+        /// </summary>
         public event Action<ModelConfig, GameObject>? OnConfigApplied;
+        /// <summary>
+        /// Called when this config is unapplied. Receives itself and the <see cref="GameObject"/> of the car.
+        /// </summary>
         public event Action<ModelConfig, GameObject>? OnConfigUnapplied;
 
         public string LocalizationKey => $"carchanger/{ModificationId.ToLower()}";

@@ -1,7 +1,9 @@
-﻿using DVLangHelper.Runtime;
+﻿using CarChanger.Common;
+using DVLangHelper.Runtime;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -23,6 +25,7 @@ namespace CarChanger.Game
             Instance = modEntry;
             Translations = new TranslationInjector(Guid);
             BuildCache();
+            ChangeManager.LoadConfigFile();
 
             ScanMods();
             UnityModManager.toggleModsListen += HandleModToggled;

@@ -20,20 +20,30 @@ namespace CarChanger.Unity.Inspector
             if (GUILayout.Button("Export mod"))
             {
                 var pack = (CarChangePack)target;
+                bool failed = false;
 
                 foreach (var item in pack.PackConfigs)
                 {
                     if (item == null)
                     {
+                        // Fail the loop right away for this one since it's a generic message.
                         Debug.LogError("Please remove all empty configs before exporting.");
-                        return;
+                        failed = true;
+                        break;
                     }
 
                     if (!item.DoValidation(out var error))
                     {
+                        // Print all validation errors.
                         Debug.LogError($"Error in {item.ModificationId}: {error}");
-                        return;
+                        failed = true;
                     }
+                }
+
+                if (failed)
+                {
+                    EditorUtility.DisplayDialog("Error exporting!", "Could not export the pack; errors are in the unity console.", "I will fix them");
+                    return;
                 }
 
                 var path = Export(pack);
@@ -52,8 +62,10 @@ namespace CarChanger.Unity.Inspector
             using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
             {
                 // Create Info.json from pack.
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Formatting = Formatting.Indented;
+                JsonSerializer serializer = new JsonSerializer
+                {
+                    Formatting = Formatting.Indented
+                };
 
                 var file = archive.CreateEntry($"{fileName}/{Constants.ModInfo}");
 

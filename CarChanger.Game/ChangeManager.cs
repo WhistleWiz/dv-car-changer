@@ -1,6 +1,7 @@
 ﻿using CarChanger.Common;
 using CarChanger.Common.Configs;
 using DV.ThingTypes;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -11,6 +12,44 @@ namespace CarChanger.Game
     public class ChangeManager
     {
         internal static Dictionary<TrainCarLivery, List<ModelConfig>> LoadedConfigs = new Dictionary<TrainCarLivery, List<ModelConfig>>();
+        internal static DefaultConfigSettings DefaultConfigSettings = new DefaultConfigSettings();
+
+        internal static void LoadConfigFile()
+        {
+            if (File.Exists(Path.Combine(CarChangerMod.Instance.Path, Constants.ConfigFile)))
+            {
+                using var reader = File.OpenText(Path.Combine(CarChangerMod.Instance.Path, Constants.ConfigFile));
+                var result = JsonConvert.DeserializeObject<DefaultConfigSettings>(reader.ReadToEnd());
+
+                if (result != null)
+                {
+                    DefaultConfigSettings = result;
+                }
+                else
+                {
+                    DefaultConfigSettings = new DefaultConfigSettings();
+                }
+            }
+            else
+            {
+                CreateEmptySettings();
+            }
+        }
+
+        private static void CreateEmptySettings()
+        {
+            JsonSerializer serializer = new JsonSerializer
+            {
+                Formatting = Formatting.Indented
+            };
+
+            using (var file = File.Create(Path.Combine(CarChangerMod.Instance.Path, Constants.ConfigFile)))
+            using (var streamWriter = new StreamWriter(file))
+            using (var jsonWr = new JsonTextWriter(streamWriter))
+            {
+                serializer.Serialize(jsonWr, DefaultConfigSettings);
+            }
+        }
 
         internal static void LoadChanges(UnityModManager.ModEntry mod)
         {

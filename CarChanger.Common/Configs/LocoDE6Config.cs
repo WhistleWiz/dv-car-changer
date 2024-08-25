@@ -89,8 +89,16 @@ namespace CarChanger.Common.Configs
         [SerializeField, HideInInspector]
         private Mesh? _rr = null;
 
-        public event Action<ModelConfig, GameObject>? OnInteriorApplied;
-        public event Action<ModelConfig, GameObject>? OnInteriorUnapplied;
+        /// <summary>
+        /// Called when this config is applied to the interior. This may happen multiple times while the outside is only applied once,
+        /// as the interior loads and unloads. Receives itself and the interior <see cref="GameObject"/> of a car.
+        /// </summary>
+        public event Action<LocoDE6Config, GameObject>? OnInteriorApplied;
+        /// <summary>
+        /// Called when this config is unapplied to the interior. This is only called when the interior is active and the config is unapplied.
+        /// It will not be called when unloading the interior. Receives itself and the interior <see cref="GameObject"/> of a car.
+        /// </summary>
+        public event Action<LocoDE6Config, GameObject>? OnInteriorUnapplied;
 
         private void OnReset()
         {
@@ -128,6 +136,7 @@ namespace CarChanger.Common.Configs
             _frontHeadlights = FrontSettings.ToJson();
             _rearHeadlights = RearSettings.ToJson();
 
+            // Can't really serialize the meshes in the json so here they go.
             _fw = FrontSettings.White;
             _fr = FrontSettings.Red;
             _rw = RearSettings.White;
