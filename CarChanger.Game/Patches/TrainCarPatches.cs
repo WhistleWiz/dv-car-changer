@@ -7,8 +7,8 @@ namespace CarChanger.Game.Patches
     [HarmonyPatch(typeof(TrainCar))]
     internal static class TrainCarPatches
     {
-        [HarmonyPatch("Start"), HarmonyPrefix]
-        private static void StartPrefix(TrainCar __instance)
+        [HarmonyPatch("Start"), HarmonyPostfix]
+        private static void StartPostfix(TrainCar __instance)
         {
             // If the car already has changes applied here, skip changing them.
             if (__instance.TryGetComponent<AppliedChange>(out _))
@@ -26,6 +26,11 @@ namespace CarChanger.Game.Patches
                 yield return null;
             }
 
+            DoInitialSetup(car);
+        }
+
+        private static void DoInitialSetup(TrainCar car)
+        {
             // Check if this car had saved configs from a previous session.
             if (ChangeManager.SaveData.TryGetValue(car.CarGUID, out var savedConfigs))
             {
@@ -41,8 +46,7 @@ namespace CarChanger.Game.Patches
                     }
                 }
 
-                ChangeManager.SaveData.Remove(car.CarGUID);
-                yield break;
+                return;
             }
 
             // If the car is not in a save (it's new), try to see if there's a default setting for it from the config file.
@@ -59,7 +63,7 @@ namespace CarChanger.Game.Patches
                     }
                 }
 
-                yield break;
+                return;
             }
 
             // Finally, as last resort, load a random change.
@@ -67,7 +71,7 @@ namespace CarChanger.Game.Patches
             {
                 // Component only added inside the if to not have an empty one.
                 car.gameObject.AddComponent<AppliedChange>().Config = configs.GetRandomElement();
-                yield break;
+                return;
             }
         }
     }

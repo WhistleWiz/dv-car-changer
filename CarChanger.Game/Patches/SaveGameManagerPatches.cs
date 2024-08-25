@@ -10,12 +10,13 @@ namespace CarChanger.Game.Patches
     [HarmonyPatch(typeof(SaveGameManager))]
     internal class SaveGameManagerPatches
     {
-        [HarmonyPrefix, HarmonyPatch("DoSaveIO")]
+        [HarmonyPatch("DoSaveIO"), HarmonyPrefix]
         public static void InjectSaveData(SaveGameData data)
         {
             var loadedData = data.GetJObject(Constants.SaveKey);
             loadedData ??= new JObject();
 
+            CarChangerMod.Log("Saving...");
             ChangeManager.SaveData.Clear();
             ChangeManager.SaveData = CarSpawner.Instance.AllCars.Where(x => x.logicCar != null).ToDictionary(x => x.logicCar.carGuid,
                 x => x.GetAppliedChanges().Where(x => x.Config != null).Select(x => x.Config!.ModificationId).ToList());
@@ -24,7 +25,7 @@ namespace CarChanger.Game.Patches
             data.SetJObject(Constants.SaveKey, loadedData);
         }
 
-        [HarmonyPostfix, HarmonyPatch(nameof(SaveGameManager.FindStartGameData))]
+        [HarmonyPatch(nameof(SaveGameManager.FindStartGameData)), HarmonyPostfix]
         public static void ExtractSaveData(SaveGameManager __instance)
         {
             if (__instance.data == null) return;
