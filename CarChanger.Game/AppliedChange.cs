@@ -102,6 +102,9 @@ namespace CarChanger.Game
                 case LocoDE6Config de6:
                     ApplyDE6(de6);
                     break;
+                case CustomCarConfig custom:
+                    ApplyCustomCar(custom);
+                    break;
                 default:
                     ReturnToDefault();
                     return;
@@ -133,6 +136,13 @@ namespace CarChanger.Game
                 {
                     return lod.gameObject;
                 }
+            }
+
+            // Don't worry about it if it's a custom car config,
+            // it won't be used anyways.
+            if (Config is CustomCarConfig)
+            {
+                return null!;
             }
 
             CarChangerMod.Error("Could not find original body!");
@@ -422,6 +432,14 @@ namespace CarChanger.Game
             {
                 _interior.Apply(TrainCar.loadedInterior);
             }
+        }
+
+        private void ApplyCustomCar(CustomCarConfig config)
+        {
+            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+
+            MatHolder = new MaterialHolder(TrainCar);
+            ChangeBody(config.BodyPrefab, false);
         }
 
         #endregion

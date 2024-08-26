@@ -15,6 +15,9 @@ namespace CarChanger.Game
         internal static DefaultConfigSettings DefaultConfigSettings = new DefaultConfigSettings();
         internal static Dictionary<string, List<string>> SaveData = new Dictionary<string, List<string>>();
 
+        private static TrainCarType_v2? s_lastLoadedType;
+        private static TrainCarLivery? s_lastLoadedLivery;
+
         internal static void LoadConfigFile()
         {
             if (File.Exists(Path.Combine(CarChangerMod.Instance.Path, Constants.ConfigFile)))
@@ -99,9 +102,29 @@ namespace CarChanger.Game
                         continue;
                     case ModificationGroupConfig group:
                         LoadConfigs(group.ModificationsToActivate);
+
+                        if (s_lastLoadedType != null)
+                        {
+                            AddToCarType(s_lastLoadedType, item);
+                        }
+                        else if (s_lastLoadedLivery != null)
+                        {
+                            AddToCarLivery(s_lastLoadedLivery, item);
+                        }
                         break;
                     case LocoDE6Config _:
                         AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDiesel].parentType, item);
+                        continue;
+                    case CustomCarConfig ccl:
+                        if (!string.IsNullOrEmpty(ccl.CarTypeId) && DV.Globals.G.Types.TryGetCarType(ccl.CarTypeId, out var type))
+                        {
+                            AddToCarType(type, item);
+                            continue;
+                        }
+                        if (DV.Globals.G.Types.TryGetLivery(ccl.LiveryId, out var livery))
+                        {
+                            AddToCarLivery(livery, item);
+                        }
                         continue;
                     default:
                         continue;
@@ -115,6 +138,9 @@ namespace CarChanger.Game
             {
                 AddToCarLivery(livery, config);
             }
+
+            s_lastLoadedLivery = null;
+            s_lastLoadedType = type;
         }
 
         private static void AddToCarLivery(TrainCarLivery livery, ModelConfig config)
@@ -134,6 +160,9 @@ namespace CarChanger.Game
 
             CarChangerMod.Translations.AddTranslations(config.LocalizationKey, config.ModificationName);
             CarChangerMod.Log($"Loaded config {config.ModificationId} for {livery.id}");
+
+            s_lastLoadedLivery = livery;
+            s_lastLoadedType = null;
         }
 
         /// <summary>

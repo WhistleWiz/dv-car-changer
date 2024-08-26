@@ -72,12 +72,13 @@ namespace CarChanger.Common
                 case LocoDE6Config de6A:
                     if (b is LocoDE6Config de6B) return LocoDE6Config.CanCombine(de6A, de6B);
                     else return false;
+                case CustomCarConfig _:
+                    if (b is CustomCarConfig) return true;
+                    else return false;
                 default:
-                    break;
+                    // If the types didn't match, fail.
+                    return false;
             }
-
-            // If somehow it's not a valid combination, fail.
-            return false;
         }
 
         public static bool CanCombine(ModelConfig a, IEnumerable<ModelConfig> others)

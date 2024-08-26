@@ -11,6 +11,12 @@ namespace CarChanger.Common.Configs
         {
             foreach (var item in ModificationsToActivate)
             {
+                if (item == null)
+                {
+                    error = $"Empty modification in group!";
+                    return false;
+                }
+
                 if (this == item)
                 {
                     error = $"Cannot include self in group!";
@@ -24,14 +30,32 @@ namespace CarChanger.Common.Configs
                 }
             }
 
+            bool isWagon = ModificationsToActivate[0] is WagonConfig;
+            bool isCCL = ModificationsToActivate[0] is CustomCarConfig;
+
             // Test if all combinations work together.
             for (int i = 0; i < ModificationsToActivate.Length - 1; i++)
             {
                 for (int j = 1; j < ModificationsToActivate.Length; j++)
                 {
-                    if (!CanCombine(ModificationsToActivate[i], ModificationsToActivate[j]))
+                    var a = ModificationsToActivate[i];
+                    var b = ModificationsToActivate[j];
+
+                    if (!CanCombine(a, b))
                     {
-                        error = $"Modifications {ModificationsToActivate[i].ModificationId} and {ModificationsToActivate[j]} cannot be combined!";
+                        error = $"Modifications {a.ModificationId} and {b.ModificationId} cannot be combined!";
+                        return false;
+                    }
+
+                    if (isWagon && !WagonConfig.SameTargets((WagonConfig)a, (WagonConfig)b))
+                    {
+                        error = $"Modifications {a.ModificationId} and {b.ModificationId} are targetting different wagons!";
+                        return false;
+                    }
+
+                    if (isCCL && !CustomCarConfig.SameTargets((CustomCarConfig)a, (CustomCarConfig)b))
+                    {
+                        error = $"Modifications {a.ModificationId} and {b.ModificationId} are targetting different custom cars!";
                         return false;
                     }
                 }

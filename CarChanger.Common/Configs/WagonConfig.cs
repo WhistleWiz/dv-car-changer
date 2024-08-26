@@ -31,6 +31,21 @@ namespace CarChanger.Common.Configs
                 !(a.HideOriginalBody && b.HideOriginalBody);
         }
 
+        public static bool SameTargets(WagonConfig a, WagonConfig b)
+        {
+            if (a.CarType != b.CarType)
+            {
+                return false;
+            }
+
+            if (a.CarType == WagonType.UseLivery)
+            {
+                return a.CarLivery == b.CarLivery;
+            }
+
+            return true;
+        }
+
         private bool EnableLivery() => CarType == WagonType.UseLivery;
 
         private bool EnableBogies() => UseCustomBogies;
