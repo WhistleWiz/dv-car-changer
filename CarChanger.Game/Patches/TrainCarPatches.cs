@@ -1,22 +1,29 @@
 ﻿using DV;
 using HarmonyLib;
 using System.Collections;
+using UnityEngine;
 
 namespace CarChanger.Game.Patches
 {
-    [HarmonyPatch(typeof(TrainCar))]
-    internal static class TrainCarPatches
+    [HarmonyPatch(typeof(CarSpawner))]
+    internal static class CarSpawnerPatches
     {
-        [HarmonyPatch("Start"), HarmonyPostfix]
-        private static void StartPostfix(TrainCar __instance)
+        [HarmonyPatch("Awake"), HarmonyPostfix]
+        private static void AwakePostfix(CarSpawner __instance)
+        {
+            __instance.CarSpawned += SpawnSequence;
+            __instance.CarAboutToBeDeleted += DespawnSequence;
+        }
+
+        private static void SpawnSequence(TrainCar car)
         {
             // If the car already has changes applied here, skip changing them.
-            if (__instance.TryGetComponent<AppliedChange>(out _))
+            if (car.TryGetComponent<AppliedChange>(out _))
             {
                 return;
             }
 
-            __instance.StartCoroutine(WaitForGUIDCoroutine(__instance));
+            car.StartCoroutine(WaitForGUIDCoroutine(car));
         }
 
         private static IEnumerator WaitForGUIDCoroutine(TrainCar car)
@@ -72,6 +79,16 @@ namespace CarChanger.Game.Patches
                 // Component only added inside the if to not have an empty one.
                 car.gameObject.AddComponent<AppliedChange>().Config = configs.GetRandomElement();
                 return;
+            }
+        }
+
+        private static void DespawnSequence(TrainCar car)
+        {
+            var changes = car.GetAppliedChanges();
+
+            foreach (var change in changes)
+            {
+                Object.Destroy(change);
             }
         }
     }

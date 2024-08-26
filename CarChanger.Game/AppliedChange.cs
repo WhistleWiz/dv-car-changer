@@ -73,7 +73,7 @@ namespace CarChanger.Game
         {
             // In case the whole object is killed, don't bother with
             // removing the actual modification.
-            if (!TrainCar || !gameObject || TrainCar.logicCar == null)
+            if (!TrainCar || !gameObject)
             {
                 return;
             }
