@@ -26,6 +26,7 @@ namespace CarChanger.Game
             Translations = new TranslationInjector(Guid);
             BuildCache();
             ChangeManager.LoadConfigFile();
+            Localization.Inject();
 
             ScanMods();
             UnityModManager.toggleModsListen += HandleModToggled;

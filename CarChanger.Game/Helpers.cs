@@ -1,5 +1,4 @@
 ﻿using CarChanger.Common;
-using DV.Localization;
 using DV.ThingTypes;
 using System;
 using System.Collections.Generic;
@@ -50,11 +49,6 @@ namespace CarChanger.Game
         public static TrainCarType_v2 EnumToCarType(WagonType carType)
         {
             return IdToCarType[s_carTypeEnumToId[carType]];
-        }
-
-        public static string LocalizeLivery(TrainCarLivery livery)
-        {
-            return LocalizationAPI.L(livery.localizationKey);
         }
 
         public static int Wrap(int i, int max)

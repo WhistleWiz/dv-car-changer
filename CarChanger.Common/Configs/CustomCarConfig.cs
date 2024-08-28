@@ -2,7 +2,7 @@
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/CCL Modification")]
+    [CreateAssetMenu(menuName = "DVCarChanger/Custom Car Modification")]
     public class CustomCarConfig : ModelConfig
     {
         [Tooltip("The car type this modification will apply to\n" +

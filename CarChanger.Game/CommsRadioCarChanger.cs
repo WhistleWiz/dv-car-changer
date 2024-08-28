@@ -1,6 +1,5 @@
 ﻿using CarChanger.Common;
 using DV;
-using DV.Localization;
 using DV.ThingTypes;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,7 +79,7 @@ namespace CarChanger.Game
 
         public void SetStartingDisplay()
         {
-            Display.SetDisplay("Car Changer", "Point at a car to begin");
+            Display.SetDisplay("Car Changer", Localization.RadioBegin);
         }
 
         public void Enable() { }
@@ -116,7 +115,7 @@ namespace CarChanger.Game
                     // If we are pointing at a car, display its info.
                     if (_pointedCar != null)
                     {
-                        Display.SetContent($"{Helpers.LocalizeLivery(_pointedCar.carLivery)} ({_pointedCar.ID})");
+                        Display.SetContent($"{Localization.GetLocalizedName(_pointedCar.carLivery)} ({_pointedCar.ID})");
                     }
                     else
                     {
@@ -204,7 +203,7 @@ namespace CarChanger.Game
 
             // Cannot combine, so go into override mode.
             _state = State.MustOverride;
-            Display.SetContentAndAction("Modification is incompatible with others", "Override?");
+            Display.SetContentAndAction(Localization.IncompatibleModification, Localization.Override);
             PlayCancel();
         }
 
@@ -352,7 +351,7 @@ namespace CarChanger.Game
             else
             {
                 _configs = null!;
-                Display.SetContentAndAction($"{Helpers.LocalizeLivery(_selectedCar.carLivery)} ({_selectedCar.ID})\nNo changes available");
+                Display.SetContentAndAction($"{Localization.GetLocalizedName(_selectedCar.carLivery)} ({_selectedCar.ID})\nNo changes available");
                 PlayCancel();
             }
         }
@@ -372,8 +371,8 @@ namespace CarChanger.Game
             //
             // ENABLE/DISABLE
             Display.SetContentAndAction(
-                $"{Helpers.LocalizeLivery(_selectedCar.carLivery)} ({_selectedCar.ID})\n{LocalizationAPI.L(config.LocalizationKey)}",
-                _applied.Any(x => x != null && x.Config == config) ? "Disable?" : "Enable?");
+                $"{Localization.GetLocalizedName(_selectedCar.carLivery)} ({_selectedCar.ID})\n{Localization.GetLocalizedName(config)}",
+                _applied.Any(x => x != null && x.Config == config) ? Localization.Disable : Localization.Enable);
         }
 
         private void ApplyConfig(ModelConfig config)
