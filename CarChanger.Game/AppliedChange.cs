@@ -2,6 +2,7 @@
 using CarChanger.Common.Components;
 using CarChanger.Common.Configs;
 using CarChanger.Game.HeadlightChanges;
+using CarChanger.Game.InteractablesChanges;
 using CarChanger.Game.InteriorChanges;
 using DV.Simulation.Brake;
 using DV.ThingTypes;
@@ -14,33 +15,8 @@ using UnityEngine;
 
 namespace CarChanger.Game
 {
-    internal class AppliedChange : MonoBehaviour
+    internal partial class AppliedChange : MonoBehaviour
     {
-        public class MaterialHolder
-        {
-            public TrainCar Car;
-            public Material Body = null!;
-            public Material Interior = null!;
-            public Material Glass = null!;
-
-            public MaterialHolder(TrainCar car)
-            {
-                Car = car;
-            }
-
-            public Material GetFromPath(UseBodyMaterial path)
-            {
-                var renderer = Car.transform.Find(path.MaterialObjectPath).GetComponent<Renderer>();
-
-                if (renderer == null)
-                {
-                    return null!;
-                }
-
-                else return renderer.material;
-            }
-        }
-
         private static GameObject? s_defaultBogie = null;
 
         private static GameObject DefaultBogie => Helpers.GetCached(ref s_defaultBogie,
@@ -51,6 +27,7 @@ namespace CarChanger.Game
         public event Action<AppliedChange>? OnApply = null;
         public MaterialHolder MatHolder = null!;
 
+        private bool _changeApplied = false;
         private GameObject _originalBody = null!;
         private GameObject _body = null!;
         private bool _bogiesChanged = false;
@@ -58,6 +35,8 @@ namespace CarChanger.Game
         private IHeadlightChanger? _frontHeadlights = null;
         private IHeadlightChanger? _rearHeadlights = null;
         private IInteriorChanger? _interior = null;
+        private IInteractablesChanger? _interactables = null;
+        private ExplosionModelHandler? _explosionHandler = null;
 
         private void Awake()
         {
@@ -89,6 +68,11 @@ namespace CarChanger.Game
                 return;
             }
 
+            if (_changeApplied)
+            {
+                ReturnToDefault();
+            }
+
             _originalBody = GetOriginalBody();
 
             switch (Config)
@@ -106,12 +90,19 @@ namespace CarChanger.Game
                     ApplyCustomCar(custom);
                     break;
                 default:
-                    ReturnToDefault();
                     return;
+            }
+
+            // If the applied change resulted in a body GameObject, see if it explodes.
+            if (_body != null)
+            {
+                _explosionHandler = CarChangerExplosionManager.PrepareExplosionHandler(_body, MatHolder);
             }
 
             Config.Applied(TrainCar.gameObject);
             OnApply?.Invoke(this);
+
+            _changeApplied = true;
         }
 
         private GameObject GetOriginalBody()
@@ -256,7 +247,7 @@ namespace CarChanger.Game
             if (body)
             {
                 _body = Instantiate(body, transform);
-                ProcessComponents(_body, MatHolder);
+                ComponentProcessor.ProcessComponents(_body, MatHolder);
             }
 
             // If the original body is missing, end here.
@@ -271,6 +262,22 @@ namespace CarChanger.Game
             }
         }
 
+        private void ChangeInterior(IInteriorChanger changer)
+        {
+            _interior = changer;
+            _interior.Apply(TrainCar.loadedInterior);
+
+            TrainCar.InteriorLoaded += _interior.Apply;
+        }
+
+        private void ChangeInteractables(IInteractablesChanger changer)
+        {
+            _interactables = changer;
+            _interactables.Apply(TrainCar.loadedExternalInteractables);
+
+            TrainCar.ExternalInteractableLoaded += _interactables.Apply;
+        }
+
         private void ResetHeadlights()
         {
             _frontHeadlights?.Unapply();
@@ -281,33 +288,21 @@ namespace CarChanger.Game
 
         private void ResetInterior()
         {
-            _interior?.Unapply();
-            _interior = null;
+            if (_interior != null)
+            {
+                TrainCar.InteriorLoaded -= _interior.Apply;
+                _interior.Unapply(TrainCar.loadedInterior);
+                _interior = null;
+            }
         }
 
-        public static void ProcessComponents(GameObject gameObject, MaterialHolder holder)
+        private void ResetInteractables()
         {
-            foreach (var item in gameObject.GetComponentsInChildren<UseBodyMaterial>())
+            if (_interactables != null)
             {
-                switch (item.Material)
-                {
-                    case SourceMaterial.BodyDefault:
-                        item.GetComponent<Renderer>().material = holder.Body;
-                        break;
-                    case SourceMaterial.InteriorDefault:
-                        item.GetComponent<Renderer>().material = holder.Interior;
-                        break;
-                    case SourceMaterial.Glass:
-                        item.GetComponent<Renderer>().material = holder.Glass;
-                        break;
-                    case SourceMaterial.DE6Engine:
-                        break;
-                    case SourceMaterial.Custom:
-                        item.GetComponent<Renderer>().material = holder.GetFromPath(item);
-                        break;
-                    default:
-                        break;
-                }
+                TrainCar.ExternalInteractableLoaded -= _interactables.Apply;
+                _interactables.Unapply(TrainCar.loadedExternalInteractables);
+                _interactables = null;
             }
         }
 
@@ -347,13 +342,17 @@ namespace CarChanger.Game
 
         private void ReturnToDefault()
         {
-            if (Config != null)
+            // No need to output anything if the car isn't in the world anymore.
+            if (TrainCar.logicCar != null)
             {
-                CarChangerMod.Log($"Removing change {Config.ModificationId} from [{TrainCar.ID}|{TrainCar.carLivery.id}]");
-            }
-            else
-            {
-                CarChangerMod.Log($"Returning to default [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+                if (Config != null)
+                {
+                    CarChangerMod.Log($"Removing change {Config.ModificationId} from [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+                }
+                else
+                {
+                    CarChangerMod.Log($"Returning to default [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+                }
             }
 
             ChangeBogies(TrainCar, _bogiesChanged ? DefaultBogie : null!, _bogiesChanged ? DefaultBogie : null!,
@@ -361,8 +360,15 @@ namespace CarChanger.Game
             ChangeBody(null!, false);
             ResetHeadlights();
             ResetInterior();
+            ResetInteractables();
+
+            if (_explosionHandler != null)
+            {
+                Destroy(_explosionHandler);
+            }
 
             Config?.Unapplied(TrainCar.gameObject);
+            _changeApplied = false;
         }
 
         private void ApplyWagon(WagonConfig config)
@@ -401,8 +407,16 @@ namespace CarChanger.Game
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody.GetComponentInChildren<Renderer>().material,
-                Interior = TrainCar.transform.Find("[interior LOD]/LocoDE6_InteriorLOD/cab_LOD1").GetComponent<Renderer>().material,
-                Glass = TrainCar.transform.Find("LocoDE6_Body/windows/window_01").GetComponent<Renderer>().material
+                Interior = TrainCar.transform.Find(
+                    "[interior LOD]/LocoDE6_InteriorLOD/cab_LOD1").GetComponent<Renderer>().material,
+                Glass = TrainCar.transform.Find(
+                    "LocoDE6_Body/windows/window_01").GetComponent<Renderer>().material,
+                BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
+                    "DoorsWindows/DoorR/C_DoorR/cab_door01a").GetComponent<Renderer>().material,
+                InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
+                    "Cab").GetComponent<Renderer>().material,
+                GlassBroken = TrainCar.transform.Find(
+                    "LocoDE6_Body/broken_windows").GetComponent<Renderer>().material,
             };
 
             if (config.UseCustomBogies)
@@ -426,12 +440,7 @@ namespace CarChanger.Game
                 _rearHeadlights.Apply();
             }
 
-            _interior = new LocoDE6InteriorChanger(config, MatHolder);
-
-            if (TrainCar.loadedInterior)
-            {
-                _interior.Apply(TrainCar.loadedInterior);
-            }
+            ChangeInterior(new LocoDE6InteriorChanger(config, MatHolder));
         }
 
         private void ApplyCustomCar(CustomCarConfig config)

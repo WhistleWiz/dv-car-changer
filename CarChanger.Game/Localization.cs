@@ -21,9 +21,39 @@ namespace CarChanger.Game
 
         internal static void Inject()
         {
-            CarChangerMod.Translations.AddTranslation(EnableKey, DVLanguage.English, "Enable?");
-            CarChangerMod.Translations.AddTranslation(DisableKey, DVLanguage.English, "Disable?");
-            CarChangerMod.Translations.AddTranslation(OverrideKey, DVLanguage.English, "Override?");
+            //CarChangerMod.Translations.AddTranslation(EnableKey, DVLanguage.English, "Enable?");
+            //CarChangerMod.Translations.AddTranslation(DisableKey, DVLanguage.English, "Disable?");
+            //CarChangerMod.Translations.AddTranslation(OverrideKey, DVLanguage.English, "Override?");
+
+            CarChangerMod.Translations.AddTranslations(EnableKey, new[]
+            {
+                new TranslationItem(DVLanguage.English, "Enable?"),
+                new TranslationItem(DVLanguage.Portuguese, "Activar?"),
+                new TranslationItem(DVLanguage.Portuguese_BR, "Activar?"),
+                new TranslationItem(DVLanguage.French, "Activer?"),
+                new TranslationItem(DVLanguage.Spanish, "Habilitar?"),
+                new TranslationItem(DVLanguage.Italian, "Abilitare?"),
+            });
+
+            CarChangerMod.Translations.AddTranslations(DisableKey, new[]
+            {
+                new TranslationItem(DVLanguage.English, "Disable?"),
+                new TranslationItem(DVLanguage.Portuguese, "Desactivar?"),
+                new TranslationItem(DVLanguage.Portuguese_BR, "Desactivar?"),
+                new TranslationItem(DVLanguage.French, "Désactiver?"),
+                new TranslationItem(DVLanguage.Spanish, "Desabilitar?"),
+                new TranslationItem(DVLanguage.Italian, "Disabilitare?"),
+            });
+
+            CarChangerMod.Translations.AddTranslations(OverrideKey, new[]
+            {
+                new TranslationItem(DVLanguage.English, "Override?"),
+                new TranslationItem(DVLanguage.Portuguese, "Substituir?"),
+                new TranslationItem(DVLanguage.Portuguese_BR, "Substituir?"),
+                new TranslationItem(DVLanguage.French, "Remplacer?"),
+                new TranslationItem(DVLanguage.Spanish, "Reemplazar?"),
+                new TranslationItem(DVLanguage.Italian, "Sostituire?"),
+            });
 
             CarChangerMod.Translations.AddTranslation(RadioBeginKey, DVLanguage.English,
                 "Point at a car to begin");

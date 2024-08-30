@@ -1,6 +1,5 @@
 ﻿using CarChanger.Common.Configs;
 using UnityEngine;
-using static CarChanger.Game.AppliedChange;
 
 namespace CarChanger.Game.InteriorChanges
 {
@@ -8,21 +7,23 @@ namespace CarChanger.Game.InteriorChanges
     {
         private LocoDE6Config _config;
         private MaterialHolder _materialHolder;
-        private GameObject _interior = null!;
         private GameObject _instanced = null!;
         private GameObject _cab = null!;
+
+        private bool IsExploded => _materialHolder.Car.isExploded;
 
         public LocoDE6InteriorChanger(LocoDE6Config config, MaterialHolder matHolder)
         {
             _config = config;
             _materialHolder = matHolder;
-            matHolder.Car.InteriorLoaded += Apply;
         }
 
         public void Apply(GameObject interior)
         {
-            _interior = interior;
-            _instanced = Object.Instantiate(_config.CabStaticPrefab, interior.transform);
+            // Interior unloaded, so don't apply.
+            if (interior == null) return;
+
+            _instanced = Object.Instantiate(IsExploded ? _config.CabExplodedStaticPrefab : _config.CabStaticPrefab, interior.transform);
             _cab = interior.transform.Find("Cab").gameObject;
 
             if (_config.HideOriginalCab)
@@ -30,24 +31,30 @@ namespace CarChanger.Game.InteriorChanges
                 _cab.SetActive(false);
             }
 
-            ProcessComponents(_instanced, _materialHolder);
+            ComponentProcessor.ProcessComponents(_instanced, _materialHolder);
 
-            _config.InteriorApplied(interior);
+            _config.InteriorApplied(interior, IsExploded);
         }
 
-        public void Unapply()
+        public void Unapply(GameObject interior)
         {
+            // Already gone, skip.
+            if (interior == null) return;
+
             if (_instanced != null)
             {
                 Object.Destroy(_instanced);
             }
 
-            if (_config.HideOriginalCab)
+            if (_config.HideOriginalCab && _cab != null)
             {
                 _cab.SetActive(true);
             }
 
-            _config.InteriorUnapplied(_interior);
+            _config.InteriorUnapplied(interior);
+
+            _instanced = null!;
+            _cab = null!;
         }
     }
 }

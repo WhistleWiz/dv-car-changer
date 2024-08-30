@@ -6,6 +6,11 @@
         InteriorDefault,
         Glass,
         DE6Engine,
-        Custom
+
+        BodyExploded = 500,
+        InteriorExploded,
+        BrokenGlass,
+
+        FromPath = 1000
     }
 }

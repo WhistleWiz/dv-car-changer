@@ -6,10 +6,11 @@ namespace CarChanger.Common.Components
     public class UseBodyMaterial : MonoBehaviour
     {
         public SourceMaterial Material;
-        [EnableIf(nameof(EnablePath)), Tooltip("Path to an object with the material\n" +
-            "Use the selector for default vehicles")]
+        [EnableIf(nameof(EnablePath)), Tooltip("Path to an object with the material")]
         public string MaterialObjectPath = string.Empty;
 
-        private bool EnablePath() => Material == SourceMaterial.Custom;
+        public Renderer GetRenderer() => gameObject.GetComponent<Renderer>();
+
+        private bool EnablePath() => Material == SourceMaterial.FromPath;
     }
 }
