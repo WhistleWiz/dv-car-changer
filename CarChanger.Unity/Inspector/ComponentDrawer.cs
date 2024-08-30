@@ -9,7 +9,7 @@ namespace CarChanger.Unity.Inspector
         private static Color Transparent = new Color(1.0f, 1.0f, 1.0f, 0.15f);
 
         [DrawGizmo(GizmoType.Selected)]
-        private static void DrawGizmoDistanceOptimiser(RandomisePosition comp, GizmoType gizmoType)
+        private static void DrawGizmoRandomisePosition(RandomisePosition comp, GizmoType gizmoType)
         {
             Handles.color = new Color(0.8f, 0.9f, 1.0f);
             Handles.matrix = Matrix4x4.TRS(comp.transform.position, comp.transform.rotation, Vector3.one);

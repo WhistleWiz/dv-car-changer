@@ -5,6 +5,18 @@ namespace CarChanger.Game
 {
     internal static class Extensions
     {
+        public static bool TryFind<T>(this List<T> list, Predicate<T> match, out T value)
+        {
+            value = list.Find(match);
+
+            if (value == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public static List<AppliedChange> GetAppliedChanges(this TrainCar car)
         {
             var comps = car.GetComponents<AppliedChange>();
@@ -28,16 +40,24 @@ namespace CarChanger.Game
             return changes;
         }
 
-        public static bool TryFind<T>(this List<T> list, Predicate<T> match, out T value)
+        public static void ForceRefreshLoadedPrefabs(this TrainCar car)
         {
-            value = list.Find(match);
-
-            if (value == null)
+            if (car.IsInteriorLoaded)
             {
-                return false;
+                car.UnloadInterior();
+                car.LoadInterior();
             }
 
-            return true;
+            if (car.AreExternalInteractablesLoaded)
+            {
+                car.UnloadExternalInteractables();
+                car.LoadExternalInteractables();
+            }
+            else if (car.AreDummyExternalInteractablesLoaded)
+            {
+                car.UnloadDummyExternalInteractables();
+                car.LoadDummyExternalInteractables();
+            }
         }
     }
 }

@@ -82,7 +82,10 @@ namespace CarChanger.Game
             Display.SetDisplay("Car Changer", Localization.RadioBegin);
         }
 
-        public void Enable() { }
+        public void Enable()
+        {
+            SetStartingDisplay();
+        }
 
         public void Disable()
         {
@@ -156,11 +159,11 @@ namespace CarChanger.Game
 
             // Select the car we are pointing at.
             SelectCar();
-            PlayConfirm();
         }
 
         private void CarSelectedUse()
-        {                    // Not pointing at anything, cancel.
+        {
+            // Not pointing at anything, cancel.
             if (!_pointedCar)
             {
                 PlayCancel();
@@ -175,7 +178,6 @@ namespace CarChanger.Game
             if (_pointedCar != _selectedCar)
             {
                 SelectCar();
-                PlayNewSelection();
                 return;
             }
 
@@ -243,6 +245,7 @@ namespace CarChanger.Game
                 case State.CarSelected:
                     if (_configs != null)
                     {
+                        // Scroll through the configs.
                         _currentIndices[_selectedCar.carLivery] = Helpers.Wrap(_currentIndices[_selectedCar.carLivery] + 1, _configs.Count);
                         DisplayCurrentConfig();
                         return true;
@@ -260,6 +263,7 @@ namespace CarChanger.Game
                 case State.CarSelected:
                     if (_configs != null)
                     {
+                        // Scroll through the configs.
                         _currentIndices[_selectedCar.carLivery] = Helpers.Wrap(_currentIndices[_selectedCar.carLivery] - 1, _configs.Count);
                         DisplayCurrentConfig();
                         return true;
@@ -305,40 +309,51 @@ namespace CarChanger.Game
 
         private void PointToCar(TrainCar car)
         {
+            // Only do this if the pointed car has changed.
             if (_pointedCar != car)
             {
+                // Unregister callbacks if the car is not gone.
                 if (_pointedCar != null)
                 {
                     _pointedCar.OnDestroyCar -= OnPointedCarDestroyed;
                 }
 
+                // If we are in fact pointing at a new car...
                 if (car != null)
                 {
+                    // ...change the pointed car and highlight the new one, or...
                     _pointedCar = car;
                     _pointedCar.OnDestroyCar += OnPointedCarDestroyed;
                     HighlightCar(_pointedCar, Controller.cargoLoaderControl.validMaterial);
                 }
                 else
                 {
+                    // ...else, clear the highlight.
                     _pointedCar = null!;
                     ClearHighlightCar();
                 }
 
+                // Play a sound to show it changed.
                 CommsRadioController.PlayAudioFromRadio(Controller.cargoLoaderControl.hoverOverCar, transform);
             }
         }
 
         private void SelectCar()
         {
+            // Check if we are selecting something new.
+            bool soundType = _selectedCar != _pointedCar;
             _selectedCar = _pointedCar;
             _state = State.CarSelected;
             ButtonBehaviour = ButtonBehaviourType.Override;
 
+            // Check if configs exist for this livery.
             if (ChangeManager.LoadedConfigs.TryGetValue(_selectedCar.carLivery, out var configs) && configs.Count > 0)
             {
                 _configs = configs;
                 _applied = _selectedCar.GetAppliedChanges();
 
+                // Get the cached current index, for consistency when moving between selected cars.
+                // Allows for fast swapping of multiple for the same.
                 if (!_currentIndices.TryGetValue(_selectedCar.carLivery, out int lastIndex))
                 {
                     _currentIndices.Add(_selectedCar.carLivery, 0);
@@ -346,12 +361,20 @@ namespace CarChanger.Game
 
                 _currentIndices[_selectedCar.carLivery] = Helpers.Wrap(lastIndex, configs.Count);
                 DisplayCurrentConfig();
-                PlayConfirm();
+
+                if (soundType)
+                {
+                    PlayNewSelection();
+                }
+                else
+                {
+                    PlayConfirm();
+                }
             }
             else
             {
                 _configs = null!;
-                Display.SetContentAndAction($"{Localization.GetLocalizedName(_selectedCar.carLivery)} ({_selectedCar.ID})\nNo changes available");
+                Display.SetContentAndAction($"{Localization.GetLocalizedName(_selectedCar.carLivery)} ({_selectedCar.ID})\n{Localization.NoModifications}");
                 PlayCancel();
             }
         }

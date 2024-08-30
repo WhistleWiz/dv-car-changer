@@ -13,7 +13,7 @@ namespace CarChanger.Common
         /// <summary>
         /// Enables or disables the property in the inspector based on a condition.
         /// </summary>
-        /// <param name="target">The method that decides when to enable/disable.</param>
+        /// <param name="target">The name of the method that decides when to enable/disable. Must return a bool.</param>
         /// <param name="invert">If true, the result of <paramref name="target"/> will have the opposite effect.</param>
         public EnableIfAttribute(string target, bool invert = false)
         {

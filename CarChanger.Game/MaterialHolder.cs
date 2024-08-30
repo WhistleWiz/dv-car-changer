@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace CarChanger.Game
 {
+    // Terrible class, but very useful.
     public class MaterialHolder
     {
         public TrainCar Car;
