@@ -1,5 +1,6 @@
 ﻿using CarChanger.Common;
 using System.Reflection;
+using System.Security.Policy;
 using UnityEditor;
 using UnityEngine;
 
@@ -27,9 +28,14 @@ namespace CarChanger.Unity.Inspector
 
             EditorGUI.BeginProperty(position, label, property);
             GUI.enabled = att.Invert ? !result : result;
-            EditorGUI.PropertyField(position, property);
+            EditorGUI.PropertyField(position, property, true);
             GUI.enabled = true;
             EditorGUI.EndProperty();
+        }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return EditorGUI.GetPropertyHeight(property, label, true);
         }
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace CarChanger.Game
 {
@@ -64,6 +65,20 @@ namespace CarChanger.Game
             }
 
             return i;
+        }
+
+        public static T InstantiateIfNotNull<T>(T? obj)
+            where T : UnityEngine.Object
+        {
+            return InstantiateIfNotNull(obj, null!);
+        }
+
+        public static T InstantiateIfNotNull<T>(T? obj, Transform t)
+            where T : UnityEngine.Object
+        {
+            if (obj == null) return null!;
+
+            return UnityEngine.Object.Instantiate(obj, t);
         }
     }
 }

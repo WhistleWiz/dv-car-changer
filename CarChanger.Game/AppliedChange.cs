@@ -16,7 +16,6 @@ namespace CarChanger.Game
 {
     internal partial class AppliedChange : MonoBehaviour
     {
-        private GameObject DefaultBogie => TrainCar.carLivery.prefab.GetComponentInChildren<Bogie>().transform.GetChild(0).gameObject;
 
         public TrainCar TrainCar = null!;
         public ModelConfig? Config = null;
@@ -34,10 +33,17 @@ namespace CarChanger.Game
         private IInteriorChanger? _interior = null;
         private IInteractablesChanger? _interactables = null;
         private ExplosionModelHandler? _explosionHandler = null;
+        private GameObject DefaultBogie => TrainCar.carLivery.prefab.GetComponentInChildren<Bogie>().transform.GetChild(0).gameObject;
 
         private void Awake()
         {
             TrainCar = TrainCar.Resolve(gameObject);
+
+            if (!TrainCar)
+            {
+                Debug.LogError("Could not find TrainCar for AppliedChange! This should never happen BTW.");
+                Destroy(this);
+            }
         }
 
         private void Start()
@@ -137,7 +143,19 @@ namespace CarChanger.Game
             return null!;
         }
 
-        public static void ChangeBogies(TrainCar car, GameObject frontBogie, GameObject rearBogie, float? radius)
+        private PoweredWheel.State[] GetCurrentPoweredWheelStates()
+        {
+            // Pick the axles, order them for consistency, then get the state
+            // from the PoweredWheel component attached to them.
+            return TrainCar.Bogies.SelectMany(x => x.Axles)
+                .Select(x => x.transform)
+                .OrderBy(x => TrainCar.transform.InverseTransformPoint(x.position).z)
+                .Select(x => x.GetComponent<PoweredWheel>().state).ToArray();
+        }
+
+        #region Changing
+
+        public static void ChangeBogies(TrainCar car, GameObject? frontBogie, GameObject? rearBogie, float? radius)
         {
             // Store them for quick access.
             var bogies = car.Bogies;
@@ -148,7 +166,7 @@ namespace CarChanger.Game
             Helpers.InvalidateBogieCache(bogieF);
             Helpers.InvalidateBogieCache(bogieR);
 
-            if (frontBogie)
+            if (frontBogie != null)
             {
                 // Yeet the original bogie by unparenting and deleting.
                 // If it is not unparented the game will still find it.
@@ -160,7 +178,7 @@ namespace CarChanger.Game
                 bogie.name = Constants.BogieName;
             }
 
-            if (rearBogie)
+            if (rearBogie != null)
             {
                 // Do the same with the rear bogie.
                 var orig = bogieR.transform.GetChild(0);
@@ -273,17 +291,29 @@ namespace CarChanger.Game
                     var sparks = car.GetComponentInChildren<WheelSlideSparksController>().sparkAnchors;
                     var anchors = new List<WheelslipSparksController.WheelSparksDefinition>();
 
-                    foreach (var item in powered)
+                    if (sparks != null && sparks.Length > 1)
                     {
-                        var axleAnchors = sparks.OrderBy(x => (item.wheelTransform.position - x.position).sqrMagnitude).Take(2)
-                            .OrderBy(x => x.position.x).ToArray();
-
-                        anchors.Add(new WheelslipSparksController.WheelSparksDefinition
+                        foreach (var item in powered)
                         {
-                            poweredWheel = item,
-                            sparksLeftAnchor = axleAnchors[0],
-                            sparksRightAnchor = axleAnchors[1]
-                        });
+                            // Find the 2 closest anchors to the axle. If set up properly, they are the right ones.
+                            // Order them by their X coordinate for left/right.
+                            var axleAnchors = sparks.OrderBy(x => (item.wheelTransform.position - x.position).sqrMagnitude)
+                                .Take(2).OrderBy(x => x.position.x);
+
+                            var definition = new WheelslipSparksController.WheelSparksDefinition
+                            {
+                                poweredWheel = item,
+                                sparksLeftAnchor = axleAnchors.ElementAt(0),
+                                sparksRightAnchor = axleAnchors.ElementAt(1)
+                            };
+
+                            definition.Init();
+                            anchors.Add(definition);
+                        }
+                    }
+                    else
+                    {
+                        CarChangerMod.Error("Wheel contact points were not setup correctly! Wheel slip sparks will not work.");
                     }
 
                     wheelSlip.wheelSparks = anchors.ToArray();
@@ -291,10 +321,10 @@ namespace CarChanger.Game
             }
         }
 
-        private void ChangeBody(GameObject body, bool hideOriginal)
+        private void ChangeBody(GameObject? body, bool hideOriginal)
         {
             // Instantiate the new modification.
-            if (body)
+            if (body != null)
             {
                 _body = Instantiate(body, transform);
                 ComponentProcessor.ProcessComponents(_body, MatHolder);
@@ -325,6 +355,10 @@ namespace CarChanger.Game
 
             TrainCar.ExternalInteractableLoaded += _interactables.Apply;
         }
+
+        #endregion
+
+        #region Resets
 
         private void ResetBogies()
         {
@@ -398,6 +432,8 @@ namespace CarChanger.Game
             }
         }
 
+        #endregion
+
         public static bool CanApplyChange(TrainCar car, ModelConfig config)
         {
             foreach (var item in car.GetComponents<AppliedChange>())
@@ -429,127 +465,5 @@ namespace CarChanger.Game
             change.Config = config;
             return change;
         }
-
-        #region Application
-
-        private void ReturnToDefault()
-        {
-            // No need to output anything if the car isn't in the world anymore.
-            if (TrainCar.logicCar != null)
-            {
-                if (Config != null)
-                {
-                    CarChangerMod.Log($"Removing change {Config.ModificationId} from [{TrainCar.ID}|{TrainCar.carLivery.id}]");
-                }
-                else
-                {
-                    CarChangerMod.Log($"Returning to default [{TrainCar.ID}|{TrainCar.carLivery.id}]");
-                }
-            }
-
-            ResetBogies();
-            ResetBody();
-            ResetHeadlights();
-            ResetInterior();
-            ResetInteractables();
-
-            if (_explosionHandler != null)
-            {
-                Destroy(_explosionHandler.gameObject);
-            }
-
-            Config?.Unapplied(TrainCar.gameObject);
-            _changeApplied = false;
-        }
-
-        private void ApplyWagon(WagonConfig config)
-        {
-            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
-
-            MatHolder = new MaterialHolder(TrainCar)
-            {
-                Body = _originalBody.GetComponentInChildren<Renderer>().material
-            };
-
-            if (config.UseCustomBogies)
-            {
-                _bogiesChanged = true;
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
-            }
-
-            _bodyHidden = config.HideOriginalBody;
-            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
-        }
-
-        private void ApplyGroup(ModificationGroupConfig config)
-        {
-            foreach (var item in config.ModificationsToActivate)
-            {
-                gameObject.AddComponent<AppliedChange>().Config = item;
-            }
-
-            Destroy(this);
-        }
-
-        private void ApplyDE6(LocoDE6Config config)
-        {
-            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
-            
-            MatHolder = new MaterialHolder(TrainCar)
-            {
-                Body = _originalBody.GetComponentInChildren<Renderer>().material,
-                Interior = TrainCar.transform.Find(
-                    "[interior LOD]/LocoDE6_InteriorLOD/cab_LOD1").GetComponent<Renderer>().material,
-                Glass = TrainCar.transform.Find(
-                    "LocoDE6_Body/windows/window_01").GetComponent<Renderer>().material,
-                BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
-                    "DoorsWindows/DoorR/C_DoorR/cab_door01a").GetComponent<Renderer>().material,
-                InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
-                    "Cab").GetComponent<Renderer>().material,
-                GlassBroken = TrainCar.transform.Find(
-                    "LocoDE6_Body/broken_windows").GetComponent<Renderer>().material,
-            };
-
-            if (config.UseCustomBogies)
-            {
-                _bogiesChanged = true;
-                _bogiesPowered = true;
-
-                var wheelStates = TrainCar.Bogies.SelectMany(x => x.Axles)
-                    .Select(x => x.transform)
-                    .OrderBy(x => TrainCar.transform.InverseTransformPoint(x.position).z)
-                    .Select(x => x.GetComponent<PoweredWheel>().state);
-
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
-                MakeBogiesPowered(TrainCar, wheelStates.ToArray(), config.WheelRadius);
-            }
-
-            _bodyHidden = config.HideOriginalBody;
-            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
-
-            if (config.UseCustomFrontHeadlights)
-            {
-                _frontHeadlights = new LocoDE6HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
-                _frontHeadlights.Apply();
-            }
-
-            if (config.UseCustomRearHeadlights)
-            {
-                _rearHeadlights = new LocoDE6HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
-                _rearHeadlights.Apply();
-            }
-
-            ChangeInterior(new LocoDE6InteriorChanger(config, MatHolder));
-        }
-
-        private void ApplyCustomCar(CustomCarConfig config)
-        {
-            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
-
-            MatHolder = new MaterialHolder(TrainCar);
-            ChangeBody(config.BodyPrefab, false);
-        }
-
-        #endregion
     }
 }

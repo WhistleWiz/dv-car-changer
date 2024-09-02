@@ -15,6 +15,14 @@ namespace CarChanger.Unity.Inspector
 
             _config = (LocoDE6Config)target;
 
+            EditorHelper.DrawHeader("Actions");
+
+            if (GUILayout.Button("Reset Bogies"))
+            {
+                _config.ResetBogies();
+                AssetHelper.SaveAsset(target);
+            }
+
             if (GUILayout.Button("Reset Front Headlights"))
             {
                 _config.ResetFrontHeadlights();

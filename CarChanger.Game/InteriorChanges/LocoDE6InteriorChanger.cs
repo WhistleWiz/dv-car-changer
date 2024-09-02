@@ -22,8 +22,9 @@ namespace CarChanger.Game.InteriorChanges
         {
             // Interior unloaded, so don't apply.
             if (interior == null) return;
+            
+            _instanced = Helpers.InstantiateIfNotNull(IsExploded ? _config.CabStaticPrefabExploded : _config.CabStaticPrefab, interior.transform);
 
-            _instanced = Object.Instantiate(IsExploded ? _config.CabExplodedStaticPrefab : _config.CabStaticPrefab, interior.transform);
             _cab = interior.transform.Find("Cab").gameObject;
 
             if (_config.HideOriginalCab)

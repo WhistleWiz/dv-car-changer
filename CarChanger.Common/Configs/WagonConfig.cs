@@ -21,9 +21,9 @@ namespace CarChanger.Common.Configs
         [EnableIf(nameof(EnableBogies))]
         public float WheelRadius = 0.459f;
         [EnableIf(nameof(EnableBogies))]
-        public GameObject FrontBogie = null!;
+        public GameObject? FrontBogie = null;
         [EnableIf(nameof(EnableBogies))]
-        public GameObject RearBogie = null!;
+        public GameObject? RearBogie = null;
 
         public static bool CanCombine(WagonConfig a, WagonConfig b)
         {

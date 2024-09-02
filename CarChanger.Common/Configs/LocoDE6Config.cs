@@ -51,32 +51,50 @@ namespace CarChanger.Common.Configs
             public Vector3 RedGlarePosition;
         }
 
+        [Header("Body")]
         [Tooltip("The prefab to load on the body")]
-        public GameObject BodyPrefab = null!;
+        public GameObject? BodyPrefab = null;
         [Tooltip("Whether to hide the original body or not")]
         public bool HideOriginalBody = false;
 
         [Header("Interior")]
         [Tooltip("The prefab to load on the cab\n" +
             "Only the static parts of the cab will be affected, all controls will remain as is")]
-        public GameObject CabStaticPrefab = null!;
+        public GameObject? CabStaticPrefab = null;
         [Tooltip("The prefab to load on the exploded cab\n" +
             "Only the static parts of the cab will be affected, all controls will remain as is")]
-        public GameObject CabExplodedStaticPrefab = null!;
+        public GameObject? CabStaticPrefabExploded = null;
         [Tooltip("Whether to hide the original cab or not\n" +
             "Only the static parts of the cab will be affected, all controls will remain as is")]
         public bool HideOriginalCab = false;
 
+        [Header("Doors and Windows")]
+        public GameObject? EngineDoorLeft = null;
+        public GameObject? EngineDoorRight = null;
+        public GameObject? EngineDoorLeftExploded = null;
+        public GameObject? EngineDoorRightExploded = null;
+        public bool HideOriginalEngineDoors = false;
+        public GameObject? CabDoorFront = null;
+        public GameObject? CabDoorRear = null;
+        public GameObject? CabDoorFrontExploded = null;
+        public GameObject? CabDoorRearExploded = null;
+        public bool HideOriginalCabDoors = false;
+
         [Header("Bogies")]
         public bool UseCustomBogies = false;
+        [EnableIf(nameof(EnableBogies))]
         public float WheelRadius = 0.5335f;
-        public GameObject FrontBogie = null!;
-        public GameObject RearBogie = null!;
+        [EnableIf(nameof(EnableBogies))]
+        public GameObject? FrontBogie = null!;
+        [EnableIf(nameof(EnableBogies))]
+        public GameObject? RearBogie = null!;
 
         [Header("Headlights")]
         public bool UseCustomFrontHeadlights = false;
+        [EnableIf(nameof(EnableFrontHeadlights))]
         public HeadlightSettings FrontSettings = HeadlightSettings.Front;
         public bool UseCustomRearHeadlights = false;
+        [EnableIf(nameof(EnableRearHeadlights))]
         public HeadlightSettings RearSettings = HeadlightSettings.Rear;
         
         [SerializeField, HideInInspector]
@@ -103,10 +121,30 @@ namespace CarChanger.Common.Configs
         /// </summary>
         public event Action<LocoDE6Config, GameObject>? OnInteriorUnapplied;
 
+        /// <summary>
+        /// Called when this config is applied to the external interactables.
+        /// Receives itself, the interactables <see cref="GameObject"/> of a car, and whether or not it is exploded.
+        /// </summary>
+        public event Action<LocoDE6Config, GameObject, bool>? OnInteractablesApplied;
+        /// <summary>
+        /// Called when this config is unapplied to the external interactables.
+        /// Receives itself and the interactables <see cref="GameObject"/> of a car.
+        /// </summary>
+        public event Action<LocoDE6Config, GameObject>? OnInteractablesUnapplied;
+
         private void Reset()
         {
+            ResetBogies();
             ResetFrontHeadlights();
             ResetRearHeadlights();
+        }
+
+        public void ResetBogies()
+        {
+            UseCustomBogies = false;
+            WheelRadius = 0.5335f;
+            FrontBogie = null!;
+            RearBogie = null!;
         }
 
         public void ResetFrontHeadlights()
@@ -173,11 +211,27 @@ namespace CarChanger.Common.Configs
             OnInteriorUnapplied?.Invoke(this, gameObject);
         }
 
+        public void InteractablesApplied(GameObject gameObject, bool isExploded)
+        {
+            OnInteractablesApplied?.Invoke(this, gameObject, isExploded);
+        }
+
+        public void InteractablesUnapplied(GameObject gameObject)
+        {
+            OnInteractablesUnapplied?.Invoke(this, gameObject);
+        }
+
+        private bool EnableBogies() => UseCustomBogies;
+        private bool EnableFrontHeadlights() => UseCustomFrontHeadlights;
+        private bool EnableRearHeadlights() => UseCustomRearHeadlights;
+
         public static bool CanCombine(LocoDE6Config a, LocoDE6Config b)
         {
             return !(a.UseCustomBogies && b.UseCustomBogies) &&
                 !(a.HideOriginalBody && b.HideOriginalBody) &&
                 !(a.HideOriginalCab && b.HideOriginalCab) &&
+                !(a.HideOriginalEngineDoors && b.HideOriginalEngineDoors) &&
+                !(a.HideOriginalCabDoors && b.HideOriginalCabDoors) &&
                 !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&
                 !(a.UseCustomRearHeadlights && b.UseCustomRearHeadlights);
         }

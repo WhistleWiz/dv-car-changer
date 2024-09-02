@@ -74,7 +74,8 @@ namespace CarChanger.Game.Patches
             }
 
             // Finally, as last resort, load a random change.
-            if (ChangeManager.LoadedConfigs.TryGetValue(car.carLivery, out configs))
+            if (CarChangerMod.Settings.NoModificationChance > Random.value % 1.0f &&
+                ChangeManager.LoadedConfigs.TryGetValue(car.carLivery, out configs))
             {
                 // Component only added inside the if to not have an empty one.
                 car.gameObject.AddComponent<AppliedChange>().Config = configs.GetRandomElement();

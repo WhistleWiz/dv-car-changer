@@ -41,23 +41,23 @@ namespace CarChanger.Common
             return null;
         }
 
-        public static string? ValidateBothBogies(GameObject front, GameObject rear,
+        public static string? ValidateBothBogies(GameObject? front, GameObject? rear,
             int? requiredAxlesF = null, int? requiredAxlesR = null,
             int? requiredPoweredAxlesF = null, int? requiredPoweredAxlesR = null)
         {
-            if (front)
+            if (front != null)
             {
-                if (!rear)
+                if (rear == null)
                 {
                     return "must set either both bogies or none";
                 }
             }
-            else if (rear)
+            else if (rear != null)
             {
                 return "must set either both bogies or none";
             }
 
-            if (front)
+            if (front != null)
             {
                 var result = ValidateBogie(front, requiredAxlesF, requiredPoweredAxlesF);
 
@@ -67,7 +67,7 @@ namespace CarChanger.Common
                 }
             }
 
-            if (rear)
+            if (rear != null)
             {
                 var result = ValidateBogie(rear, requiredAxlesR, requiredPoweredAxlesR);
 

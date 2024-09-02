@@ -18,13 +18,20 @@ namespace CarChanger.Game
         public static UnityModManager.ModEntry Instance { get; private set; } = null!;
         public static TranslationInjector Translations { get; private set; } = null!;
         public static Dictionary<string, AudioClip> SoundCache { get; private set; } = null!;
+        public static Settings Settings { get; private set; } = null!;
 
         // Unity Mod Manager Wiki: https://wiki.nexusmods.com/index.php/Category:Unity_Mod_Manager
         private static bool Load(UnityModManager.ModEntry modEntry)
         {
             Instance = modEntry;
             Translations = new TranslationInjector(Guid);
+            Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
+
+            Instance.OnGUI += Settings.Draw;
+            Instance.OnSaveGUI += Settings.Save;
+
             BuildCache();
+
             ChangeManager.LoadConfigFile();
             Localization.Inject();
 

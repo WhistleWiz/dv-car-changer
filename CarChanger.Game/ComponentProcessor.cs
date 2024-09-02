@@ -7,6 +7,8 @@ namespace CarChanger.Game
     {
         public static void ProcessComponents(GameObject gameObject, MaterialHolder holder)
         {
+            if (gameObject == null) return;
+
             foreach (var item in gameObject.GetComponentsInChildren<UseBodyMaterial>())
             {
                 ProcessBodyMaterial(item, holder);
