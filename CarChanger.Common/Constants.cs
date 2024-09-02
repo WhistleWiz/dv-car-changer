@@ -14,5 +14,6 @@
         public const string BogieR = "BogieR";
         public const string BogieBrakePadsPath = "bogie_car/bogie2brakes/Bogie2BrakePads";
         public const string BogieContactPointsPath = "bogie_car/ContactPoints";
+        public const string Axle = "[axle]";
     }
 }

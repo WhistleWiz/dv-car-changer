@@ -5,9 +5,8 @@ using CarChanger.Game.HeadlightChanges;
 using CarChanger.Game.InteractablesChanges;
 using CarChanger.Game.InteriorChanges;
 using DV.Simulation.Brake;
-using DV.ThingTypes;
-using DV.ThingTypes.TransitionHelpers;
 using DV.Wheels;
+using LocoSim.Implementations.Wheels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +16,7 @@ namespace CarChanger.Game
 {
     internal partial class AppliedChange : MonoBehaviour
     {
-        private static GameObject? s_defaultBogie = null;
-
-        private static GameObject DefaultBogie => Helpers.GetCached(ref s_defaultBogie,
-            () => TrainCarType.FlatbedEmpty.ToV2().prefab.transform.Find($"{Constants.BogieF}/{Constants.BogieName}").gameObject);
+        private GameObject DefaultBogie => TrainCar.carLivery.prefab.GetComponentInChildren<Bogie>().transform.GetChild(0).gameObject;
 
         public TrainCar TrainCar = null!;
         public ModelConfig? Config = null;
@@ -31,6 +27,7 @@ namespace CarChanger.Game
         private GameObject _originalBody = null!;
         private GameObject _body = null!;
         private bool _bogiesChanged = false;
+        private bool _bogiesPowered = false;
         private bool _bodyHidden = false;
         private IHeadlightChanger? _frontHeadlights = null;
         private IHeadlightChanger? _rearHeadlights = null;
@@ -60,7 +57,7 @@ namespace CarChanger.Game
             ReturnToDefault();
         }
 
-        public void ApplyChange()
+        private void ApplyChange()
         {
             if (Config == null)
             {
@@ -225,24 +222,77 @@ namespace CarChanger.Game
             // For those a separate method is used to update.
             if (car.TryGetComponent<WheelRotationViaCode>(out var wheelRotation))
             {
-                if (radius.HasValue)
-                {
-                    wheelRotation.wheelRadius = radius.Value;
-                }
+                wheelRotation.wheelRadius = radius ?? wheelRotation.wheelRadius;
 
                 Transform[] transformsToRotate = bogies.SelectMany((Bogie b) => b.Axles.Select((Bogie.AxleInfo a) => a.transform)).ToArray();
                 wheelRotation.transformsToRotate = transformsToRotate;
             }
         }
 
+        public static void MakeBogiesPowered(TrainCar car, IList<PoweredWheel.State> wheelStates, float? radius)
+        {
+            var wheelRotation = car.GetComponentInChildren<PoweredWheelRotationViaCode>();
+            var manager = car.GetComponentInChildren<PoweredWheelsManager>();
+
+            if (wheelRotation && manager)
+            {
+                wheelRotation.wheelRadius = radius ?? wheelRotation.wheelRadius;
+
+                // Get all axles, ordered by position in relation to the car for consistency.
+                var axles = car.Bogies.SelectMany(x => x.Axles).Select(x => x.transform).OrderBy(x => car.transform.InverseTransformPoint(x.position).z);
+                int i = 0;
+                List<PoweredWheel> powered = new List<PoweredWheel>();
+
+                foreach (var item in axles)
+                {
+                    if (item.TryGetComponent<PoweredWheel>(out var wheel))
+                    {
+                        wheel.state = wheelStates[i++];
+                        powered.Add(wheel);
+                        continue;
+                    }
+
+                    if (item.TryGetComponent<PoweredAxle>(out var axle))
+                    {
+                        wheel = item.gameObject.AddComponent<PoweredWheel>();
+                        wheel.wheelTransform = item;
+                        wheel.localRotationAxis = axle.Axis;
+                        wheel.state = wheelStates[i++];
+                        powered.Add(wheel);
+                        Destroy(axle);
+                        continue;
+                    }
+                }
+
+                manager.poweredWheels = powered.ToArray();
+
+                var wheelSlip = car.GetComponentInChildren<WheelslipSparksController>();
+
+                if (wheelSlip)
+                {
+                    var sparks = car.GetComponentInChildren<WheelSlideSparksController>().sparkAnchors;
+                    var anchors = new List<WheelslipSparksController.WheelSparksDefinition>();
+
+                    foreach (var item in powered)
+                    {
+                        var axleAnchors = sparks.OrderBy(x => (item.wheelTransform.position - x.position).sqrMagnitude).Take(2)
+                            .OrderBy(x => x.position.x).ToArray();
+
+                        anchors.Add(new WheelslipSparksController.WheelSparksDefinition
+                        {
+                            poweredWheel = item,
+                            sparksLeftAnchor = axleAnchors[0],
+                            sparksRightAnchor = axleAnchors[1]
+                        });
+                    }
+
+                    wheelSlip.wheelSparks = anchors.ToArray();
+                }
+            }
+        }
+
         private void ChangeBody(GameObject body, bool hideOriginal)
         {
-            // Destroy the modification applied by this component.
-            if (_body != null)
-            {
-                Destroy(_body);
-            }
-
             // Instantiate the new modification.
             if (body)
             {
@@ -251,14 +301,12 @@ namespace CarChanger.Game
             }
 
             // If the original body is missing, end here.
-            if (!_originalBody)
-            {
-                return;
-            }
+            if (!_originalBody) return;
 
-            if (_bodyHidden)
+            if (hideOriginal)
             {
-                _originalBody.SetActive(!hideOriginal);
+                _originalBody.SetActive(false);
+                _bodyHidden = true;
             }
         }
 
@@ -276,6 +324,50 @@ namespace CarChanger.Game
             _interactables.Apply(TrainCar.loadedExternalInteractables);
 
             TrainCar.ExternalInteractableLoaded += _interactables.Apply;
+        }
+
+        private void ResetBogies()
+        {
+            if (_bogiesChanged)
+            {
+                // States must be extracted before changing the bogies, and reapplied after
+                // the new bogies are instanced. Thus the mess.
+                PoweredWheel.State[] wheelStates = null!;
+
+                if (_bogiesPowered)
+                {
+                    wheelStates = TrainCar.Bogies.SelectMany(x => x.Axles)
+                        .Select(x => x.transform)
+                        .OrderBy(x => TrainCar.transform.InverseTransformPoint(x.position).z)
+                        .Select(x => x.GetComponent<PoweredWheel>().state).ToArray();
+                }
+
+                ChangeBogies(TrainCar, DefaultBogie, DefaultBogie, TrainCar.carLivery.parentType.wheelRadius);
+
+                if (_bogiesPowered)
+                {
+                    MakeBogiesPowered(TrainCar, wheelStates, TrainCar.carLivery.parentType.wheelRadius);
+                }
+
+                _bogiesChanged = false;
+                _bogiesPowered = false;
+            }
+        }
+
+        private void ResetBody()
+        {
+            if (_body)
+            {
+                Destroy(_body);
+            }
+
+            if (_bodyHidden && _originalBody)
+            {
+                _originalBody.SetActive(true);
+            }
+
+            _body = null!;
+            _bodyHidden = false;
         }
 
         private void ResetHeadlights()
@@ -355,16 +447,15 @@ namespace CarChanger.Game
                 }
             }
 
-            ChangeBogies(TrainCar, _bogiesChanged ? DefaultBogie : null!, _bogiesChanged ? DefaultBogie : null!,
-                _bogiesChanged ? TrainCar.carLivery.parentType.wheelRadius : (float?)null);
-            ChangeBody(null!, false);
+            ResetBogies();
+            ResetBody();
             ResetHeadlights();
             ResetInterior();
             ResetInteractables();
 
             if (_explosionHandler != null)
             {
-                Destroy(_explosionHandler);
+                Destroy(_explosionHandler.gameObject);
             }
 
             Config?.Unapplied(TrainCar.gameObject);
@@ -422,7 +513,15 @@ namespace CarChanger.Game
             if (config.UseCustomBogies)
             {
                 _bogiesChanged = true;
+                _bogiesPowered = true;
+
+                var wheelStates = TrainCar.Bogies.SelectMany(x => x.Axles)
+                    .Select(x => x.transform)
+                    .OrderBy(x => TrainCar.transform.InverseTransformPoint(x.position).z)
+                    .Select(x => x.GetComponent<PoweredWheel>().state);
+
                 ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
+                MakeBogiesPowered(TrainCar, wheelStates.ToArray(), config.WheelRadius);
             }
 
             _bodyHidden = config.HideOriginalBody;

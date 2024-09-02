@@ -52,6 +52,17 @@ namespace CarChanger.Common.Configs
 
         public override bool DoValidation(out string error)
         {
+            if (FrontBogie || RearBogie)
+            {
+                var result = Validation.ValidateBothBogies(FrontBogie, RearBogie);
+
+                if (!string.IsNullOrEmpty(result))
+                {
+                    error = result!;
+                    return false;
+                }
+            }
+
             error = string.Empty;
             return true;
         }
