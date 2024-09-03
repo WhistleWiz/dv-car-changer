@@ -57,6 +57,14 @@ namespace CarChanger.Common.Configs
         [Tooltip("Whether to hide the original body or not")]
         public bool HideOriginalBody = false;
 
+        [Header("Colliders")]
+        [Tooltip("The colliders of the train with the world")]
+        public GameObject? CollisionCollider = null;
+        [Tooltip("The colliders of the train with the player")]
+        public GameObject? WalkableCollider = null;
+        [Tooltip("The colliders of the train with items")]
+        public GameObject? ItemsCollider = null;
+
         [Header("Interior")]
         [Tooltip("The prefab to load on the cab\n" +
             "Only the static parts of the cab will be affected, all controls will remain as is")]

@@ -84,22 +84,10 @@ namespace CarChanger.Game.InteractablesChanges
         {
             if (interactables == null) return;
 
-            if (_engR != null)
-            {
-                Object.Destroy(_engR);
-            }
-            if (_engL != null)
-            {
-                Object.Destroy(_engL);
-            }
-            if (_cabR != null)
-            {
-                Object.Destroy(_cabR);
-            }
-            if (_cabF != null)
-            {
-                Object.Destroy(_cabF);
-            }
+            Helpers.DestroyIfNotNull(_engR);
+            Helpers.DestroyIfNotNull(_engL);
+            Helpers.DestroyIfNotNull(_cabR);
+            Helpers.DestroyIfNotNull(_cabF);
 
             if (_config.HideOriginalEngineDoors)
             {

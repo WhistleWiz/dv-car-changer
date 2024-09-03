@@ -16,6 +16,14 @@ namespace CarChanger.Common.Configs
         [Tooltip("Whether to hide the original body or not")]
         public bool HideOriginalBody = false;
 
+        [Header("Colliders")]
+        [Tooltip("The colliders of the train with the world")]
+        public GameObject? CollisionCollider = null;
+        [Tooltip("The colliders of the train with the player")]
+        public GameObject? WalkableCollider = null;
+        [Tooltip("The colliders of the train with items")]
+        public GameObject? ItemsCollider = null;
+
         [Header("Bogies")]
         public bool UseCustomBogies = false;
         [EnableIf(nameof(EnableBogies))]

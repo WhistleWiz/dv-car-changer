@@ -28,6 +28,7 @@ namespace CarChanger.Game
             ResetHeadlights();
             ResetInterior();
             ResetInteractables();
+            ResetColliders();
 
             if (_explosionHandler != null)
             {
@@ -55,6 +56,8 @@ namespace CarChanger.Game
 
             _bodyHidden = config.HideOriginalBody;
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
         private void ApplyGroup(ModificationGroupConfig config)
@@ -114,6 +117,8 @@ namespace CarChanger.Game
 
             ChangeInterior(new LocoDE6InteriorChanger(config, MatHolder));
             ChangeInteractables(new LocoDE6InteractablesChanger(config, MatHolder));
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
         private void ApplyCustomCar(CustomCarConfig config)

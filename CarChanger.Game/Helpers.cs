@@ -80,5 +80,21 @@ namespace CarChanger.Game
 
             return UnityEngine.Object.Instantiate(obj, t);
         }
+
+        public static void DestroyIfNotNull(UnityEngine.Object obj)
+        {
+            if (obj != null)
+            {
+                UnityEngine.Object.Destroy(obj);
+            }
+        }
+
+        public static void SetLayersForAllChildren(GameObject gameObject, int layer)
+        {
+            foreach (var item in gameObject.GetComponentsInChildren<Transform>())
+            {
+                item.gameObject.layer = layer;
+            }
+        }
     }
 }

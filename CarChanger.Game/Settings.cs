@@ -10,6 +10,11 @@ namespace CarChanger.Game
             "Does not apply to cars with a default modification set", Type = DrawType.Slider, Min = 0.0, Max = 1.0)]
         public float NoModificationChance = 0.2f;
 
+        public override void Save(UnityModManager.ModEntry modEntry)
+        {
+            Save(this, modEntry);
+        }
+
         public void OnChange() { }
     }
 }

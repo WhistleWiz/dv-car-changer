@@ -33,6 +33,8 @@ namespace CarChanger.Game
         private IInteriorChanger? _interior = null;
         private IInteractablesChanger? _interactables = null;
         private ExplosionModelHandler? _explosionHandler = null;
+        private ColliderHolder? _colliderHolder = null;
+
         private GameObject DefaultBogie => TrainCar.carLivery.prefab.GetComponentInChildren<Bogie>().transform.GetChild(0).gameObject;
 
         private void Awake()
@@ -101,6 +103,8 @@ namespace CarChanger.Game
             {
                 _explosionHandler = CarChangerExplosionManager.PrepareExplosionHandler(_body, MatHolder);
             }
+
+            _colliderHolder?.Apply();
 
             Config.Applied(TrainCar.gameObject);
             OnApply?.Invoke(this);
@@ -429,6 +433,15 @@ namespace CarChanger.Game
                 TrainCar.ExternalInteractableLoaded -= _interactables.Apply;
                 _interactables.Unapply(TrainCar.loadedExternalInteractables);
                 _interactables = null;
+            }
+        }
+
+        private void ResetColliders()
+        {
+            if (_colliderHolder != null)
+            {
+                _colliderHolder.Unapply();
+                _colliderHolder = null;
             }
         }
 

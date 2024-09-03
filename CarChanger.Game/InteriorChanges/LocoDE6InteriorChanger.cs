@@ -42,10 +42,7 @@ namespace CarChanger.Game.InteriorChanges
             // Already gone, skip.
             if (interior == null) return;
 
-            if (_instanced != null)
-            {
-                Object.Destroy(_instanced);
-            }
+            Helpers.DestroyIfNotNull(_instanced);
 
             if (_config.HideOriginalCab && _cab != null)
             {
