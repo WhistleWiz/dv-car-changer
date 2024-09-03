@@ -31,6 +31,9 @@ namespace CarChanger.Game
             { WagonType.TankShortFood, "TankShortFood" }
         };
 
+        private static System.Random? s_random;
+        public static System.Random RNG => GetCached(ref s_random, () => new System.Random());
+
         public static Dictionary<string, TrainCarType_v2> IdToCarType => GetCached(ref s_idToCarType,
             () => DV.Globals.G.Types.carTypes.ToDictionary(x => x.id, x => x));
 
@@ -65,6 +68,11 @@ namespace CarChanger.Game
             }
 
             return i;
+        }
+
+        public static bool Chance(double percent)
+        {
+            return RNG.NextDouble() < percent;
         }
 
         public static T InstantiateIfNotNull<T>(T? obj)
