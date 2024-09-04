@@ -22,7 +22,6 @@ namespace CarChanger.Game
             { WagonType.Gondola, "Gondola" },
             { WagonType.Hopper, "Hopper" },
             { WagonType.NuclearFlask, "NuclearFlask" },
-            { WagonType.Passenger, "Passenger" },
             { WagonType.Stock, "Stock" },
             { WagonType.Refrigerator, "Refrigerator" },
             { WagonType.TankChem, "TankChem" },
