@@ -7,15 +7,20 @@ namespace CarChanger.Common.Components
         public Vector3 PositionRange;
         public Vector3 RotationRange;
 
+        public Vector3 ActualPositionRange => PositionRange * 0.5f;
+        public Vector3 ActualRotationRange => RotationRange * 0.5f;
+
         private void Start()
         {
-            Vector3 posOffset = new Vector3(Random.Range(-PositionRange.x, PositionRange.x),
-                Random.Range(-PositionRange.y, PositionRange.y),
-                Random.Range(-PositionRange.z, PositionRange.z));
+            var posRange = ActualPositionRange;
+            Vector3 posOffset = new Vector3(Random.Range(-posRange.x, posRange.x),
+                Random.Range(-posRange.y, posRange.y),
+                Random.Range(-posRange.z, posRange.z));
 
-            Vector3 rotOffset = new Vector3(Random.Range(-RotationRange.x, RotationRange.x),
-                Random.Range(-RotationRange.y, RotationRange.y),
-                Random.Range(-RotationRange.z, RotationRange.z));
+            var rotRange = ActualRotationRange;
+            Vector3 rotOffset = new Vector3(Random.Range(-rotRange.x, rotRange.x),
+                Random.Range(-rotRange.y, rotRange.y),
+                Random.Range(-rotRange.z, rotRange.z));
 
             transform.localPosition += posOffset;
             transform.localRotation *= Quaternion.Euler(rotOffset);

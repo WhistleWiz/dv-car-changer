@@ -15,24 +15,26 @@ namespace CarChanger.Unity.Inspector
             Handles.matrix = Matrix4x4.TRS(comp.transform.position, comp.transform.rotation, Vector3.one);
             Handles.DrawWireCube(Vector3.zero, comp.PositionRange);
 
-            Handles.color = Color.red;
-            Handles.DrawWireArc(Vector3.zero, Vector3.right, Vector3.forward, comp.RotationRange.x, 0.5f);
-            Handles.DrawWireArc(Vector3.zero, Vector3.right, Vector3.forward, -comp.RotationRange.x, 0.5f);
+            var range = comp.ActualRotationRange;
+
+            Handles.color = Handles.xAxisColor;
+            Handles.DrawWireArc(Vector3.zero, Vector3.right, Vector3.forward, range.x, 0.5f);
+            Handles.DrawWireArc(Vector3.zero, Vector3.right, Vector3.forward, -range.x, 0.5f);
             Handles.color *= Transparent;
-            Handles.DrawSolidArc(Vector3.zero, Vector3.right, Vector3.forward, comp.RotationRange.x, 0.5f);
-            Handles.DrawSolidArc(Vector3.zero, Vector3.right, Vector3.forward, -comp.RotationRange.x, 0.5f);
-            Handles.color = Color.green;
-            Handles.DrawWireArc(Vector3.zero, Vector3.up, Vector3.forward, comp.RotationRange.y, 0.5f);
-            Handles.DrawWireArc(Vector3.zero, Vector3.up, Vector3.forward, -comp.RotationRange.y, 0.5f);
+            Handles.DrawSolidArc(Vector3.zero, Vector3.right, Vector3.forward, range.x, 0.5f);
+            Handles.DrawSolidArc(Vector3.zero, Vector3.right, Vector3.forward, -range.x, 0.5f);
+            Handles.color = Handles.yAxisColor;
+            Handles.DrawWireArc(Vector3.zero, Vector3.up, Vector3.forward, range.y, 0.5f);
+            Handles.DrawWireArc(Vector3.zero, Vector3.up, Vector3.forward, -range.y, 0.5f);
             Handles.color *= Transparent;
-            Handles.DrawSolidArc(Vector3.zero, Vector3.up, Vector3.forward, comp.RotationRange.y, 0.5f);
-            Handles.DrawSolidArc(Vector3.zero, Vector3.up, Vector3.forward, -comp.RotationRange.y, 0.5f);
-            Handles.color = Color.blue;
-            Handles.DrawWireArc(Vector3.zero, Vector3.forward, Vector3.up, comp.RotationRange.z, 0.5f);
-            Handles.DrawWireArc(Vector3.zero, Vector3.forward, Vector3.up, -comp.RotationRange.z, 0.5f);
+            Handles.DrawSolidArc(Vector3.zero, Vector3.up, Vector3.forward, range.y, 0.5f);
+            Handles.DrawSolidArc(Vector3.zero, Vector3.up, Vector3.forward, -range.y, 0.5f);
+            Handles.color = Handles.zAxisColor;
+            Handles.DrawWireArc(Vector3.zero, Vector3.forward, Vector3.up, range.z, 0.5f);
+            Handles.DrawWireArc(Vector3.zero, Vector3.forward, Vector3.up, -range.z, 0.5f);
             Handles.color *= Transparent;
-            Handles.DrawSolidArc(Vector3.zero, Vector3.forward, Vector3.up, comp.RotationRange.z, 0.5f);
-            Handles.DrawSolidArc(Vector3.zero, Vector3.forward, Vector3.up, -comp.RotationRange.z, 0.5f);
+            Handles.DrawSolidArc(Vector3.zero, Vector3.forward, Vector3.up, range.z, 0.5f);
+            Handles.DrawSolidArc(Vector3.zero, Vector3.forward, Vector3.up, -range.z, 0.5f);
         }
     }
 }
