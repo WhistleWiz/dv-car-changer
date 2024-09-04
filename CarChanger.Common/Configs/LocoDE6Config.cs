@@ -58,11 +58,11 @@ namespace CarChanger.Common.Configs
         public bool HideOriginalBody = false;
 
         [Header("Colliders")]
-        [Tooltip("The colliders of the train with the world")]
+        [Tooltip("The colliders of the car with the world")]
         public GameObject? CollisionCollider = null;
-        [Tooltip("The colliders of the train with the player")]
+        [Tooltip("The colliders of the car with the player")]
         public GameObject? WalkableCollider = null;
-        [Tooltip("The colliders of the train with items")]
+        [Tooltip("The colliders of the car with items")]
         public GameObject? ItemsCollider = null;
 
         [Header("Interior")]
@@ -91,7 +91,7 @@ namespace CarChanger.Common.Configs
         [Header("Bogies")]
         public bool UseCustomBogies = false;
         [EnableIf(nameof(EnableBogies))]
-        public float WheelRadius = 0.5335f;
+        public float WheelRadius = Constants.WheelRadiusDE6;
         [EnableIf(nameof(EnableBogies))]
         public GameObject? FrontBogie = null!;
         [EnableIf(nameof(EnableBogies))]

@@ -25,6 +25,7 @@ namespace CarChanger.Game
 
             ResetBogies();
             ResetBody();
+            ResetInteriorLod();
             ResetHeadlights();
             ResetInterior();
             ResetInteractables();
@@ -54,8 +55,28 @@ namespace CarChanger.Game
                 ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
             }
 
-            _bodyHidden = config.HideOriginalBody;
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
+        }
+
+        private void ApplyPassenger(PassengerConfig config)
+        {
+            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+
+            MatHolder = new MaterialHolder(TrainCar)
+            {
+                Body = _originalBody[0].GetComponentInChildren<Renderer>().material
+            };
+
+            if (config.UseCustomBogies)
+            {
+                _bogiesChanged = true;
+                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
+            }
+
+            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+            ChangeInteriorLod(config.InteriorPrefab, config.HideOriginalInterior);
 
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }

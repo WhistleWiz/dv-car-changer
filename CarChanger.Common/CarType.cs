@@ -16,7 +16,6 @@
         Refrigerator,
         Hopper,
         Gondola,
-        Passenger,
         NuclearFlask,
         UseLivery = 1000
     }
@@ -52,9 +51,14 @@
         GondolaRed = 550,
         GondolaGreen = 551,
         GondolaGray = 552,
-        PassengerRed = 600,
-        PassengerGreen = 601,
-        PassengerBlue = 602,
         NuclearFlask = 800
+    }
+
+    public enum PassengerType
+    {
+        All = 0,
+        Red = 600,
+        Green = 601,
+        Blue = 602
     }
 }

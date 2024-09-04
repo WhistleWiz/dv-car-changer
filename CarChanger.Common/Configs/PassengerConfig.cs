@@ -2,19 +2,22 @@
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/Wagon Modification")]
-    public class WagonConfig : ModelConfig
+    [CreateAssetMenu(menuName = "DVCarChanger/Passenger Coach Modification")]
+    public class PassengerConfig : ModelConfig
     {
-        [Header("Wagon Settings")]
-        [Tooltip("The car type this modification will apply to\n" +
-            "'Use Livery' applies it to a single livery instead of all liveries of a type")]
-        public WagonType CarType = WagonType.Flatbed;
-        [EnableIf(nameof(EnableLivery)), Tooltip("The livery this modification will apply to")]
-        public WagonLivery CarLivery = WagonLivery.FlatbedEmpty;
+        // Passenger gets a separate one from the rest of the wagons
+        // to allow changing the interior.
+        [Header("Coach Settings")]
+        [Tooltip("The coach liveries this modification will apply to")]
+        public PassengerType Livery = PassengerType.All;
         [Tooltip("The prefab to load on the body")]
         public GameObject BodyPrefab = null!;
         [Tooltip("Whether to hide the original body or not")]
         public bool HideOriginalBody = false;
+        [Tooltip("The prefab to load on the body")]
+        public GameObject InteriorPrefab = null!;
+        [Tooltip("Whether to hide the original body or not")]
+        public bool HideOriginalInterior = false;
 
         [Header("Colliders")]
         [Tooltip("The colliders of the car with the world")]
@@ -33,28 +36,12 @@ namespace CarChanger.Common.Configs
         [EnableIf(nameof(EnableBogies))]
         public GameObject? RearBogie = null;
 
-        public static bool CanCombine(WagonConfig a, WagonConfig b)
+        public static bool CanCombine(PassengerConfig a, PassengerConfig b)
         {
             return !(a.UseCustomBogies && b.UseCustomBogies) &&
-                !(a.HideOriginalBody && b.HideOriginalBody);
+                !(a.HideOriginalBody && b.HideOriginalBody) &&
+                !(a.HideOriginalInterior && b.HideOriginalInterior);
         }
-
-        public static bool SameTargets(WagonConfig a, WagonConfig b)
-        {
-            if (a.CarType != b.CarType)
-            {
-                return false;
-            }
-
-            if (a.CarType == WagonType.UseLivery)
-            {
-                return a.CarLivery == b.CarLivery;
-            }
-
-            return true;
-        }
-
-        private bool EnableLivery() => CarType == WagonType.UseLivery;
 
         private bool EnableBogies() => UseCustomBogies;
 

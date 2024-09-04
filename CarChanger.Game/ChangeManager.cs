@@ -38,11 +38,11 @@ namespace CarChanger.Game
             else
             {
                 CarChangerMod.Log("Default configs file not found, creating new one...");
-                CreateEmptySettings();
+                WriteSettingsFile();
             }
         }
 
-        private static void CreateEmptySettings()
+        internal static void WriteSettingsFile()
         {
             JsonSerializer serializer = new JsonSerializer
             {
@@ -99,6 +99,15 @@ namespace CarChanger.Game
                         }
 
                         AddToCarType(Helpers.EnumToCarType(wagon.CarType), item);
+                        continue;
+                    case PassengerConfig pax:
+                        if (pax.Livery == PassengerType.All)
+                        {
+                            AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[(TrainCarType)PassengerType.Blue].parentType, item);
+                            continue;
+                        }
+
+                        AddToCarLivery(DV.Globals.G.Types.TrainCarType_to_v2[(TrainCarType)PassengerType.Blue], item);
                         continue;
                     case ModificationGroupConfig group:
                         LoadConfigs(group.ModificationsToActivate);

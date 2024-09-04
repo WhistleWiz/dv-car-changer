@@ -24,10 +24,13 @@ namespace CarChanger.Game
 
         private bool _changeApplied = false;
         private List<GameObject> _originalBody = new List<GameObject>();
+        private List<GameObject> _originalInteriorLod = new List<GameObject>();
         private GameObject _body = null!;
+        private GameObject _interiorLod = null!;
         private bool _bogiesChanged = false;
         private bool _bogiesPowered = false;
         private bool _bodyHidden = false;
+        private bool _interiorLodHidden = false;
         private IHeadlightChanger? _frontHeadlights = null;
         private IHeadlightChanger? _rearHeadlights = null;
         private IInteriorChanger? _interior = null;
@@ -80,11 +83,16 @@ namespace CarChanger.Game
 
             _originalBody.Clear();
             _originalBody = GetOriginalBody();
+            _originalInteriorLod.Clear();
+            _originalInteriorLod = GetOriginalInteriorLod();
 
             switch (Config)
             {
                 case WagonConfig wagon:
                     ApplyWagon(wagon);
+                    break;
+                case PassengerConfig pax:
+                    ApplyPassenger(pax);
                     break;
                 case ModificationGroupConfig group:
                     ApplyGroup(group);
@@ -119,8 +127,19 @@ namespace CarChanger.Game
             // Locos have a special path to ensure everything works fine.
             switch (Config)
             {
+                case PassengerConfig _:
+                    return new List<GameObject>
+                    {
+                        transform.Find("CarPassenger/CarPassenger_LOD0").gameObject,
+                        transform.Find("CarPassenger/CarPassenger_LOD1").gameObject,
+                        transform.Find("CarPassenger/CarPassenger_LOD2").gameObject,
+                        transform.Find("CarPassenger/CarPassenger_LOD3").gameObject
+                    };
                 case LocoDE6Config _:
-                    return new List<GameObject> { transform.Find("LocoDE6_Body/Body").gameObject };
+                    return new List<GameObject>
+                    {
+                        transform.Find("LocoDE6_Body/Body").gameObject
+                    };
                 default:
                     break;
             }
@@ -145,6 +164,30 @@ namespace CarChanger.Game
             }
 
             CarChangerMod.Error("Could not find original body!");
+            return null!;
+        }
+
+        private List<GameObject> GetOriginalInteriorLod()
+        {
+            // Ditto, for the interior LOD.
+            switch (Config)
+            {
+                case PassengerConfig _:
+                    return new List<GameObject>
+                    {
+                        transform.Find("CarPassenger/CarPassengerInterior_LOD0").gameObject,
+                        transform.Find("CarPassenger/CarPassengerInterior_LOD1").gameObject,
+                        transform.Find("CarPassenger/CarPassengerInterior_LOD2").gameObject
+                    };
+                case LocoDE6Config _:
+                    return new List<GameObject>
+                    {
+                        transform.Find("[interior LOD]/LocoDE6_InteriorLOD").gameObject
+                    };
+                default:
+                    break;
+            }
+
             return null!;
         }
 
@@ -328,7 +371,6 @@ namespace CarChanger.Game
 
         private void ChangeBody(GameObject? body, bool hideOriginal)
         {
-            // Instantiate the new modification.
             if (body != null)
             {
                 _body = Instantiate(body, transform);
@@ -343,6 +385,25 @@ namespace CarChanger.Game
                 }
 
                 _bodyHidden = true;
+            }
+        }
+
+        private void ChangeInteriorLod(GameObject? interior, bool hideOriginal)
+        {
+            if (interior != null)
+            {
+                _interiorLod = Instantiate(interior, transform);
+                ComponentProcessor.ProcessComponents(_interiorLod, MatHolder);
+            }
+
+            if (hideOriginal)
+            {
+                foreach (var item in _originalInteriorLod)
+                {
+                    item.SetActive(false);
+                }
+
+                _interiorLodHidden = true;
             }
         }
 
@@ -396,10 +457,7 @@ namespace CarChanger.Game
 
         private void ResetBody()
         {
-            if (_body)
-            {
-                Destroy(_body);
-            }
+            Helpers.DestroyIfNotNull(_body);
 
             if (_bodyHidden)
             {
@@ -411,6 +469,22 @@ namespace CarChanger.Game
 
             _body = null!;
             _bodyHidden = false;
+        }
+
+        private void ResetInteriorLod()
+        {
+            Helpers.DestroyIfNotNull(_interiorLod);
+
+            if (_interiorLodHidden)
+            {
+                foreach (var item in _originalInteriorLod)
+                {
+                    item.SetActive(true);
+                }
+            }
+
+            _interiorLod = null!;
+            _interiorLodHidden = false;
         }
 
         private void ResetHeadlights()
