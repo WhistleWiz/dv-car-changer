@@ -23,7 +23,7 @@ namespace CarChanger.Game
         public MaterialHolder MatHolder = null!;
 
         private bool _changeApplied = false;
-        private GameObject _originalBody = null!;
+        private List<GameObject> _originalBody = new List<GameObject>();
         private GameObject _body = null!;
         private bool _bogiesChanged = false;
         private bool _bogiesPowered = false;
@@ -78,6 +78,7 @@ namespace CarChanger.Game
                 ReturnToDefault();
             }
 
+            _originalBody.Clear();
             _originalBody = GetOriginalBody();
 
             switch (Config)
@@ -112,14 +113,14 @@ namespace CarChanger.Game
             _changeApplied = true;
         }
 
-        private GameObject GetOriginalBody()
+        private List<GameObject> GetOriginalBody()
         {
             // Get the body object at the path.
             // Locos have a special path to ensure everything works fine.
             switch (Config)
             {
                 case LocoDE6Config _:
-                    return transform.Find("LocoDE6_Body/Body").gameObject;
+                    return new List<GameObject> { transform.Find("LocoDE6_Body/Body").gameObject };
                 default:
                     break;
             }
@@ -132,7 +133,7 @@ namespace CarChanger.Game
                 // First LODGroup in top level children should be the body.
                 if (t.TryGetComponent<LODGroup>(out var lod))
                 {
-                    return lod.gameObject;
+                    return new List<GameObject> { lod.gameObject };
                 }
             }
 
@@ -334,12 +335,13 @@ namespace CarChanger.Game
                 ComponentProcessor.ProcessComponents(_body, MatHolder);
             }
 
-            // If the original body is missing, end here.
-            if (!_originalBody) return;
-
             if (hideOriginal)
             {
-                _originalBody.SetActive(false);
+                foreach (var item in _originalBody)
+                {
+                    item.SetActive(false);
+                }
+
                 _bodyHidden = true;
             }
         }
@@ -399,9 +401,12 @@ namespace CarChanger.Game
                 Destroy(_body);
             }
 
-            if (_bodyHidden && _originalBody)
+            if (_bodyHidden)
             {
-                _originalBody.SetActive(true);
+                foreach (var item in _originalBody)
+                {
+                    item.SetActive(true);
+                }
             }
 
             _body = null!;

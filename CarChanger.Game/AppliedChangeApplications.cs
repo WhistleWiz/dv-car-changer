@@ -45,7 +45,7 @@ namespace CarChanger.Game
 
             MatHolder = new MaterialHolder(TrainCar)
             {
-                Body = _originalBody.GetComponentInChildren<Renderer>().material
+                Body = _originalBody[0].GetComponentInChildren<Renderer>().material
             };
 
             if (config.UseCustomBogies)
@@ -77,7 +77,7 @@ namespace CarChanger.Game
 
             MatHolder = new MaterialHolder(TrainCar)
             {
-                Body = _originalBody.GetComponentInChildren<Renderer>().material,
+                Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
                 Interior = TrainCar.transform.Find(
                     "[interior LOD]/LocoDE6_InteriorLOD/cab_LOD1").GetComponent<Renderer>().material,
                 Glass = TrainCar.transform.Find(
