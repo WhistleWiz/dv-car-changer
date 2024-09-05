@@ -5,7 +5,7 @@ namespace CarChanger.Common.Configs
     [CreateAssetMenu(menuName = "DVCarChanger/Wagon Modification", order = Constants.MenuOrderConstants.Unpowered + 0)]
     public class WagonConfig : ModelConfig
     {
-        [Header("Wagon Settings")]
+        [Header("Body")]
         [Tooltip("The car type this modification will apply to\n" +
             "'Use Livery' applies it to a single livery instead of all liveries of a type")]
         public WagonType CarType = WagonType.Flatbed;
@@ -32,6 +32,8 @@ namespace CarChanger.Common.Configs
         public GameObject? FrontBogie = null;
         [EnableIf(nameof(EnableBogies))]
         public GameObject? RearBogie = null;
+        [Button(nameof(ResetBogies), "Reset"), SerializeField]
+        private bool _resetBogiesToDefaultButton;
 
         public static bool CanCombine(WagonConfig a, WagonConfig b)
         {
@@ -57,6 +59,13 @@ namespace CarChanger.Common.Configs
         private bool EnableLivery() => CarType == WagonType.UseLivery;
 
         private bool EnableBogies() => UseCustomBogies;
+
+        private void ResetBogies()
+        {
+            WheelRadius = Constants.WheelRadiusDefault;
+            FrontBogie = null;
+            RearBogie = null;
+        }
 
         public override bool DoValidation(out string error)
         {

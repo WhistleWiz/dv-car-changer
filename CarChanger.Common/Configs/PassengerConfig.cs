@@ -7,16 +7,14 @@ namespace CarChanger.Common.Configs
     {
         // Passenger gets a separate one from the rest of the wagons
         // to allow changing the interior.
-        [Header("Coach Settings")]
+        [Header("Body")]
         [Tooltip("The coach liveries this modification will apply to")]
         public PassengerType Livery = PassengerType.All;
         [Tooltip("The prefab to load on the body")]
         public GameObject BodyPrefab = null!;
         [Tooltip("Whether to hide the original body or not")]
         public bool HideOriginalBody = false;
-        [Tooltip("The prefab to load on the body")]
-        public GameObject InteriorPrefab = null!;
-        [Tooltip("Whether to hide the original body or not")]
+        [Tooltip("Whether to hide the original interior or not")]
         public bool HideOriginalInterior = false;
 
         [Header("Colliders")]
@@ -35,6 +33,8 @@ namespace CarChanger.Common.Configs
         public GameObject? FrontBogie = null;
         [EnableIf(nameof(EnableBogies))]
         public GameObject? RearBogie = null;
+        [Button(nameof(ResetBogies), "Reset"), SerializeField]
+        private bool _resetBogiesToDefaultButton;
 
         public static bool CanCombine(PassengerConfig a, PassengerConfig b)
         {
@@ -44,6 +44,13 @@ namespace CarChanger.Common.Configs
         }
 
         private bool EnableBogies() => UseCustomBogies;
+
+        private void ResetBogies()
+        {
+            WheelRadius = Constants.WheelRadiusDefault;
+            FrontBogie = null;
+            RearBogie = null;
+        }
 
         public override bool DoValidation(out string error)
         {

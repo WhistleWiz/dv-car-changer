@@ -3,19 +3,22 @@ using UnityEngine;
 
 namespace CarChanger.Game.InteriorChanges
 {
-    internal class LocoS282AInteriorChanger : IInteriorChanger
+    internal class BasicLocoInteriorChanger : IInteriorChanger
     {
-        private LocoS282AConfig _config;
+        private LocomotiveConfig _config;
         private MaterialHolder _materialHolder;
         private GameObject _instanced = null!;
         private GameObject _cab = null!;
+        private string _path;
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
-        public LocoS282AInteriorChanger(LocoS282AConfig config, MaterialHolder matHolder)
+        public BasicLocoInteriorChanger(LocomotiveConfig config, MaterialHolder matHolder, string staticObjectPath)
         {
             _config = config;
             _materialHolder = matHolder;
+            _path = staticObjectPath;
+
         }
 
         public void Apply(GameObject interior)
@@ -25,7 +28,7 @@ namespace CarChanger.Game.InteriorChanges
 
             _instanced = Helpers.InstantiateIfNotNull(IsExploded ? _config.CabStaticPrefabExploded : _config.CabStaticPrefab, interior.transform);
 
-            _cab = interior.transform.Find("Static").gameObject;
+            _cab = interior.transform.Find(_path).gameObject;
 
             if (_config.HideOriginalCab)
             {

@@ -23,8 +23,8 @@ namespace CarChanger.Common.Configs
         protected void ResetBogies()
         {
             WheelRadius = OriginalRadius;
-            FrontBogie = null!;
-            RearBogie = null!;
+            FrontBogie = null;
+            RearBogie = null;
         }
 
         public static bool CanCombine(LocomotiveWithBogiesConfig a, LocomotiveWithBogiesConfig b)

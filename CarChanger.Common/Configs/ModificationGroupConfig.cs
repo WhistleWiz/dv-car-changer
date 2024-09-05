@@ -2,7 +2,7 @@
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/Modification Group", order = Constants.MenuOrderConstants.Other + 1)]
+    [CreateAssetMenu(menuName = "DVCarChanger/Modification Group", order = Constants.MenuOrderConstants.Other + 0)]
     public class ModificationGroupConfig : ModelConfig
     {
         public ModelConfig[] ModificationsToActivate = new ModelConfig[0];

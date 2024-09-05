@@ -94,28 +94,6 @@ namespace CarChanger.Common.Configs
 
         #endregion
 
-        /// <summary>
-        /// Called when this config is applied to the interior. This may happen multiple times while the outside is only applied once,
-        /// as the interior loads and unloads. Receives itself, the interior <see cref="GameObject"/> of a car, and whether or not it is exploded.
-        /// </summary>
-        public event Action<LocoDE6Config, GameObject, bool>? OnInteriorApplied;
-        /// <summary>
-        /// Called when this config is unapplied to the interior. This is only called when the interior is active and the config is unapplied.
-        /// It will not be called when unloading the interior. Receives itself and the interior <see cref="GameObject"/> of a car.
-        /// </summary>
-        public event Action<LocoDE6Config, GameObject>? OnInteriorUnapplied;
-
-        /// <summary>
-        /// Called when this config is applied to the external interactables.
-        /// Receives itself, the interactables <see cref="GameObject"/> of a car, and whether or not it is exploded.
-        /// </summary>
-        public event Action<LocoDE6Config, GameObject, bool>? OnInteractablesApplied;
-        /// <summary>
-        /// Called when this config is unapplied to the external interactables.
-        /// Receives itself and the interactables <see cref="GameObject"/> of a car.
-        /// </summary>
-        public event Action<LocoDE6Config, GameObject>? OnInteractablesUnapplied;
-
         public void ResetFrontHeadlights()
         {
             FrontSettings = HeadlightSettings.Front;
@@ -168,26 +146,6 @@ namespace CarChanger.Common.Configs
 
             error = string.Empty;
             return true;
-        }
-
-        public void InteriorApplied(GameObject gameObject, bool isExploded)
-        {
-            OnInteriorApplied?.Invoke(this, gameObject, isExploded);
-        }
-
-        public void InteriorUnapplied(GameObject gameObject)
-        {
-            OnInteriorUnapplied?.Invoke(this, gameObject);
-        }
-
-        public void InteractablesApplied(GameObject gameObject, bool isExploded)
-        {
-            OnInteractablesApplied?.Invoke(this, gameObject, isExploded);
-        }
-
-        public void InteractablesUnapplied(GameObject gameObject)
-        {
-            OnInteractablesUnapplied?.Invoke(this, gameObject);
         }
 
         private bool EnableFrontHeadlights() => UseCustomFrontHeadlights;
