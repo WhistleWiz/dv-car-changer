@@ -8,6 +8,16 @@ namespace CarChanger.Common.Configs
     {
         private static readonly Vector3 OriginalBeamPosition = new Vector3(0.0f, 3.579122f, 10.98136f);
 
+        [Header("Doors and Windows")]
+        public GameObject? LeftWindow = null;
+        public GameObject? RightWindow = null;
+        public GameObject? LeftWindowExploded = null;
+        public GameObject? RightWindowExploded = null;
+        public bool HideOriginalWindows = false;
+        public GameObject? ToolboxLid = null;
+        public GameObject? ToolboxLidExploded = null;
+        public bool HideOriginalToolboxLid = false;
+
         [Header("Headlights")]
         public bool UseCustomHeadlights = false;
         [EnableIf(nameof(EnableHeadlights))]

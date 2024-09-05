@@ -1,9 +1,4 @@
 ﻿using CarChanger.Common.Configs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace CarChanger.Game.InteriorChanges
@@ -12,6 +7,10 @@ namespace CarChanger.Game.InteriorChanges
     {
         private LocoS282AConfig _config;
         private MaterialHolder _materialHolder;
+        private GameObject _instanced = null!;
+        private GameObject _cab = null!;
+
+        private bool IsExploded => _materialHolder.Car.isExploded;
 
         public LocoS282AInteriorChanger(LocoS282AConfig config, MaterialHolder matHolder)
         {
@@ -21,12 +20,39 @@ namespace CarChanger.Game.InteriorChanges
 
         public void Apply(GameObject interior)
         {
-            throw new NotImplementedException();
+            // Interior unloaded, so don't apply.
+            if (interior == null) return;
+
+            _instanced = Helpers.InstantiateIfNotNull(IsExploded ? _config.CabStaticPrefabExploded : _config.CabStaticPrefab, interior.transform);
+
+            _cab = interior.transform.Find("Static").gameObject;
+
+            if (_config.HideOriginalCab)
+            {
+                _cab.SetActive(false);
+            }
+
+            ComponentProcessor.ProcessComponents(_instanced, _materialHolder);
+
+            _config.InteriorApplied(interior, IsExploded);
         }
 
         public void Unapply(GameObject interior)
         {
-            throw new NotImplementedException();
+            // Already gone, skip.
+            if (interior == null) return;
+
+            Helpers.DestroyIfNotNull(_instanced);
+
+            if (_config.HideOriginalCab && _cab != null)
+            {
+                _cab.SetActive(true);
+            }
+
+            _config.InteriorUnapplied(interior);
+
+            _instanced = null!;
+            _cab = null!;
         }
     }
 }
