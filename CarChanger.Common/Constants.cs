@@ -18,5 +18,15 @@
 
         public const float WheelRadiusDefault = 0.459f;
         public const float WheelRadiusDE6 = 0.5335f;
+
+        internal class MenuOrderConstants
+        {
+            public const int Pack = 0;
+            public const int Unpowered = 100;
+            public const int Diesel = 200;
+            public const int Steam = 300;
+            public const int Electric = 400;
+            public const int Other = 1000;
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using CarChanger.Common;
 using System.Reflection;
-using System.Security.Policy;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,20 +10,26 @@ namespace CarChanger.Unity.Inspector
     {
         private const BindingFlags Flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
+        private MethodInfo? _method;
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var att = (EnableIfAttribute)attribute;
-            var t = property.serializedObject.targetObject.GetType();
-            var m = t.GetMethod(att.Target, Flags);
 
-            if (m == null)
+            if (_method == null)
             {
-                Debug.LogError($"Could not find method {att.Target} in {t.Name}");
-                base.OnGUI(position, property, label);
-                return;
+                var t = property.serializedObject.targetObject.GetType();
+                _method = t.GetMethod(att.Target, Flags);
+
+                if (_method == null)
+                {
+                    Debug.LogError($"Could not find method {att.Target} in {t.Name}");
+                    base.OnGUI(position, property, label);
+                    return;
+                }
             }
 
-            var result = (bool)m.Invoke(property.serializedObject.targetObject, null);
+            var result = (bool)_method.Invoke(property.serializedObject.targetObject, null);
 
             EditorGUI.BeginProperty(position, label, property);
             GUI.enabled = att.Invert ? !result : result;

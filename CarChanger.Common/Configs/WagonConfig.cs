@@ -2,7 +2,7 @@
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/Wagon Modification")]
+    [CreateAssetMenu(menuName = "DVCarChanger/Wagon Modification", order = Constants.MenuOrderConstants.Unpowered + 0)]
     public class WagonConfig : ModelConfig
     {
         [Header("Wagon Settings")]

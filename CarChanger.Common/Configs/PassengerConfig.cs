@@ -2,7 +2,7 @@
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/Passenger Coach Modification")]
+    [CreateAssetMenu(menuName = "DVCarChanger/Passenger Coach Modification", order = Constants.MenuOrderConstants.Unpowered + 1)]
     public class PassengerConfig : ModelConfig
     {
         // Passenger gets a separate one from the rest of the wagons

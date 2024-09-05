@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/DE6 Modification")]
-    public class LocoDE6Config : ModelConfig
+    [CreateAssetMenu(menuName = "DVCarChanger/DE6 Modification", order = Constants.MenuOrderConstants.Diesel + 1)]
+    public class LocoDE6Config : LocomotiveWithBogiesConfig
     {
         [Serializable]
         public class HeadlightSettings
@@ -37,9 +37,9 @@ namespace CarChanger.Common.Configs
             };
 
             [JsonIgnore]
-            public Mesh White = null!;
+            public Mesh WhiteMesh = null!;
             [JsonIgnore]
-            public Mesh Red = null!;
+            public Mesh RedMesh = null!;
 
             public Vector3 HighBeamPosition;
             public Vector3 LowBeamPosition;
@@ -51,30 +51,7 @@ namespace CarChanger.Common.Configs
             public Vector3 RedGlarePosition;
         }
 
-        [Header("Body")]
-        [Tooltip("The prefab to load on the body")]
-        public GameObject? BodyPrefab = null;
-        [Tooltip("Whether to hide the original body or not")]
-        public bool HideOriginalBody = false;
-
-        [Header("Colliders")]
-        [Tooltip("The colliders of the car with the world")]
-        public GameObject? CollisionCollider = null;
-        [Tooltip("The colliders of the car with the player")]
-        public GameObject? WalkableCollider = null;
-        [Tooltip("The colliders of the car with items")]
-        public GameObject? ItemsCollider = null;
-
-        [Header("Interior")]
-        [Tooltip("The prefab to load on the cab\n" +
-            "Only the static parts of the cab will be affected, all controls will remain as is")]
-        public GameObject? CabStaticPrefab = null;
-        [Tooltip("The prefab to load on the exploded cab\n" +
-            "Only the static parts of the cab will be affected, all controls will remain as is")]
-        public GameObject? CabStaticPrefabExploded = null;
-        [Tooltip("Whether to hide the original cab or not\n" +
-            "Only the static parts of the cab will be affected, all controls will remain as is")]
-        public bool HideOriginalCab = false;
+        protected override float OriginalRadius => Constants.WheelRadiusDE6;
 
         [Header("Doors and Windows")]
         public GameObject? EngineDoorLeft = null;
@@ -88,23 +65,20 @@ namespace CarChanger.Common.Configs
         public GameObject? CabDoorRearExploded = null;
         public bool HideOriginalCabDoors = false;
 
-        [Header("Bogies")]
-        public bool UseCustomBogies = false;
-        [EnableIf(nameof(EnableBogies))]
-        public float WheelRadius = Constants.WheelRadiusDE6;
-        [EnableIf(nameof(EnableBogies))]
-        public GameObject? FrontBogie = null!;
-        [EnableIf(nameof(EnableBogies))]
-        public GameObject? RearBogie = null!;
-
         [Header("Headlights")]
         public bool UseCustomFrontHeadlights = false;
         [EnableIf(nameof(EnableFrontHeadlights))]
         public HeadlightSettings FrontSettings = HeadlightSettings.Front;
+        [Button(nameof(ResetFrontHeadlights), "Reset"), SerializeField]
+        private bool _resetFrontButton;
         public bool UseCustomRearHeadlights = false;
         [EnableIf(nameof(EnableRearHeadlights))]
         public HeadlightSettings RearSettings = HeadlightSettings.Rear;
-        
+        [Button(nameof(ResetRearHeadlights), "Reset"), SerializeField]
+        private bool _resetRearButton;
+
+        #region Serialization
+
         [SerializeField, HideInInspector]
         private string? _frontHeadlights = null;
         [SerializeField, HideInInspector]
@@ -117,6 +91,8 @@ namespace CarChanger.Common.Configs
         private Mesh? _rw = null;
         [SerializeField, HideInInspector]
         private Mesh? _rr = null;
+
+        #endregion
 
         /// <summary>
         /// Called when this config is applied to the interior. This may happen multiple times while the outside is only applied once,
@@ -140,21 +116,6 @@ namespace CarChanger.Common.Configs
         /// </summary>
         public event Action<LocoDE6Config, GameObject>? OnInteractablesUnapplied;
 
-        private void Reset()
-        {
-            ResetBogies();
-            ResetFrontHeadlights();
-            ResetRearHeadlights();
-        }
-
-        public void ResetBogies()
-        {
-            UseCustomBogies = false;
-            WheelRadius = 0.5335f;
-            FrontBogie = null!;
-            RearBogie = null!;
-        }
-
         public void ResetFrontHeadlights()
         {
             FrontSettings = HeadlightSettings.Front;
@@ -172,10 +133,10 @@ namespace CarChanger.Common.Configs
             _frontHeadlights.FromJson(ref FrontSettings);
             _rearHeadlights.FromJson(ref RearSettings);
 
-            FrontSettings.White = _fw!;
-            FrontSettings.Red = _fr!;
-            RearSettings.White = _rw!;
-            RearSettings.Red = _rr!;
+            FrontSettings.WhiteMesh = _fw!;
+            FrontSettings.RedMesh = _fr!;
+            RearSettings.WhiteMesh = _rw!;
+            RearSettings.RedMesh = _rr!;
         }
 
         public override void OnBeforeSerialize()
@@ -186,10 +147,10 @@ namespace CarChanger.Common.Configs
             _rearHeadlights = RearSettings.ToJson();
 
             // Can't really serialize the meshes in the json so here they go.
-            _fw = FrontSettings.White;
-            _fr = FrontSettings.Red;
-            _rw = RearSettings.White;
-            _rr = RearSettings.Red;
+            _fw = FrontSettings.WhiteMesh;
+            _fr = FrontSettings.RedMesh;
+            _rw = RearSettings.WhiteMesh;
+            _rr = RearSettings.RedMesh;
         }
 
         public override bool DoValidation(out string error)
@@ -229,15 +190,12 @@ namespace CarChanger.Common.Configs
             OnInteractablesUnapplied?.Invoke(this, gameObject);
         }
 
-        private bool EnableBogies() => UseCustomBogies;
         private bool EnableFrontHeadlights() => UseCustomFrontHeadlights;
         private bool EnableRearHeadlights() => UseCustomRearHeadlights;
 
         public static bool CanCombine(LocoDE6Config a, LocoDE6Config b)
         {
-            return !(a.UseCustomBogies && b.UseCustomBogies) &&
-                !(a.HideOriginalBody && b.HideOriginalBody) &&
-                !(a.HideOriginalCab && b.HideOriginalCab) &&
+            return LocomotiveWithBogiesConfig.CanCombine(a, b) &&
                 !(a.HideOriginalEngineDoors && b.HideOriginalEngineDoors) &&
                 !(a.HideOriginalCabDoors && b.HideOriginalCabDoors) &&
                 !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&

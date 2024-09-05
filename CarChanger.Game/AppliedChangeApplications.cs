@@ -142,6 +142,37 @@ namespace CarChanger.Game
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
+        private void ApplyS282A(LocoS282AConfig config)
+        {
+            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+
+            MatHolder = new MaterialHolder(TrainCar)
+            {
+                Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
+                Interior = TrainCar.transform.Find(
+                    "[interior LOD]/LocoS282A_InteriorLOD/s282_cab_LOD1").GetComponent<Renderer>().material,
+                Glass = TrainCar.carLivery.externalInteractablesPrefab.transform.Find(
+                    "Interactables/WindowR/C_WindowR/model/s282_window_glass_R").GetComponent<Renderer>().material,
+                BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
+                    "Interactables/Toolbox/C_Toolbox/model/s282_toolbox_lid_LOD1").GetComponent<Renderer>().material,
+                InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
+                    "Static/Cab").GetComponent<Renderer>().material,
+            };
+
+            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+
+            if (config.UseCustomHeadlights)
+            {
+                _frontHeadlights = new LocoS282AHeadlightChanger(config, TrainCar);
+                _frontHeadlights.Apply();
+            }
+
+            ChangeInterior(new LocoS282AInteriorChanger(config, MatHolder));
+            ChangeInteractables(new LocoS282AInteractablesChanger(config, MatHolder));
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
+        }
+
         private void ApplyCustomCar(CustomCarConfig config)
         {
             CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");

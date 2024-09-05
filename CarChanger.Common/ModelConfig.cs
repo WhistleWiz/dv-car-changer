@@ -75,6 +75,9 @@ namespace CarChanger.Common
                 case LocoDE6Config de6A:
                     if (b is LocoDE6Config de6B) return LocoDE6Config.CanCombine(de6A, de6B);
                     else return false;
+                case LocoS282AConfig s282A:
+                    if (b is LocoS282AConfig s282B) return LocoDE6Config.CanCombine(s282A, s282B);
+                    else return false;
                 case CustomCarConfig _:
                     if (b is CustomCarConfig) return true;
                     else return false;

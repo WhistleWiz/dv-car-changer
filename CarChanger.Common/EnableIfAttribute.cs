@@ -7,8 +7,8 @@ namespace CarChanger.Common
     /// </summary>
     public class EnableIfAttribute : PropertyAttribute
     {
-        public string Target;
-        public bool Invert;
+        public string Target { get; }
+        public bool Invert { get; set; }
 
         /// <summary>
         /// Enables or disables the property in the inspector based on a condition.

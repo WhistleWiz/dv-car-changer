@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CarChanger.Common
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/Change Pack")]
+    [CreateAssetMenu(menuName = "DVCarChanger/Change Pack", order = 0)]
     public class CarChangePack : ScriptableObject
     {
         public string ModId = string.Empty;

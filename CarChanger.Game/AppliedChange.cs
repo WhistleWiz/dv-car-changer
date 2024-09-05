@@ -31,8 +31,8 @@ namespace CarChanger.Game
         private bool _bogiesPowered = false;
         private bool _bodyHidden = false;
         private bool _interiorLodHidden = false;
-        private IHeadlightChanger? _frontHeadlights = null;
-        private IHeadlightChanger? _rearHeadlights = null;
+        private HeadlightChanger? _frontHeadlights = null;
+        private HeadlightChanger? _rearHeadlights = null;
         private IInteriorChanger? _interior = null;
         private IInteractablesChanger? _interactables = null;
         private ExplosionModelHandler? _explosionHandler = null;
@@ -94,14 +94,17 @@ namespace CarChanger.Game
                 case PassengerConfig pax:
                     ApplyPassenger(pax);
                     break;
-                case ModificationGroupConfig group:
-                    ApplyGroup(group);
-                    break;
                 case LocoDE6Config de6:
                     ApplyDE6(de6);
                     break;
+                case LocoS282AConfig s282A:
+                    ApplyS282A(s282A);
+                    break;
                 case CustomCarConfig custom:
                     ApplyCustomCar(custom);
+                    break;
+                case ModificationGroupConfig group:
+                    ApplyGroup(group);
                     break;
                 default:
                     return;
@@ -139,6 +142,14 @@ namespace CarChanger.Game
                     return new List<GameObject>
                     {
                         transform.Find("LocoDE6_Body/Body").gameObject
+                    };
+                case LocoS282AConfig _:
+                    return new List<GameObject>
+                    {
+                        transform.Find("LocoS282A_Body/Static_LOD0").gameObject,
+                        transform.Find("LocoS282A_Body/Static_LOD1").gameObject,
+                        transform.Find("LocoS282A_Body/Static_LOD2").gameObject,
+                        transform.Find("LocoS282A_Body/Static_LOD3").gameObject
                     };
                 default:
                     break;
@@ -183,6 +194,11 @@ namespace CarChanger.Game
                     return new List<GameObject>
                     {
                         transform.Find("[interior LOD]/LocoDE6_InteriorLOD").gameObject
+                    };
+                case LocoS282AConfig _:
+                    return new List<GameObject>
+                    {
+                        transform.Find("[interior LOD]/LocoS282A_InteriorLOD").gameObject
                     };
                 default:
                     break;
