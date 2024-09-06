@@ -3,7 +3,7 @@
 namespace CarChanger.Common.Configs
 {
     [CreateAssetMenu(menuName = "DVCarChanger/S282A Modification", order = Constants.MenuOrderConstants.Steam + 1)]
-    public class LocoS282AConfig : LocomotiveConfig
+    public class LocoS282AConfig : CarWithInteriorConfig
     {
         private static readonly Vector3 OriginalBeamPosition = new Vector3(0.0f, 3.579122f, 10.98136f);
 
@@ -41,7 +41,7 @@ namespace CarChanger.Common.Configs
 
         public static bool CanCombine(LocoS282AConfig a, LocoS282AConfig b)
         {
-            return LocomotiveConfig.CanCombine(a, b);
+            return CarWithInteriorConfig.CanCombine(a, b);
         }
     }
 }

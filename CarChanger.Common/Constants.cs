@@ -19,7 +19,7 @@
         public const float WheelRadiusDefault = 0.459f;
         public const float WheelRadiusDE6 = 0.5335f;
 
-        internal class MenuOrderConstants
+        public class MenuOrderConstants
         {
             public const int Pack = 0;
             public const int Unpowered = 100;

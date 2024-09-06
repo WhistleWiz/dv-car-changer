@@ -29,6 +29,28 @@ namespace CarChanger.Common
         /// </summary>
         public event Action<ModelConfig, GameObject>? OnConfigUnapplied;
 
+        /// <summary>
+        /// Called when this config is applied to the interior. This may happen multiple times while the outside is only applied once,
+        /// as the interior loads and unloads. Receives itself, the interior <see cref="GameObject"/> of a car, and whether or not it is exploded.
+        /// </summary>
+        public event Action<ModelConfig, GameObject, bool>? OnInteriorApplied;
+        /// <summary>
+        /// Called when this config is unapplied to the interior. This is only called when the interior is active and the config is unapplied.
+        /// It will not be called when unloading the interior. Receives itself and the interior <see cref="GameObject"/> of a car.
+        /// </summary>
+        public event Action<ModelConfig, GameObject>? OnInteriorUnapplied;
+
+        /// <summary>
+        /// Called when this config is applied to the external interactables.
+        /// Receives itself, the interactables <see cref="GameObject"/> of a car, and whether or not it is exploded.
+        /// </summary>
+        public event Action<ModelConfig, GameObject, bool>? OnInteractablesApplied;
+        /// <summary>
+        /// Called when this config is unapplied to the external interactables.
+        /// Receives itself and the interactables <see cref="GameObject"/> of a car.
+        /// </summary>
+        public event Action<ModelConfig, GameObject>? OnInteractablesUnapplied;
+
         public string LocalizationKey => $"carchanger/{ModificationId.ToLower()}";
 
         public virtual void OnBeforeSerialize()
@@ -108,6 +130,26 @@ namespace CarChanger.Common
         public void Unapplied(GameObject gameObject)
         {
             OnConfigUnapplied?.Invoke(this, gameObject);
+        }
+
+        public void InteriorApplied(GameObject gameObject, bool isExploded)
+        {
+            OnInteriorApplied?.Invoke(this, gameObject, isExploded);
+        }
+
+        public void InteriorUnapplied(GameObject gameObject)
+        {
+            OnInteriorUnapplied?.Invoke(this, gameObject);
+        }
+
+        public void InteractablesApplied(GameObject gameObject, bool isExploded)
+        {
+            OnInteractablesApplied?.Invoke(this, gameObject, isExploded);
+        }
+
+        public void InteractablesUnapplied(GameObject gameObject)
+        {
+            OnInteractablesUnapplied?.Invoke(this, gameObject);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace CarChanger.Common.Configs
 {
-    public abstract class LocomotiveWithBogiesConfig : LocomotiveConfig
+    public abstract class CarWithInteriorAndBogiesConfig : CarWithInteriorConfig
     {
         [Header("Bogies")]
         public bool UseCustomBogies = false;
@@ -16,7 +16,7 @@ namespace CarChanger.Common.Configs
         [Button(nameof(ResetBogies), "Reset"), SerializeField]
         protected bool ResetBogiesToDefaultButton;
 
-        protected abstract float OriginalRadius { get; }
+        protected virtual float OriginalRadius => Constants.WheelRadiusDefault;
 
         protected bool EnableBogies() => UseCustomBogies;
 
@@ -27,9 +27,26 @@ namespace CarChanger.Common.Configs
             RearBogie = null;
         }
 
-        public static bool CanCombine(LocomotiveWithBogiesConfig a, LocomotiveWithBogiesConfig b)
+        public override bool DoValidation(out string error)
         {
-            return LocomotiveConfig.CanCombine(a, b) &&
+            if (FrontBogie || RearBogie)
+            {
+                var result = Validation.ValidateBothBogies(FrontBogie, RearBogie);
+
+                if (!string.IsNullOrEmpty(result))
+                {
+                    error = result!;
+                    return false;
+                }
+            }
+
+            error = string.Empty;
+            return true;
+        }
+
+        public static bool CanCombine(CarWithInteriorAndBogiesConfig a, CarWithInteriorAndBogiesConfig b)
+        {
+            return CarWithInteriorConfig.CanCombine(a, b) &&
                 !(a.UseCustomBogies && b.UseCustomBogies);
         }
     }

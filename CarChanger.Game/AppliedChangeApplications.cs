@@ -136,7 +136,7 @@ namespace CarChanger.Game
                 _rearHeadlights.Apply();
             }
 
-            ChangeInterior(new BasicLocoInteriorChanger(config, MatHolder, "Cab"));
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
             ChangeInteractables(new LocoDE6InteractablesChanger(config, MatHolder));
 
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
@@ -167,7 +167,7 @@ namespace CarChanger.Game
                 _frontHeadlights.Apply();
             }
 
-            ChangeInterior(new BasicLocoInteriorChanger(config, MatHolder, "Static"));
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Static"));
             ChangeInteractables(new LocoS282AInteractablesChanger(config, MatHolder));
 
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);

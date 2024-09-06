@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace CarChanger.Game.InteriorChanges
 {
-    internal class BasicLocoInteriorChanger : IInteriorChanger
+    internal class BasicInteriorChanger : IInteriorChanger
     {
-        private LocomotiveConfig _config;
+        private CarWithInteriorConfig _config;
         private MaterialHolder _materialHolder;
         private GameObject _instanced = null!;
         private GameObject _cab = null!;
@@ -13,7 +13,7 @@ namespace CarChanger.Game.InteriorChanges
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
-        public BasicLocoInteriorChanger(LocomotiveConfig config, MaterialHolder matHolder, string staticObjectPath)
+        public BasicInteriorChanger(CarWithInteriorConfig config, MaterialHolder matHolder, string staticObjectPath)
         {
             _config = config;
             _materialHolder = matHolder;
@@ -26,11 +26,11 @@ namespace CarChanger.Game.InteriorChanges
             // Interior unloaded, so don't apply.
             if (interior == null) return;
 
-            _instanced = Helpers.InstantiateIfNotNull(IsExploded ? _config.CabStaticPrefabExploded : _config.CabStaticPrefab, interior.transform);
+            _instanced = Helpers.InstantiateIfNotNull(IsExploded ? _config.InteriorStaticPrefabExploded : _config.InteriorStaticPrefab, interior.transform);
 
             _cab = interior.transform.Find(_path).gameObject;
 
-            if (_config.HideOriginalCab)
+            if (_config.HideOriginalInterior)
             {
                 _cab.SetActive(false);
             }
@@ -47,7 +47,7 @@ namespace CarChanger.Game.InteriorChanges
 
             Helpers.DestroyIfNotNull(_instanced);
 
-            if (_config.HideOriginalCab && _cab != null)
+            if (_config.HideOriginalInterior && _cab != null)
             {
                 _cab.SetActive(true);
             }

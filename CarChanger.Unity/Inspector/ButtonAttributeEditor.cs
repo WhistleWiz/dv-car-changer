@@ -17,7 +17,10 @@ namespace CarChanger.Unity.Inspector
             var att = (ButtonAttribute)attribute;
             label.text = att.Text ?? label.text;
 
-            position = new Rect(position.x + (position.width - att.Width) * 0.5f, position.y, att.Width, position.height);
+            if (att.Width >= 0)
+            {
+                position = new Rect(position.x + (position.width - att.Width) * 0.5f, position.y, att.Width, position.height);
+            }
 
             if (GUI.Button(position, label))
             {
