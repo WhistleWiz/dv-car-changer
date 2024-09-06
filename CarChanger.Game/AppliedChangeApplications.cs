@@ -81,6 +81,26 @@ namespace CarChanger.Game
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
+        private void ApplyCaboose(CabooseConfig config)
+        {
+            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+
+            MatHolder = new MaterialHolder(TrainCar)
+            {
+                Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
+                Interior = TrainCar.transform.Find(
+                    "[interior LOD]/CabooseInterior_LOD1").GetComponent<Renderer>().material,
+                Glass = TrainCar.transform.Find(
+                    "CarCaboose_exterior/CabooseWindowsStatic/CabooseWindowsStatic01").GetComponent<Renderer>().material
+            };
+
+            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "CabooseInterior"));
+            ChangeInteractables(new CabooseInteractablesChanger(config, MatHolder));
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
+        }
+
         private void ApplyGroup(ModificationGroupConfig config)
         {
             foreach (var item in config.ModificationsToActivate)

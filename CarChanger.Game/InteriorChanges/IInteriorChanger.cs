@@ -1,11 +1,4 @@
-﻿using UnityEngine;
-
-namespace CarChanger.Game.InteriorChanges
+﻿namespace CarChanger.Game.InteriorChanges
 {
-    internal interface IInteriorChanger
-    {
-        public void Apply(GameObject interior);
-
-        public void Unapply(GameObject interior);
-    }
+    internal interface IInteriorChanger : IChange { }
 }

@@ -94,6 +94,9 @@ namespace CarChanger.Common
                 case PassengerConfig paxA:
                     if (b is PassengerConfig paxB) return PassengerConfig.CanCombine(paxA, paxB);
                     else return false;
+                case CabooseConfig cabooseA:
+                    if (b is CabooseConfig cabooseB) return CabooseConfig.CanCombine(cabooseA, cabooseB);
+                    else return false;
                 case LocoDE6Config de6A:
                     if (b is LocoDE6Config de6B) return LocoDE6Config.CanCombine(de6A, de6B);
                     else return false;

@@ -1,17 +1,17 @@
 ﻿using CarChanger.Common.Configs;
 using UnityEngine;
 
+using static CarChanger.Game.IChange;
+
 namespace CarChanger.Game.InteractablesChanges
 {
     internal class LocoS282AInteractablesChanger : IInteractablesChanger
     {
         private LocoS282AConfig _config;
         private MaterialHolder _materialHolder;
-        private GameObject _windowR = null!;
-        private GameObject _windowL = null!;
-        private GameObject _toolbox = null!;
-        private GameObject[] _ogWindows = null!;
-        private GameObject _ogBox = null!;
+        private ChangeObject _windowR = null!;
+        private ChangeObject _windowL = null!;
+        private ChangeObject _toolbox = null!;
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
@@ -29,34 +29,21 @@ namespace CarChanger.Game.InteractablesChanges
             var wL = interactables.transform.Find("Interactables/WindowL/C_WindowL");
             var toolbox = interactables.transform.Find("Interactables/Toolbox/C_Toolbox");
 
-            _ogWindows = new[]
-            {
-                wR.transform.Find("model").gameObject,
-                wL.transform.Find("model").gameObject
-            };
-
-            if (_config.HideOriginalWindows)
-            {
-                foreach (var item in _ogWindows)
+            _windowR = new ChangeObject(wR, IsExploded ? _config.RightWindowExploded : _config.RightWindow, new[]
                 {
-                    item.SetActive(false);
-                }
-            }
-
-            _ogBox = toolbox.transform.Find("model").gameObject;
-
-            if (_config.HideOriginalToolboxLid)
-            {
-                _ogBox.SetActive(false);
-            }
-
-            _windowR = Helpers.InstantiateIfNotNull(IsExploded ? _config.RightWindowExploded : _config.RightWindow, wR);
-            _windowL = Helpers.InstantiateIfNotNull(IsExploded ? _config.LeftWindowExploded : _config.LeftWindow, wL);
-            _toolbox = Helpers.InstantiateIfNotNull(IsExploded ? _config.ToolboxLidExploded : _config.ToolboxLid, toolbox);
-
-            ComponentProcessor.ProcessComponents(_windowR, _materialHolder);
-            ComponentProcessor.ProcessComponents(_windowL, _materialHolder);
-            ComponentProcessor.ProcessComponents(_toolbox, _materialHolder);
+                    wR.transform.Find("model").gameObject
+                },
+                _config.HideOriginalWindows, _materialHolder);
+            _windowL = new ChangeObject(wL, IsExploded ? _config.LeftWindowExploded : _config.LeftWindow, new[]
+                {
+                    wL.transform.Find("model").gameObject
+                },
+                _config.HideOriginalWindows, _materialHolder);
+            _toolbox = new ChangeObject(toolbox, IsExploded ? _config.ToolboxLidExploded : _config.ToolboxLid, new[]
+                {
+                    toolbox.transform.Find("model").gameObject
+                },
+                _config.HideOriginalWindows, _materialHolder);
 
             _config.InteractablesApplied(interactables, IsExploded);
         }
@@ -65,22 +52,9 @@ namespace CarChanger.Game.InteractablesChanges
         {
             if (interactables == null) return;
 
-            Helpers.DestroyIfNotNull(_windowR);
-            Helpers.DestroyIfNotNull(_windowL);
-            Helpers.DestroyIfNotNull(_toolbox);
-
-            if (_config.HideOriginalWindows)
-            {
-                foreach (var item in _ogWindows)
-                {
-                    item.SetActive(true);
-                }
-            }
-
-            if (_config.HideOriginalToolboxLid)
-            {
-                _ogBox.SetActive(true);
-            }
+            _windowR.Clear();
+            _windowL.Clear();
+            _toolbox.Clear();
 
             _config.InteractablesUnapplied(interactables);
         }

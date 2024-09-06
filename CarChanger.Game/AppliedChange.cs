@@ -16,7 +16,6 @@ namespace CarChanger.Game
 {
     internal partial class AppliedChange : MonoBehaviour
     {
-
         public TrainCar TrainCar = null!;
         public ModelConfig? Config = null;
         public event Action<AppliedChange>? OnApply = null;
@@ -94,6 +93,9 @@ namespace CarChanger.Game
                 case PassengerConfig pax:
                     ApplyPassenger(pax);
                     break;
+                case CabooseConfig caboose:
+                    ApplyCaboose(caboose);
+                    break;
                 case LocoDE6Config de6:
                     ApplyDE6(de6);
                     break;
@@ -137,6 +139,14 @@ namespace CarChanger.Game
                         transform.Find("CarPassenger/CarPassenger_LOD1").gameObject,
                         transform.Find("CarPassenger/CarPassenger_LOD2").gameObject,
                         transform.Find("CarPassenger/CarPassenger_LOD3").gameObject
+                    };
+                case CabooseConfig _:
+                    return new List<GameObject>
+                    {
+                        transform.Find("CarCaboose_exterior/CabooseExterior").gameObject,
+                        transform.Find("CarCaboose_exterior/CabooseExterior_LOD1").gameObject,
+                        transform.Find("CarCaboose_exterior/CabooseExterior_LOD2").gameObject,
+                        transform.Find("CarCaboose_exterior/Caboose_LOD3").gameObject
                     };
                 case LocoDE6Config _:
                     return new List<GameObject>
@@ -189,6 +199,12 @@ namespace CarChanger.Game
                         transform.Find("CarPassenger/CarPassengerInterior_LOD0").gameObject,
                         transform.Find("CarPassenger/CarPassengerInterior_LOD1").gameObject,
                         transform.Find("CarPassenger/CarPassengerInterior_LOD2").gameObject
+                    };
+                case CabooseConfig _:
+                    return new List<GameObject>
+                    {
+                        transform.Find("[interior LOD]/CabooseInterior_LOD1").gameObject,
+                        transform.Find("[interior LOD]/CabooseInterior_LOD2").gameObject
                     };
                 case LocoDE6Config _:
                     return new List<GameObject>

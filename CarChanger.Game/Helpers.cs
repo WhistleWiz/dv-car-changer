@@ -88,7 +88,7 @@ namespace CarChanger.Game
             return UnityEngine.Object.Instantiate(obj, t);
         }
 
-        public static void DestroyIfNotNull(UnityEngine.Object obj)
+        public static void DestroyIfNotNull(UnityEngine.Object? obj)
         {
             if (obj != null)
             {
