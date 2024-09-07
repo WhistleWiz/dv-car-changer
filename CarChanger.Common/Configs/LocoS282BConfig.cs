@@ -2,6 +2,7 @@
 
 namespace CarChanger.Common.Configs
 {
+    [CreateAssetMenu(menuName = "DVCarChanger/S282B Modification", order = Constants.MenuOrderConstants.Steam + 2)]
     public class LocoS282BConfig : CarWithBogiesConfig
     {
         private static readonly Vector3 OriginalBeamPosition = new Vector3(0.0024f, 3.2164f, -7.9304f);

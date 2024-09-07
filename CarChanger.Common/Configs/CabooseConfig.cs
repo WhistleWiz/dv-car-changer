@@ -2,6 +2,7 @@
 
 namespace CarChanger.Common.Configs
 {
+    [CreateAssetMenu(menuName = "DVCarChanger/Caboose Modification", order = Constants.MenuOrderConstants.Unpowered + 2)]
     public class CabooseConfig : CarWithInteriorAndBogiesConfig
     {
         [Header("Doors and Windows")]
