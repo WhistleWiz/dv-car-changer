@@ -1,8 +1,6 @@
 ﻿using CarChanger.Common.Configs;
 using UnityEngine;
 
-using static CarChanger.Game.IChange;
-
 namespace CarChanger.Game.InteractablesChanges
 {
     internal class LocoDE6InteractablesChanger : IInteractablesChanger

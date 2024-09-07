@@ -81,6 +81,14 @@ namespace CarChanger.Game
             return RNG.NextDouble() < percent;
         }
 
+        public static GameObject CreateEmptyInactiveObject(string name, Transform parent = null!, bool worldPositionStays = true)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, worldPositionStays);
+            go.SetActive(false);
+            return go;
+        }
+
         public static T InstantiateIfNotNull<T>(T? obj)
             where T : UnityEngine.Object
         {

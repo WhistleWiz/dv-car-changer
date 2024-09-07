@@ -1,8 +1,6 @@
 ﻿using CarChanger.Common.Configs;
 using UnityEngine;
 
-using static CarChanger.Game.IChange;
-
 namespace CarChanger.Game.InteractablesChanges
 {
     internal class LocoS282AInteractablesChanger : IInteractablesChanger
@@ -43,7 +41,7 @@ namespace CarChanger.Game.InteractablesChanges
                 {
                     toolbox.transform.Find("model").gameObject
                 },
-                _config.HideOriginalWindows, _materialHolder);
+                _config.HideOriginalToolboxLid, _materialHolder);
 
             _config.InteractablesApplied(interactables, IsExploded);
         }

@@ -10,15 +10,46 @@ namespace CarChanger.Game
         {
             if (gameObject == null) return;
 
+            // Find the root car or interior transform.
+            Transform? root = null;
+            var interior = gameObject.GetComponentInParent<TrainCarInteriorObject>();
+
+            if (interior != null)
+            {
+                root = interior.transform;
+            }
+            else
+            {
+                var car = TrainCar.Resolve(gameObject);
+
+                if (car != null)
+                {
+                    root = car.transform;
+                }
+            }
+
             foreach (var item in gameObject.GetComponentsInChildren<UseBodyMaterial>())
             {
                 ProcessBodyMaterial(item, holder);
+            }
+
+            if (root != null)
+            {
+                foreach (var item in gameObject.GetComponentsInChildren<HideTransformsOnChange>())
+                {
+                    ProcessHideTransforms(item, root);
+                }
             }
         }
 
         public static void ProcessBodyMaterial(UseBodyMaterial comp, MaterialHolder holder)
         {
             comp.GetRenderer().material = holder.GetMaterial(comp.Material, comp.MaterialObjectPath);
+        }
+
+        public static void ProcessHideTransforms(HideTransformsOnChange comp, Transform root)
+        {
+            comp.Hide(root);
         }
 
         public static void ProcessTelePassThroughColliders(GameObject gameObject)

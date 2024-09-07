@@ -160,7 +160,7 @@ namespace CarChanger.Game
                     };
                 case LocoS282AConfig _:
                     result = new List<GameObject>();
-                    result.AddRange(transform.Find("LocoS282A_Body/Static_LOD0").AllChildGOsExcept("s282_buffer_stems"));
+                    result.AddRange(transform.Find("LocoS282A_Body/Static_LOD0").AllChildGOsExcept("s282_buffer_stems", "s282_brake_shoes"));
                     result.AddRange(transform.Find("LocoS282A_Body/Static_LOD1").AllChildGOsExcept("s282_buffer_stems_LOD1"));
                     result.AddRange(transform.Find("LocoS282A_Body/Static_LOD2").AllChildGOs());
                     result.AddRange(transform.Find("LocoS282A_Body/Static_LOD3").AllChildGOs());
@@ -530,14 +530,6 @@ namespace CarChanger.Game
             _interiorLodHidden = false;
         }
 
-        private void ResetHeadlights()
-        {
-            _frontHeadlights?.Unapply();
-            _rearHeadlights?.Unapply();
-            _frontHeadlights = null;
-            _rearHeadlights = null;
-        }
-
         private void ResetInterior()
         {
             if (_interior != null)
@@ -556,6 +548,14 @@ namespace CarChanger.Game
                 _interactables.Unapply(TrainCar.loadedExternalInteractables);
                 _interactables = null;
             }
+        }
+
+        private void ResetHeadlights()
+        {
+            _frontHeadlights?.Unapply();
+            _rearHeadlights?.Unapply();
+            _frontHeadlights = null;
+            _rearHeadlights = null;
         }
 
         private void ResetColliders()

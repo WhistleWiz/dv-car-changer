@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using static CarChanger.Game.IChange;
-
 namespace CarChanger.Game.InteractablesChanges
 {
     internal class LocoS282BInteractablesChanger : IInteractablesChanger

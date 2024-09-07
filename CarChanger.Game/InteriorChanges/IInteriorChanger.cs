@@ -1,4 +1,4 @@
 ﻿namespace CarChanger.Game.InteriorChanges
 {
-    internal interface IInteriorChanger : IChange { }
+    public interface IInteriorChanger : IChange { }
 }

@@ -41,10 +41,6 @@ namespace CarChanger.Game
 
         private void Awake()
         {
-            // .-.
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-
             SignalOrigin = Controller.laserBeam.transform;
             Display = Controller.cargoLoaderControl.display;
 

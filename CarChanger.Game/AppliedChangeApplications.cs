@@ -145,6 +145,9 @@ namespace CarChanger.Game
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+            ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
+            ChangeInteractables(new LocoDE6InteractablesChanger(config, MatHolder));
 
             if (config.UseCustomFrontHeadlights)
             {
@@ -157,9 +160,6 @@ namespace CarChanger.Game
                 _rearHeadlights = new LocoDE6HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
                 _rearHeadlights.Apply();
             }
-
-            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
-            ChangeInteractables(new LocoDE6InteractablesChanger(config, MatHolder));
 
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
@@ -182,15 +182,15 @@ namespace CarChanger.Game
             };
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+            ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Static"));
+            ChangeInteractables(new LocoS282AInteractablesChanger(config, MatHolder));
 
             if (config.UseCustomHeadlights)
             {
                 _frontHeadlights = new LocoS282AHeadlightChanger(config, TrainCar);
                 _frontHeadlights.Apply();
             }
-
-            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Static"));
-            ChangeInteractables(new LocoS282AInteractablesChanger(config, MatHolder));
 
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
@@ -208,14 +208,13 @@ namespace CarChanger.Game
             };
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+            ChangeInteractables(new LocoS282BInteractablesChanger(config, MatHolder));
 
             if (config.UseCustomHeadlights)
             {
-                _frontHeadlights = new LocoS282BHeadlightChanger(config, TrainCar);
-                _frontHeadlights.Apply();
+                _rearHeadlights = new LocoS282BHeadlightChanger(config, TrainCar);
+                _rearHeadlights.Apply();
             }
-
-            ChangeInteractables(new LocoS282BInteractablesChanger(config, MatHolder));
 
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
