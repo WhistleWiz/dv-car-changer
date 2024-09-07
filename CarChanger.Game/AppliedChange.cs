@@ -102,6 +102,9 @@ namespace CarChanger.Game
                 case LocoS282AConfig s282A:
                     ApplyS282A(s282A);
                     break;
+                case LocoS282BConfig s282B:
+                    ApplyS282B(s282B);
+                    break;
                 case CustomCarConfig custom:
                     ApplyCustomCar(custom);
                     break;
@@ -128,6 +131,8 @@ namespace CarChanger.Game
 
         private List<GameObject> GetOriginalBody()
         {
+            List<GameObject> result;
+
             // Get the body object at the path.
             // Locos have a special path to ensure everything works fine.
             switch (Config)
@@ -154,13 +159,19 @@ namespace CarChanger.Game
                         transform.Find("LocoDE6_Body/Body").gameObject
                     };
                 case LocoS282AConfig _:
-                    return new List<GameObject>
-                    {
-                        transform.Find("LocoS282A_Body/Static_LOD0").gameObject,
-                        transform.Find("LocoS282A_Body/Static_LOD1").gameObject,
-                        transform.Find("LocoS282A_Body/Static_LOD2").gameObject,
-                        transform.Find("LocoS282A_Body/Static_LOD3").gameObject
-                    };
+                    result = new List<GameObject>();
+                    result.AddRange(transform.Find("LocoS282A_Body/Static_LOD0").AllChildGOsExcept("s282_buffer_stems"));
+                    result.AddRange(transform.Find("LocoS282A_Body/Static_LOD1").AllChildGOsExcept("s282_buffer_stems_LOD1"));
+                    result.AddRange(transform.Find("LocoS282A_Body/Static_LOD2").AllChildGOs());
+                    result.AddRange(transform.Find("LocoS282A_Body/Static_LOD3").AllChildGOs());
+                    return result;
+                case LocoS282BConfig _:
+                    result = new List<GameObject>();
+                    result.AddRange(transform.Find("LocoS282B_Body/LOD0").AllChildGOsExcept("s282_tender_buffer_stems"));
+                    result.AddRange(transform.Find("LocoS282B_Body/LOD1").AllChildGOsExcept("s282_tender_buffer_stems_LOD1"));
+                    result.AddRange(transform.Find("LocoS282B_Body/LOD2").AllChildGOs());
+                    result.AddRange(transform.Find("LocoS282B_Body/LOD3").AllChildGOs());
+                    return result;
                 default:
                     break;
             }
@@ -557,6 +568,11 @@ namespace CarChanger.Game
         }
 
         #endregion
+
+        private void LogChange()
+        {
+            CarChangerMod.Log($"Applying change {Config!.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+        }
 
         public static bool CanApplyChange(TrainCar car, ModelConfig config)
         {

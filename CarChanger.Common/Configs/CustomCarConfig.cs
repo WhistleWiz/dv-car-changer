@@ -14,6 +14,14 @@ namespace CarChanger.Common.Configs
         [Tooltip("The prefab to load on the body")]
         public GameObject BodyPrefab = null!;
 
+        protected bool EnableLivery() => string.IsNullOrEmpty(CarTypeId);
+
+        public override bool DoValidation(out string error)
+        {
+            error = string.Empty;
+            return true;
+        }
+
         public static bool SameTargets(CustomCarConfig a, CustomCarConfig b)
         {
             if (a.CarTypeId != b.CarTypeId)
@@ -26,14 +34,6 @@ namespace CarChanger.Common.Configs
                 return a.LiveryId == b.LiveryId;
             }
 
-            return true;
-        }
-
-        private bool EnableLivery() => string.IsNullOrEmpty(CarTypeId);
-
-        public override bool DoValidation(out string error)
-        {
-            error = string.Empty;
             return true;
         }
     }

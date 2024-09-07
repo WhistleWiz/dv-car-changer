@@ -5,14 +5,12 @@ namespace CarChanger.Common.Configs
     public class CabooseConfig : CarWithInteriorAndBogiesConfig
     {
         [Header("Doors and Windows")]
-        public GameObject? DoorFront = null;
-        public GameObject? DoorRear = null;
+        public GameObject? DoorFront;
+        public GameObject? DoorRear;
         public bool HideOriginalDoors = false;
 
-        public static bool CanCombine(CabooseConfig a, CabooseConfig b)
-        {
-            return CarWithInteriorAndBogiesConfig.CanCombine(a, b) &&
-                !(a.HideOriginalDoors && b.HideOriginalDoors);
-        }
+        public static bool CanCombine(CabooseConfig a, CabooseConfig b) =>
+            CarWithInteriorAndBogiesConfig.CanCombine(a, b) &&
+            !(a.HideOriginalDoors && b.HideOriginalDoors);
     }
 }

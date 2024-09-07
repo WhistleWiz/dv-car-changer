@@ -7,18 +7,16 @@ namespace CarChanger.Common.Configs
         [Header("Interior")]
         [Tooltip("The prefab to load on the cab\n" +
             "Only the static parts of the cab will be affected, all controls will remain as is")]
-        public GameObject? InteriorStaticPrefab = null;
+        public GameObject? InteriorStaticPrefab;
         [Tooltip("The prefab to load on the exploded cab\n" +
             "Only the static parts of the cab will be affected, all controls will remain as is")]
-        public GameObject? InteriorStaticPrefabExploded = null;
+        public GameObject? InteriorStaticPrefabExploded;
         [Tooltip("Whether to hide the original cab or not\n" +
             "Only the static parts of the cab will be affected, all controls will remain as is")]
         public bool HideOriginalInterior = false;
 
-        public static bool CanCombine(CarWithInteriorConfig a, CarWithInteriorConfig b)
-        {
-            return CarConfig.CanCombine(a, b) &&
-                !(a.HideOriginalInterior && b.HideOriginalInterior);
-        }
+        public static bool CanCombine(CarWithInteriorConfig a, CarWithInteriorConfig b) =>
+            CarConfig.CanCombine(a, b) &&
+            !(a.HideOriginalInterior && b.HideOriginalInterior);
     }
 }

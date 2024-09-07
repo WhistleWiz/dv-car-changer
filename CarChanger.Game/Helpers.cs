@@ -49,6 +49,13 @@ namespace CarChanger.Game
             f.SetValue(b, null);
         }
 
+        public static void RefreshIndicator(Indicator indicator)
+        {
+            var t = indicator.GetType();
+            var m = t.GetMethod("OnValueSet", BindingFlags.Instance | BindingFlags.NonPublic);
+            m.Invoke(indicator, null);
+        }
+
         public static TrainCarType_v2 EnumToCarType(WagonType carType)
         {
             return IdToCarType[s_carTypeEnumToId[carType]];

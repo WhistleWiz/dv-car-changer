@@ -42,7 +42,7 @@ namespace CarChanger.Game
 
         private void ApplyWagon(WagonConfig config)
         {
-            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+            LogChange();
 
             MatHolder = new MaterialHolder(TrainCar)
             {
@@ -62,7 +62,7 @@ namespace CarChanger.Game
 
         private void ApplyPassenger(PassengerConfig config)
         {
-            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+            LogChange();
 
             MatHolder = new MaterialHolder(TrainCar)
             {
@@ -83,7 +83,7 @@ namespace CarChanger.Game
 
         private void ApplyCaboose(CabooseConfig config)
         {
-            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+            LogChange();
 
             MatHolder = new MaterialHolder(TrainCar)
             {
@@ -103,6 +103,8 @@ namespace CarChanger.Game
 
         private void ApplyGroup(ModificationGroupConfig config)
         {
+            LogChange();
+
             foreach (var item in config.ModificationsToActivate)
             {
                 gameObject.AddComponent<AppliedChange>().Config = item;
@@ -114,7 +116,7 @@ namespace CarChanger.Game
 
         private void ApplyDE6(LocoDE6Config config)
         {
-            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+            LogChange();
 
             MatHolder = new MaterialHolder(TrainCar)
             {
@@ -164,7 +166,7 @@ namespace CarChanger.Game
 
         private void ApplyS282A(LocoS282AConfig config)
         {
-            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+            LogChange();
 
             MatHolder = new MaterialHolder(TrainCar)
             {
@@ -193,9 +195,34 @@ namespace CarChanger.Game
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
+        private void ApplyS282B(LocoS282BConfig config)
+        {
+            LogChange();
+
+            MatHolder = new MaterialHolder(TrainCar)
+            {
+                Body = TrainCar.transform.Find(
+                    "LocoS282B_Body/LOD0/s282_tender").GetComponent<Renderer>().material,
+                Interior = TrainCar.transform.Find(
+                    "LocoS282B_Body/LOD0/s282_tender_cab").GetComponent<Renderer>().material
+            };
+
+            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+
+            if (config.UseCustomHeadlights)
+            {
+                _frontHeadlights = new LocoS282BHeadlightChanger(config, TrainCar);
+                _frontHeadlights.Apply();
+            }
+
+            ChangeInteractables(new LocoS282BInteractablesChanger(config, MatHolder));
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
+        }
+
         private void ApplyCustomCar(CustomCarConfig config)
         {
-            CarChangerMod.Log($"Applying change {config.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+            LogChange();
 
             MatHolder = new MaterialHolder(TrainCar);
             ChangeBody(config.BodyPrefab, false);

@@ -9,9 +9,9 @@ namespace CarChanger.Common.Configs
         [EnableIf(nameof(EnableBogies))]
         public float WheelRadius = Constants.WheelRadiusDefault;
         [EnableIf(nameof(EnableBogies))]
-        public GameObject? FrontBogie = null!;
+        public GameObject? FrontBogie;
         [EnableIf(nameof(EnableBogies))]
-        public GameObject? RearBogie = null!;
+        public GameObject? RearBogie;
 
         [Button(nameof(ResetBogies), "Reset"), SerializeField]
         protected bool ResetBogiesToDefaultButton;
@@ -44,10 +44,8 @@ namespace CarChanger.Common.Configs
             return true;
         }
 
-        public static bool CanCombine(CarWithBogiesConfig a, CarWithBogiesConfig b)
-        {
-            return CarConfig.CanCombine(a, b) &&
-                !(a.UseCustomBogies && b.UseCustomBogies);
-        }
+        public static bool CanCombine(CarWithBogiesConfig a, CarWithBogiesConfig b) =>
+            CarConfig.CanCombine(a, b) &&
+            !(a.UseCustomBogies && b.UseCustomBogies);
     }
 }

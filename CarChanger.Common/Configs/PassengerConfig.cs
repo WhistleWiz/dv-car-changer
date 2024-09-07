@@ -13,10 +13,8 @@ namespace CarChanger.Common.Configs
         [Tooltip("Whether to hide the original interior or not")]
         public bool HideOriginalInterior = false;
 
-        public static bool CanCombine(PassengerConfig a, PassengerConfig b)
-        {
-            return CarWithBogiesConfig.CanCombine(a, b) &&
-                !(a.HideOriginalInterior && b.HideOriginalInterior);
-        }
+        public static bool CanCombine(PassengerConfig a, PassengerConfig b) =>
+            CarWithBogiesConfig.CanCombine(a, b) &&
+            !(a.HideOriginalInterior && b.HideOriginalInterior);
     }
 }

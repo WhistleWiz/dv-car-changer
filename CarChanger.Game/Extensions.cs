@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace CarChanger.Game
 {
-    internal static class Extensions
+    public static class Extensions
     {
         public static bool TryFind<T>(this List<T> list, Predicate<T> match, out T value)
         {
@@ -17,7 +19,27 @@ namespace CarChanger.Game
             return true;
         }
 
-        public static List<AppliedChange> GetAppliedChanges(this TrainCar car)
+        public static void ForceRefreshLoadedPrefabs(this TrainCar car)
+        {
+            if (car.IsInteriorLoaded)
+            {
+                car.UnloadInterior();
+                car.LoadInterior();
+            }
+
+            if (car.AreExternalInteractablesLoaded)
+            {
+                car.UnloadExternalInteractables();
+                car.LoadExternalInteractables();
+            }
+            else if (car.AreDummyExternalInteractablesLoaded)
+            {
+                car.UnloadDummyExternalInteractables();
+                car.LoadDummyExternalInteractables();
+            }
+        }
+
+        internal static List<AppliedChange> GetAppliedChanges(this TrainCar car)
         {
             var comps = car.GetComponents<AppliedChange>();
             var changes = new List<AppliedChange>();
@@ -40,23 +62,21 @@ namespace CarChanger.Game
             return changes;
         }
 
-        public static void ForceRefreshLoadedPrefabs(this TrainCar car)
+        public static IEnumerable<GameObject> AllChildGOs(this Transform t)
         {
-            if (car.IsInteriorLoaded)
+            foreach (Transform child in t)
             {
-                car.UnloadInterior();
-                car.LoadInterior();
+                yield return child.gameObject;
             }
+        }
 
-            if (car.AreExternalInteractablesLoaded)
+        public static IEnumerable<GameObject> AllChildGOsExcept(this Transform t, params string[] names)
+        {
+            foreach (var item in t.AllChildGOs())
             {
-                car.UnloadExternalInteractables();
-                car.LoadExternalInteractables();
-            }
-            else if (car.AreDummyExternalInteractablesLoaded)
-            {
-                car.UnloadDummyExternalInteractables();
-                car.LoadDummyExternalInteractables();
+                if (names.Contains(item.name)) continue;
+
+                yield return item;
             }
         }
     }

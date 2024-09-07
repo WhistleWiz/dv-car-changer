@@ -14,10 +14,7 @@ namespace CarChanger.Common.Configs
 
         private bool EnableLivery() => CarType == WagonType.UseLivery;
 
-        public static bool CanCombine(WagonConfig a, WagonConfig b)
-        {
-            return CarWithBogiesConfig.CanCombine(a, b);
-        }
+        public static bool CanCombine(WagonConfig a, WagonConfig b) => CarWithBogiesConfig.CanCombine(a, b);
 
         public static bool SameTargets(WagonConfig a, WagonConfig b)
         {

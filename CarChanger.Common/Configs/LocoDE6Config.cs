@@ -54,15 +54,15 @@ namespace CarChanger.Common.Configs
         protected override float OriginalRadius => Constants.WheelRadiusDE6;
 
         [Header("Doors and Windows")]
-        public GameObject? EngineDoorLeft = null;
-        public GameObject? EngineDoorRight = null;
-        public GameObject? EngineDoorLeftExploded = null;
-        public GameObject? EngineDoorRightExploded = null;
+        public GameObject? EngineDoorLeft;
+        public GameObject? EngineDoorRight;
+        public GameObject? EngineDoorLeftExploded;
+        public GameObject? EngineDoorRightExploded;
         public bool HideOriginalEngineDoors = false;
-        public GameObject? CabDoorFront = null;
-        public GameObject? CabDoorRear = null;
-        public GameObject? CabDoorFrontExploded = null;
-        public GameObject? CabDoorRearExploded = null;
+        public GameObject? CabDoorFront;
+        public GameObject? CabDoorRear;
+        public GameObject? CabDoorFrontExploded;
+        public GameObject? CabDoorRearExploded;
         public bool HideOriginalCabDoors = false;
 
         [Header("Headlights")]
@@ -94,12 +94,12 @@ namespace CarChanger.Common.Configs
 
         #endregion
 
-        public void ResetFrontHeadlights()
+        private void ResetFrontHeadlights()
         {
             FrontSettings = HeadlightSettings.Front;
         }
 
-        public void ResetRearHeadlights()
+        private void ResetRearHeadlights()
         {
             RearSettings = HeadlightSettings.Rear;
         }
@@ -151,13 +151,11 @@ namespace CarChanger.Common.Configs
         private bool EnableFrontHeadlights() => UseCustomFrontHeadlights;
         private bool EnableRearHeadlights() => UseCustomRearHeadlights;
 
-        public static bool CanCombine(LocoDE6Config a, LocoDE6Config b)
-        {
-            return CarWithInteriorAndBogiesConfig.CanCombine(a, b) &&
-                !(a.HideOriginalEngineDoors && b.HideOriginalEngineDoors) &&
-                !(a.HideOriginalCabDoors && b.HideOriginalCabDoors) &&
-                !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&
-                !(a.UseCustomRearHeadlights && b.UseCustomRearHeadlights);
-        }
+        public static bool CanCombine(LocoDE6Config a, LocoDE6Config b) =>
+            CarWithInteriorAndBogiesConfig.CanCombine(a, b) &&
+            !(a.HideOriginalEngineDoors && b.HideOriginalEngineDoors) &&
+            !(a.HideOriginalCabDoors && b.HideOriginalCabDoors) &&
+            !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&
+            !(a.UseCustomRearHeadlights && b.UseCustomRearHeadlights);
     }
 }

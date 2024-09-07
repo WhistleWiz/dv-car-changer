@@ -5,16 +5,16 @@ namespace CarChanger.Common.Configs
     [CreateAssetMenu(menuName = "DVCarChanger/S282A Modification", order = Constants.MenuOrderConstants.Steam + 1)]
     public class LocoS282AConfig : CarWithInteriorConfig
     {
-        private static readonly Vector3 OriginalBeamPosition = new Vector3(0.0f, 3.579122f, 10.98136f);
+        private static readonly Vector3 OriginalBeamPosition = new Vector3(-0.00146591f, 3.579122f, 10.98136f);
 
         [Header("Doors and Windows")]
-        public GameObject? LeftWindow = null;
-        public GameObject? RightWindow = null;
-        public GameObject? LeftWindowExploded = null;
-        public GameObject? RightWindowExploded = null;
+        public GameObject? LeftWindow;
+        public GameObject? RightWindow;
+        public GameObject? LeftWindowExploded;
+        public GameObject? RightWindowExploded;
         public bool HideOriginalWindows = false;
-        public GameObject? ToolboxLid = null;
-        public GameObject? ToolboxLidExploded = null;
+        public GameObject? ToolboxLid;
+        public GameObject? ToolboxLidExploded;
         public bool HideOriginalToolboxLid = false;
 
         [Header("Headlights")]
@@ -39,9 +39,8 @@ namespace CarChanger.Common.Configs
 
         private bool EnableHeadlights() => UseCustomHeadlights;
 
-        public static bool CanCombine(LocoS282AConfig a, LocoS282AConfig b)
-        {
-            return CarWithInteriorConfig.CanCombine(a, b);
-        }
+        public static bool CanCombine(LocoS282AConfig a, LocoS282AConfig b) =>
+            CarWithInteriorConfig.CanCombine(a, b) &&
+            !(a.UseCustomHeadlights && b.UseCustomHeadlights);
     }
 }
