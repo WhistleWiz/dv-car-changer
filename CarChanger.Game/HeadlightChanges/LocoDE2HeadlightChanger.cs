@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace CarChanger.Game.HeadlightChanges
 {
-    internal class LocoDE6HeadlightChanger : HeadlightChanger
+    internal class LocoDE2HeadlightChanger : HeadlightChanger
     {
-        private LocoDE6Config.HeadlightSettings _config;
+        private LocoDE2Config.HeadlightSettings _config;
         private MeshFilter _white;
         private MeshFilter _red;
         private Mesh _originalWhite;
@@ -13,7 +13,7 @@ namespace CarChanger.Game.HeadlightChanges
 
         protected override float BeamOffset => 0.055f;
 
-        public LocoDE6HeadlightChanger(LocoDE6Config config, TrainCar car, HeadlightDirection direction) : base(car, direction)
+        public LocoDE2HeadlightChanger(LocoDE2Config config, TrainCar car, HeadlightDirection direction) : base(car, direction)
         {
             if (direction == HeadlightDirection.Front)
             {
@@ -24,10 +24,12 @@ namespace CarChanger.Game.HeadlightChanges
                 _config = config.RearSettings;
             }
 
-            _white = Root.Find("headlight_glass").GetComponent<MeshFilter>();
-            _red = Root.Find("headlight_glass_red").GetComponent<MeshFilter>();
+            _white = Root.Find($"ext headlights_glass_{GetDirectionLetter(direction)}").GetComponent<MeshFilter>();
+            _red = Root.Find($"ext headlights_glass_red_{GetDirectionLetter(direction)}").GetComponent<MeshFilter>();
             _originalWhite = _white.sharedMesh;
             _originalRed = _red.sharedMesh;
+
+            static string GetDirectionLetter(HeadlightDirection dir) => dir == HeadlightDirection.Front ? "F" : "R";
         }
 
         public override void Apply()
@@ -42,13 +44,11 @@ namespace CarChanger.Game.HeadlightChanges
                 _red.sharedMesh = _config.RedMesh;
             }
 
-            Lights[0].glare.transform.localPosition = _config.TopGlarePosition;
-            Lights[1].glare.transform.localPosition = _config.LeftGlarePosition;
-            Lights[2].glare.transform.localPosition = _config.RightGlarePosition;
-            Lights[3].glare.transform.localPosition = _config.TopGlarePosition;
-            Lights[4].glare.transform.localPosition = _config.LeftGlarePosition;
-            Lights[5].glare.transform.localPosition = _config.RightGlarePosition;
-            Lights[6].glare.transform.localPosition = _config.RedGlarePosition;
+            Lights[0].glare.transform.localPosition = _config.LeftGlarePosition;
+            Lights[1].glare.transform.localPosition = _config.RightGlarePosition;
+            Lights[2].glare.transform.localPosition = _config.LeftGlarePosition;
+            Lights[3].glare.transform.localPosition = _config.RightGlarePosition;
+            Lights[4].glare.transform.localPosition = _config.RedGlarePosition;
 
             UpdateBeams();
         }

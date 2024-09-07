@@ -14,6 +14,8 @@ namespace CarChanger.Common.Configs
         [Tooltip("Whether to hide the original interior or not\n" +
             "Only the static parts of the interior will be affected, all controls will remain as is")]
         public bool HideOriginalInterior = false;
+        [Tooltip("Whether to prevent other modifications that hide the interior from working with this one or not")]
+        public bool PreventInteriorHiding = false;
 
         [Header("Interior LOD")]
         [Tooltip("The prefab to load on the interior LOD\n" +
@@ -21,10 +23,15 @@ namespace CarChanger.Common.Configs
         public GameObject? InteriorLODPrefab;
         [Tooltip("Whether to hide the original interior LOD or not")]
         public bool HideOriginalInteriorLOD = false;
+        [Tooltip("Whether to prevent other modifications that hide the interior LOD from working with this one or not")]
+        public bool PreventInteriorLODHiding = false;
+
+        public bool ImcompatibleInteriorHiding => HideOriginalInterior || PreventInteriorHiding;
+        public bool ImcompatibleInteriorLODHiding => HideOriginalInteriorLOD || PreventInteriorLODHiding;
 
         public static bool CanCombine(CarWithInteriorConfig a, CarWithInteriorConfig b) =>
             CarConfig.CanCombine(a, b) &&
-            !(a.HideOriginalInterior && b.HideOriginalInterior) &&
-            !(a.HideOriginalInteriorLOD && b.HideOriginalInteriorLOD);
+            !(a.ImcompatibleInteriorHiding && b.ImcompatibleInteriorHiding) &&
+            !(a.ImcompatibleInteriorLODHiding && b.ImcompatibleInteriorLODHiding);
     }
 }

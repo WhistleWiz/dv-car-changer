@@ -96,6 +96,9 @@ namespace CarChanger.Game
                 case CabooseConfig caboose:
                     ApplyCaboose(caboose);
                     break;
+                case LocoDE2Config de2:
+                    ApplyDE2(de2);
+                    break;
                 case LocoDE6Config de6:
                     ApplyDE6(de6);
                     break;
@@ -153,6 +156,12 @@ namespace CarChanger.Game
                         transform.Find("CarCaboose_exterior/CabooseExterior_LOD2").gameObject,
                         transform.Find("CarCaboose_exterior/Caboose_LOD3").gameObject
                     };
+                case LocoDE2Config _:
+                    return new List<GameObject>
+                    {
+                        transform.Find("LocoDE2_Body/ext 621_exterior").gameObject,
+                        transform.Find("LocoDE2_Body/LocoShunterExterior_lod").gameObject
+                    };
                 case LocoDE6Config _:
                     return new List<GameObject>
                     {
@@ -201,6 +210,8 @@ namespace CarChanger.Game
 
         private List<GameObject> GetOriginalInteriorLod()
         {
+            List<GameObject> result;
+
             // Ditto, for the interior LOD.
             switch (Config)
             {
@@ -217,6 +228,19 @@ namespace CarChanger.Game
                         transform.Find("[interior LOD]/CabooseInterior_LOD1").gameObject,
                         transform.Find("[interior LOD]/CabooseInterior_LOD2").gameObject
                     };
+                case LocoDE2Config de2:
+                    result = new List<GameObject>
+                    {
+                        transform.Find("[interior LOD]/InteriorLOD/cab_LOD1").gameObject,
+                        transform.Find("[interior LOD]/InteriorLOD/cab_LOD2").gameObject
+                    };
+
+                    if (de2.HideControlDeck)
+                    {
+                        result.Add(transform.Find("[interior LOD]/InteriorLOD/deck_LOD1").gameObject);
+                    }
+
+                    return result;
                 case LocoDE6Config _:
                     return new List<GameObject>
                     {
@@ -231,7 +255,7 @@ namespace CarChanger.Game
                     break;
             }
 
-            return null!;
+            return new List<GameObject> { transform.Find("[interior LOD]").GetChild(0).gameObject };
         }
 
         private PoweredWheel.State[] GetCurrentPoweredWheelStates()

@@ -79,5 +79,12 @@ namespace CarChanger.Game
                 yield return item;
             }
         }
+
+        public static void ResetLocal(this Transform t)
+        {
+            t.localPosition = Vector3.zero;
+            t.localRotation = Quaternion.identity;
+            t.localScale = Vector3.one;
+        }
     }
 }

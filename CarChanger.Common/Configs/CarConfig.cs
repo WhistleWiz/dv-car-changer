@@ -9,6 +9,8 @@ namespace CarChanger.Common.Configs
         public GameObject? BodyPrefab;
         [Tooltip("Whether to hide the original body or not")]
         public bool HideOriginalBody = false;
+        [Tooltip("Whether to prevent other modifications that hide the body from working with this one or not")]
+        public bool PreventBodyHiding = false;
 
         [Header("Colliders")]
         [Tooltip("The colliders of the car with the world")]
@@ -18,6 +20,8 @@ namespace CarChanger.Common.Configs
         [Tooltip("The colliders of the car with items")]
         public GameObject? ItemsCollider;
 
-        public static bool CanCombine(CarConfig a, CarConfig b) => !(a.HideOriginalBody && b.HideOriginalBody);
+        public bool ImcompatibleBodyHiding => HideOriginalBody || PreventBodyHiding;
+
+        public static bool CanCombine(CarConfig a, CarConfig b) => !(a.ImcompatibleBodyHiding && b.ImcompatibleBodyHiding);
     }
 }

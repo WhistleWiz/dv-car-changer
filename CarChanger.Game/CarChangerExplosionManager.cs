@@ -23,6 +23,7 @@ namespace CarChanger.Game
 
             _explodeParent = new GameObject("[car changer explosion stuff]").transform;
             _explodeParent.parent = trainCar.transform;
+            _explodeParent.ResetLocal();
         }
 
         public void HandleExplode()
@@ -44,10 +45,7 @@ namespace CarChanger.Game
         public ExplosionModelHandler CreateHandler(GameObject[] disableGameObjects, ExplosionModelHandler.GameObjectSwapData[] gameObjectsSwaps,
             ExplosionModelHandler.MaterialSwapData[] matSwaps)
         {
-            var go = new GameObject("handler");
-            go.SetActive(false);
-            go.transform.parent = _explodeParent;
-
+            var go = Helpers.CreateEmptyInactiveObject("handler", _explodeParent, false);
             var handler = go.AddComponent<ExplosionModelHandler>();
 
             var t = typeof(ExplosionModelHandler);

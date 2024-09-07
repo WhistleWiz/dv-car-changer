@@ -7,9 +7,9 @@ namespace CarChanger.Game.InteractablesChanges
     {
         private LocoS282AConfig _config;
         private MaterialHolder _materialHolder;
-        private ChangeObject _windowR = null!;
-        private ChangeObject _windowL = null!;
-        private ChangeObject _toolbox = null!;
+        private ChangeObject? _windowR;
+        private ChangeObject? _windowL;
+        private ChangeObject? _toolbox;
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
@@ -50,9 +50,9 @@ namespace CarChanger.Game.InteractablesChanges
         {
             if (interactables == null) return;
 
-            _windowR.Clear();
-            _windowL.Clear();
-            _toolbox.Clear();
+            _windowR?.Clear();
+            _windowL?.Clear();
+            _toolbox?.Clear();
 
             _config.InteractablesUnapplied(interactables);
         }

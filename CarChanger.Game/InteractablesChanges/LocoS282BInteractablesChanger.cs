@@ -8,8 +8,8 @@ namespace CarChanger.Game.InteractablesChanges
     {
         private LocoS282BConfig _config;
         private MaterialHolder _materialHolder;
-        private ChangeObject _hatch = null!;
-        private ChangeObject _water = null!;
+        private ChangeObject? _hatch;
+        private ChangeObject? _water;
         private IndicatorModelChanger _coal = null!;
         private GameObject[] _ogCoal = null!;
         private float[] _ogPercent = null!;
@@ -69,10 +69,10 @@ namespace CarChanger.Game.InteractablesChanges
         {
             if (interactables == null) return;
 
-            _hatch.Clear();
-            _water.Clear();
+            _hatch?.Clear();
+            _water?.Clear();
 
-            if (_config.ReplaceCoal)
+            if (_config.ReplaceCoal && _coal != null)
             {
                 foreach (var item in _coal.indicatorModels)
                 {

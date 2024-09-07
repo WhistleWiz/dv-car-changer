@@ -7,10 +7,10 @@ namespace CarChanger.Game.InteractablesChanges
     {
         private LocoDE6Config _config;
         private MaterialHolder _materialHolder;
-        private ChangeObject _engR = null!;
-        private ChangeObject _engL = null!;
-        private ChangeObject _cabR = null!;
-        private ChangeObject _cabF = null!;
+        private ChangeObject? _engR;
+        private ChangeObject? _engL;
+        private ChangeObject? _cabR;
+        private ChangeObject? _cabF;
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
@@ -65,10 +65,10 @@ namespace CarChanger.Game.InteractablesChanges
         {
             if (interactables == null) return;
 
-            _engR.Clear();
-            _engL.Clear();
-            _cabR.Clear();
-            _cabF.Clear();
+            _engR?.Clear();
+            _engL?.Clear();
+            _cabR?.Clear();
+            _cabF?.Clear();
 
             _config.InteractablesUnapplied(interactables);
         }
