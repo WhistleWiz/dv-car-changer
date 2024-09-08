@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace CarChanger.Game
+namespace CarChanger.Game.Components
 {
     internal class CarChangerExplosionManager : MonoBehaviour
     {
@@ -45,7 +45,7 @@ namespace CarChanger.Game
         public ExplosionModelHandler CreateHandler(GameObject[] disableGameObjects, ExplosionModelHandler.GameObjectSwapData[] gameObjectsSwaps,
             ExplosionModelHandler.MaterialSwapData[] matSwaps)
         {
-            var go = Helpers.CreateEmptyInactiveObject("handler", _explodeParent, false);
+            var go = Helpers.CreateEmptyInactiveObject("handler", _explodeParent);
             var handler = go.AddComponent<ExplosionModelHandler>();
 
             var t = typeof(ExplosionModelHandler);

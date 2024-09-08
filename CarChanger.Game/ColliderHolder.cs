@@ -41,7 +41,7 @@ namespace CarChanger.Game
             {
                 _walkableInstance = Object.Instantiate(_walkable, roots.Walkable);
                 Helpers.SetLayersForAllChildren(_walkableInstance, WalkableLayer);
-                ComponentProcessor.ProcessTelePassThroughColliders(_walkableInstance);
+                ComponentProcessor.ProcessTeleportPassThroughColliders(_walkableInstance);
             }
 
             if (_items != null)

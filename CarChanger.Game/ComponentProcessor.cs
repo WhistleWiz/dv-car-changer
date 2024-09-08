@@ -1,4 +1,6 @@
 ﻿using CarChanger.Common.Components;
+using CarChanger.Game.Components;
+using DV.CabControls.Spec;
 using System.Linq;
 using UnityEngine;
 
@@ -40,6 +42,11 @@ namespace CarChanger.Game
                     ProcessHideTransforms(item, root);
                 }
             }
+
+            if (gameObject.TryGetComponent(out MoveThisControl moveThis))
+            {
+                ProcessMoveThisControl(moveThis);
+            }
         }
 
         public static void ProcessBodyMaterial(UseBodyMaterial comp, MaterialHolder holder)
@@ -52,7 +59,23 @@ namespace CarChanger.Game
             comp.Hide(root);
         }
 
-        public static void ProcessTelePassThroughColliders(GameObject gameObject)
+        public static void ProcessMoveThisControl(MoveThisControl comp)
+        {
+            var control = comp.GetComponentInParent<ControlSpec>();
+
+            if (control != null)
+            {
+                MoveThisControlInternal.Create(comp, control);
+            }
+            else
+            {
+                CarChangerMod.Error($"No control found to move on {comp.name}");
+            }
+
+            Object.Destroy(comp);
+        }
+
+        public static void ProcessTeleportPassThroughColliders(GameObject gameObject)
         {
             foreach (var item in gameObject.GetComponentsInChildren<TeleportPassthroughCollider>())
             {

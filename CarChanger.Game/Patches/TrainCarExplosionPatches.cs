@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using CarChanger.Game.Components;
+using HarmonyLib;
 
 namespace CarChanger.Game.Patches
 {

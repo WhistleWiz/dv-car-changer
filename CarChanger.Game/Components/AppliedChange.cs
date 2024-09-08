@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace CarChanger.Game
+namespace CarChanger.Game.Components
 {
     internal partial class AppliedChange : MonoBehaviour
     {
@@ -227,12 +227,6 @@ namespace CarChanger.Game
                         transform.Find("CarPassenger/CarPassengerInterior_LOD1").gameObject,
                         transform.Find("CarPassenger/CarPassengerInterior_LOD2").gameObject
                     };
-                case CabooseConfig _:
-                    return new List<GameObject>
-                    {
-                        transform.Find("[interior LOD]/CabooseInterior_LOD1").gameObject,
-                        transform.Find("[interior LOD]/CabooseInterior_LOD2").gameObject
-                    };
                 case LocoDE2Config de2:
                     result = new List<GameObject>
                     {
@@ -246,21 +240,17 @@ namespace CarChanger.Game
                     }
 
                     return result;
-                case LocoDE6Config _:
-                    return new List<GameObject>
-                    {
-                        transform.Find("[interior LOD]/LocoDE6_InteriorLOD").gameObject
-                    };
-                case LocoS282AConfig _:
-                    return new List<GameObject>
-                    {
-                        transform.Find("[interior LOD]/LocoS282A_InteriorLOD").gameObject
-                    };
                 default:
                     break;
             }
 
-            return new List<GameObject> { transform.Find("[interior LOD]").GetChild(0).gameObject };
+            var lod = transform.Find("[interior LOD]");
+
+            // If there's no interior lod object, return an emtpy list.
+            if (lod == null) return new List<GameObject>();
+
+            // By default, return all children of that object.
+            return lod.AllChildGOs().ToList();
         }
 
         private PoweredWheel.State[] GetCurrentPoweredWheelStates()

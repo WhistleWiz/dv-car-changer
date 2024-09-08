@@ -1,14 +1,17 @@
 ﻿using CarChanger.Common;
+using DV.CabControls.Spec;
+using DV.Interaction;
 using DV.ThingTypes;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
 namespace CarChanger.Game
 {
-    internal static class Helpers
+    public static class Helpers
     {
         private static Dictionary<string, TrainCarType_v2>? s_idToCarType;
         private static Dictionary<WagonType, string> s_carTypeEnumToId = new Dictionary<WagonType, string>()
@@ -81,10 +84,10 @@ namespace CarChanger.Game
             return RNG.NextDouble() < percent;
         }
 
-        public static GameObject CreateEmptyInactiveObject(string name, Transform parent = null!, bool worldPositionStays = true)
+        public static GameObject CreateEmptyInactiveObject(string name, Transform parent = null!)
         {
             var go = new GameObject(name);
-            go.transform.SetParent(parent, worldPositionStays);
+            go.transform.SetParent(parent, false);
             go.SetActive(false);
             return go;
         }
@@ -116,6 +119,40 @@ namespace CarChanger.Game
             foreach (var item in gameObject.GetComponentsInChildren<Transform>())
             {
                 item.gameObject.layer = layer;
+            }
+        }
+
+        public static void MoveControl(ControlSpec control, Vector3 move)
+        {
+            var joint = control.GetComponent<Joint>();
+
+            if (joint == null)
+            {
+                CarChangerMod.Error($"Tried to move control {control.name}, but joint has not been created yet!");
+                return;
+            }
+
+            MoveControl(control, joint, move);
+        }
+
+        internal static void MoveControl(ControlSpec control, Joint joint, Vector3 move)
+        {
+            joint.autoConfigureConnectedAnchor = false;
+            joint.connectedAnchor += move;
+
+            // Get the interaction area if it exists.
+            // It isn't part of the base ControlSpec, so reflection it is...
+            var t = control.GetType();
+            var f = t.GetField("nonVrStaticInteractionArea");
+
+            if (f != null)
+            {
+                var ia = (StaticInteractionArea)f.GetValue(control);
+
+                if (ia != null)
+                {
+                    ia.transform.localPosition += move;
+                }
             }
         }
     }

@@ -4,7 +4,7 @@ using CarChanger.Game.InteractablesChanges;
 using CarChanger.Game.InteriorChanges;
 using UnityEngine;
 
-namespace CarChanger.Game
+namespace CarChanger.Game.Components
 {
     internal partial class AppliedChange : MonoBehaviour
     {

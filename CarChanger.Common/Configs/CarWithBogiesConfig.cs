@@ -18,6 +18,11 @@ namespace CarChanger.Common.Configs
 
         protected virtual float OriginalRadius => Constants.WheelRadiusDefault;
 
+        protected virtual void Reset()
+        {
+            ResetBogies();
+        }
+
         protected void ResetBogies()
         {
             WheelRadius = OriginalRadius;

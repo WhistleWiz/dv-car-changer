@@ -11,7 +11,7 @@ namespace CarChanger.Game.Patches
         private static void AwakePostfix(CommsRadioController __instance)
         {
             // Create the object as inactive to prevent Awake() from running too early.
-            var go = Helpers.CreateEmptyInactiveObject("CommsRadioCarChanger", __instance.transform, false);
+            var go = Helpers.CreateEmptyInactiveObject("CommsRadioCarChanger", __instance.transform);
             var mode = go.AddComponent<CommsRadioCarChanger>();
             mode.Controller = __instance;
 
