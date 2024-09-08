@@ -87,5 +87,25 @@ namespace CarChanger.Game
             t.localRotation = Quaternion.identity;
             t.localScale = Vector3.one;
         }
+
+        public static T GetComponentInSiblings<T>(this GameObject go, bool ignoreSelf = true)
+            where T : Component
+        {
+            var parent = go.transform.parent;
+
+            if (parent == null) return null!;
+
+            foreach (var item in parent.AllChildGOs())
+            {
+                if (ignoreSelf && item == go) continue;
+
+                if (item.TryGetComponent(out T comp))
+                {
+                    return comp;
+                }
+            }
+
+            return null!;
+        }
     }
 }

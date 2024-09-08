@@ -454,7 +454,7 @@ namespace CarChanger.Game.Components
         {
             if (interior != null)
             {
-                _interiorLod = Instantiate(interior, transform);
+                _interiorLod = Instantiate(interior, transform.Find("[interior LOD]") ?? transform);
                 ComponentProcessor.ProcessComponents(_interiorLod, MatHolder);
             }
 

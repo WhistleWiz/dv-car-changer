@@ -1,6 +1,7 @@
 ﻿using CarChanger.Common.Components;
 using CarChanger.Game.Components;
 using DV.CabControls.Spec;
+using DV.Rain;
 using System.Linq;
 using UnityEngine;
 
@@ -30,37 +31,28 @@ namespace CarChanger.Game
                 }
             }
 
-            foreach (var item in gameObject.GetComponentsInChildren<UseBodyMaterial>())
-            {
-                ProcessBodyMaterial(item, holder);
-            }
+            ProcessBodyMaterial(gameObject, holder);
+            ProcessMoveThisControl(gameObject);
+            ProcessWindows(gameObject);
 
             if (root != null)
             {
-                foreach (var item in gameObject.GetComponentsInChildren<HideTransformsOnChange>())
-                {
-                    ProcessHideTransforms(item, root);
-                }
+                ProcessHideTransforms(gameObject, root);
             }
+        }
 
-            if (gameObject.TryGetComponent(out MoveThisControl moveThis))
+        private static void ProcessBodyMaterial(GameObject gameObject, MaterialHolder holder)
+        {
+            foreach (var item in gameObject.GetComponentsInChildren<UseBodyMaterial>())
             {
-                ProcessMoveThisControl(moveThis);
+                item.GetRenderer().material = holder.GetMaterial(item.Material, item.MaterialObjectPath);
             }
         }
 
-        public static void ProcessBodyMaterial(UseBodyMaterial comp, MaterialHolder holder)
+        private static void ProcessMoveThisControl(GameObject gameObject)
         {
-            comp.GetRenderer().material = holder.GetMaterial(comp.Material, comp.MaterialObjectPath);
-        }
+            if (!gameObject.TryGetComponent(out MoveThisControl comp)) return;
 
-        public static void ProcessHideTransforms(HideTransformsOnChange comp, Transform root)
-        {
-            comp.Hide(root);
-        }
-
-        public static void ProcessMoveThisControl(MoveThisControl comp)
-        {
             var control = comp.GetComponentInParent<ControlSpec>();
 
             if (control != null)
@@ -73,6 +65,54 @@ namespace CarChanger.Game
             }
 
             Object.Destroy(comp);
+        }
+
+        private static void ProcessWindows(GameObject gameObject)
+        {
+            // Check if there's an existing window.
+            var window = gameObject.GetComponentInParent<Window>();
+
+            if (window == null)
+            {
+                window = gameObject.GetComponentInSiblings<Window>();
+
+                if (window == null) return;
+            }
+
+            // Deactivate the current object to prevent Awake() from being called too early.
+            gameObject.SetActive(false);
+            var dupes = window.duplicates.ToList();
+
+            foreach (var item in gameObject.GetComponentsInChildren<UseAsWindow>(true))
+            {
+                // Initialise even the empty arrays, or they'll be null.
+                var dupe = item.gameObject.AddComponent<Window>();
+                dupe.visuals = item.Renderers;
+                dupe.sizeInMeters = item.Size;
+                dupe.wipers = new Wiper[0];
+                dupe.duplicates = new Window[0];
+                dupe.windowEdges = new Transform[0];
+                dupes.Add(dupe);
+
+                // Register this window duplicate for removal when it is destroyed.
+                item.DestroyEvent += () =>
+                {
+                    var list = window.duplicates.ToList();
+                    list.Remove(dupe);
+                    window.duplicates = list.ToArray();
+                };
+            }
+
+            window.duplicates = dupes.ToArray();
+            gameObject.SetActive(true);
+        }
+
+        private static void ProcessHideTransforms(GameObject gameObject, Transform root)
+        {
+            foreach (var item in gameObject.GetComponentsInChildren<HideTransformsOnChange>())
+            {
+                item.Hide(root);
+            }
         }
 
         public static void ProcessTeleportPassThroughColliders(GameObject gameObject)
