@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/DE2 Modification", order = Constants.MenuOrderConstants.Diesel + 0)]
-    public class LocoDE2Config : CarWithInteriorAndBogiesConfig
+    [CreateAssetMenu(menuName = "DVCarChanger/DE6 Slug Modification", order = Constants.MenuOrderConstants.Extras + 0)]
+    public class LocoDE6SlugConfig : CarWithBogiesConfig
     {
         [Serializable]
         public class HeadlightSettings
@@ -13,23 +13,27 @@ namespace CarChanger.Common.Configs
             [JsonIgnore]
             public static HeadlightSettings Front => new HeadlightSettings
             {
-                BeamPosition = new Vector3(0.0f, 1.521f, 3.269f),
+                HighBeamPosition = new Vector3(0.0f, 2.853f, 6.864f),
+                LowBeamPosition = new Vector3(0.0f, 1.99f, 6.864f),
 
-                LeftGlarePosition = new Vector3(-0.6467f, 1.5274f, 3.27f),
-                RightGlarePosition = new Vector3(0.6467f, 1.5274f, 3.27f),
+                TopGlarePosition = new Vector3(0.0f, 2.842f, 7.33f),
+                LeftGlarePosition = new Vector3(-0.6184f, 1.8968f, 7.3f),
+                RightGlarePosition = new Vector3(0.6184f, 1.8968f, 7.3f),
 
-                RedGlarePosition = new Vector3(-0.005f, 2.799f, 3.237f)
+                RedGlarePosition = new Vector3(0.0f, 2.53f, 7.33f)
             };
 
             [JsonIgnore]
             public static HeadlightSettings Rear => new HeadlightSettings
             {
-                BeamPosition = new Vector3(0.0f, 3.6f, -8.914f),
+                HighBeamPosition = new Vector3(0.0f, 2.853f, -6.864f),
+                LowBeamPosition = new Vector3(0.0f, 1.99f, -6.864f),
 
-                LeftGlarePosition = new Vector3(-0.6467f, 1.9274f, -3.27f),
-                RightGlarePosition = new Vector3(0.6467f, 1.9274f, -3.27f),
+                TopGlarePosition = new Vector3(0.0f, 2.842f, -7.33f),
+                LeftGlarePosition = new Vector3(-0.6184f, 1.8968f, -7.3f),
+                RightGlarePosition = new Vector3(0.6184f, 1.8968f, -7.3f),
 
-                RedGlarePosition = new Vector3(0.005f, 2.458f, -3.267f)
+                RedGlarePosition = new Vector3(0.0f, 2.53f, -7.33f)
             };
 
             [JsonIgnore]
@@ -37,22 +41,17 @@ namespace CarChanger.Common.Configs
             [JsonIgnore]
             public Mesh RedMesh = null!;
 
-            public Vector3 BeamPosition;
+            public Vector3 HighBeamPosition;
+            public Vector3 LowBeamPosition;
 
+            public Vector3 TopGlarePosition;
             public Vector3 LeftGlarePosition;
             public Vector3 RightGlarePosition;
 
             public Vector3 RedGlarePosition;
         }
 
-        protected override float OriginalRadius => Constants.WheelRadiusDE2;
-
-        [Header("Doors and Windows")]
-        public GameObject? DoorFront;
-        public GameObject? DoorRear;
-        public GameObject? DoorFrontExploded;
-        public GameObject? DoorRearExploded;
-        public bool HideOriginalCabDoors = false;
+        protected override float OriginalRadius => Constants.WheelRadiusDE6;
 
         [Header("Headlights")]
         public bool UseCustomFrontHeadlights = false;
@@ -65,9 +64,6 @@ namespace CarChanger.Common.Configs
         public HeadlightSettings RearSettings = HeadlightSettings.Rear;
         [Button(nameof(ResetRearHeadlights), "Reset"), SerializeField]
         private bool _resetRearButton;
-
-        [Header("Other")]
-        public bool HideControlDeck = false;
 
         #region Serialization
 
@@ -110,6 +106,7 @@ namespace CarChanger.Common.Configs
             _frontHeadlights = FrontSettings.ToJson();
             _rearHeadlights = RearSettings.ToJson();
 
+            // Can't really serialize the meshes in the json so here they go.
             _fw = FrontSettings.WhiteMesh;
             _fr = FrontSettings.RedMesh;
             _rw = RearSettings.WhiteMesh;
@@ -120,7 +117,7 @@ namespace CarChanger.Common.Configs
         {
             if (FrontBogie || RearBogie)
             {
-                var result = Validation.ValidateBothBogies(FrontBogie, RearBogie, null, null, 1, 1);
+                var result = Validation.ValidateBothBogies(FrontBogie, RearBogie, null, null, 3, 3);
 
                 if (!string.IsNullOrEmpty(result))
                 {
@@ -133,9 +130,8 @@ namespace CarChanger.Common.Configs
             return true;
         }
 
-        public static bool CanCombine(LocoDE2Config a, LocoDE2Config b) =>
-            CarWithInteriorAndBogiesConfig.CanCombine(a, b) &&
-            !(a.HideOriginalCabDoors && b.HideOriginalCabDoors) &&
+        public static bool CanCombine(LocoDE6SlugConfig a, LocoDE6SlugConfig b) =>
+            CarWithBogiesConfig.CanCombine(a, b) &&
             !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&
             !(a.UseCustomRearHeadlights && b.UseCustomRearHeadlights);
     }

@@ -18,16 +18,16 @@ namespace CarChanger.Common.Configs
             "Each model will be enabled based on the percentage of available coal\n" +
             "The percentage array should have 1 less item than the models array, as 0 is assumed as the first value")]
         public bool ReplaceCoal = false;
-        [EnableIf(nameof(EnableCoal)), Tooltip("In ascending order\nAt 0% all models are hidden")]
+        [EnableIf(nameof(ReplaceCoal)), Tooltip("In ascending order\nAt 0% all models are hidden")]
         public GameObject[] CoalModels = new GameObject[0];
-        [EnableIf(nameof(EnableCoal)), Tooltip("In ascending order\n0 does not need to be included")]
+        [EnableIf(nameof(ReplaceCoal)), Tooltip("In ascending order\n0 does not need to be included")]
         public float[] SwitchPercentage = new float[0];
 
         [Header("Headlights")]
         public bool UseCustomHeadlights = false;
-        [EnableIf(nameof(EnableHeadlights))]
+        [EnableIf(nameof(UseCustomHeadlights))]
         public Mesh Mesh = null!;
-        [EnableIf(nameof(EnableHeadlights))]
+        [EnableIf(nameof(UseCustomHeadlights))]
         public Vector3 BeamPosition = OriginalBeamPosition;
         [Button(nameof(ResetHeadlights), "Reset Position"), SerializeField]
         private bool _resetHeadlight;
@@ -48,14 +48,7 @@ namespace CarChanger.Common.Configs
             return true;
         }
 
-        private void ResetHeadlights()
-        {
-            BeamPosition = OriginalBeamPosition;
-        }
-
-        private bool EnableHeadlights() => UseCustomHeadlights;
-
-        private bool EnableCoal() => ReplaceCoal;
+        private void ResetHeadlights() => BeamPosition = OriginalBeamPosition;
 
         public static bool CanCombine(LocoS282BConfig a, LocoS282BConfig b) =>
             CarWithBogiesConfig.CanCombine(a, b) &&

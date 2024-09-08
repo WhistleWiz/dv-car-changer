@@ -54,6 +54,8 @@ namespace CarChanger.Game.HeadlightChanges
                 }
             }
         }
+
+        protected static string GetDirectionLetter(HeadlightDirection dir) => dir == HeadlightDirection.Front ? "F" : "R";
     }
 
     public enum HeadlightDirection

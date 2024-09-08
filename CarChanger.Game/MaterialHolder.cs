@@ -9,9 +9,11 @@ namespace CarChanger.Game
         public TrainCar Car;
         public Material Body = null!;
         public Material Interior = null!;
+        public Material InteriorExtra = null!;
         public Material Glass = null!;
         public Material BodyExploded = null!;
         public Material InteriorExploded = null!;
+        public Material InteriorExtraExploded = null!;
         public Material GlassBroken = null!;
 
         public MaterialHolder(TrainCar car)
@@ -23,10 +25,12 @@ namespace CarChanger.Game
         {
             SourceMaterial.BodyDefault => Body,
             SourceMaterial.InteriorDefault => Interior,
-            SourceMaterial.Glass => Glass,
+            SourceMaterial.InteriorExtra => InteriorExtra,
+            SourceMaterial.Windows => Glass,
             SourceMaterial.BodyExploded => BodyExploded,
             SourceMaterial.InteriorExploded => InteriorExploded,
-            SourceMaterial.BrokenGlass => GlassBroken,
+            SourceMaterial.InteriorExtraExploded => InteriorExtraExploded,
+            SourceMaterial.BrokenWindows => GlassBroken,
             SourceMaterial.FromPath => GetFromPath(path),
             _ => null!,
         };

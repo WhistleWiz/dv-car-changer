@@ -30,6 +30,7 @@
             public const int Diesel = 200;
             public const int Steam = 300;
             public const int Electric = 400;
+            public const int Extras = 500;
             public const int Other = 1000;
         }
     }

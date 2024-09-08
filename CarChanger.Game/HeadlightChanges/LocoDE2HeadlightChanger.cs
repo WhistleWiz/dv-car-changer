@@ -15,21 +15,12 @@ namespace CarChanger.Game.HeadlightChanges
 
         public LocoDE2HeadlightChanger(LocoDE2Config config, TrainCar car, HeadlightDirection direction) : base(car, direction)
         {
-            if (direction == HeadlightDirection.Front)
-            {
-                _config = config.FrontSettings;
-            }
-            else
-            {
-                _config = config.RearSettings;
-            }
+            _config = direction == HeadlightDirection.Front ? config.FrontSettings : config.RearSettings;
 
             _white = Root.Find($"ext headlights_glass_{GetDirectionLetter(direction)}").GetComponent<MeshFilter>();
             _red = Root.Find($"ext headlights_glass_red_{GetDirectionLetter(direction)}").GetComponent<MeshFilter>();
             _originalWhite = _white.sharedMesh;
             _originalRed = _red.sharedMesh;
-
-            static string GetDirectionLetter(HeadlightDirection dir) => dir == HeadlightDirection.Front ? "F" : "R";
         }
 
         public override void Apply()
@@ -60,6 +51,13 @@ namespace CarChanger.Game.HeadlightChanges
 
             ResetGlares();
             UpdateBeams();
+        }
+
+        protected override Transform GetRoot(TrainCar car)
+        {
+            return Direction == HeadlightDirection.Front ?
+                car.transform.Find("[headlights_de2]/FrontSide") :
+                car.transform.Find("[headlights_de2]/RearSide");
         }
     }
 }

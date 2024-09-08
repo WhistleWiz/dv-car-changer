@@ -108,6 +108,9 @@ namespace CarChanger.Game
                 case LocoS282BConfig s282B:
                     ApplyS282B(s282B);
                     break;
+                case LocoDE6SlugConfig de6Slug:
+                    ApplyDE6Slug(de6Slug);
+                    break;
                 case CustomCarConfig custom:
                     ApplyCustomCar(custom);
                     break;
@@ -181,6 +184,8 @@ namespace CarChanger.Game
                     result.AddRange(transform.Find("LocoS282B_Body/LOD2").AllChildGOs());
                     result.AddRange(transform.Find("LocoS282B_Body/LOD3").AllChildGOs());
                     return result;
+                case LocoDE6SlugConfig _:
+                    return transform.Find("LocoDE6Slug_Body").AllChildGOsExcept("de6_slug_buffer_stems").ToList();
                 default:
                     break;
             }

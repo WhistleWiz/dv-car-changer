@@ -4,12 +4,13 @@
     {
         BodyDefault,
         InteriorDefault,
-        Glass,
-        DE6Engine,
+        InteriorExtra,
+        Windows,
 
         BodyExploded = 500,
         InteriorExploded,
-        BrokenGlass,
+        InteriorExtraExploded,
+        BrokenWindows,
 
         FromPath = 1000
     }

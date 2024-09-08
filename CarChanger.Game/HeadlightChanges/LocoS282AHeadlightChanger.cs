@@ -39,5 +39,7 @@ namespace CarChanger.Game.HeadlightChanges
             ResetGlares();
             UpdateBeams();
         }
+
+        protected override Transform GetRoot(TrainCar car) => car.transform.Find("LocoS282A_Headlights/FrontSide");
     }
 }

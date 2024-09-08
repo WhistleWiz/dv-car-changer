@@ -19,9 +19,9 @@ namespace CarChanger.Common.Configs
 
         [Header("Headlights")]
         public bool UseCustomHeadlights = false;
-        [EnableIf(nameof(EnableHeadlights))]
+        [EnableIf(nameof(UseCustomHeadlights))]
         public Mesh Mesh = null!;
-        [EnableIf(nameof(EnableHeadlights))]
+        [EnableIf(nameof(UseCustomHeadlights))]
         public Vector3 BeamPosition = OriginalBeamPosition;
         [Button(nameof(ResetHeadlights), "Reset Position"), SerializeField]
         private bool _resetHeadlight;
@@ -32,12 +32,7 @@ namespace CarChanger.Common.Configs
             return true;
         }
 
-        public void ResetHeadlights()
-        {
-            BeamPosition = OriginalBeamPosition;
-        }
-
-        private bool EnableHeadlights() => UseCustomHeadlights;
+        public void ResetHeadlights() => BeamPosition = OriginalBeamPosition;
 
         public static bool CanCombine(LocoS282AConfig a, LocoS282AConfig b) =>
             CarWithInteriorConfig.CanCombine(a, b) &&

@@ -67,12 +67,12 @@ namespace CarChanger.Common.Configs
 
         [Header("Headlights")]
         public bool UseCustomFrontHeadlights = false;
-        [EnableIf(nameof(EnableFrontHeadlights))]
+        [EnableIf(nameof(UseCustomFrontHeadlights))]
         public HeadlightSettings FrontSettings = HeadlightSettings.Front;
         [Button(nameof(ResetFrontHeadlights), "Reset"), SerializeField]
         private bool _resetFrontButton;
         public bool UseCustomRearHeadlights = false;
-        [EnableIf(nameof(EnableRearHeadlights))]
+        [EnableIf(nameof(UseCustomRearHeadlights))]
         public HeadlightSettings RearSettings = HeadlightSettings.Rear;
         [Button(nameof(ResetRearHeadlights), "Reset"), SerializeField]
         private bool _resetRearButton;
@@ -94,15 +94,9 @@ namespace CarChanger.Common.Configs
 
         #endregion
 
-        private void ResetFrontHeadlights()
-        {
-            FrontSettings = HeadlightSettings.Front;
-        }
+        private void ResetFrontHeadlights() => FrontSettings = HeadlightSettings.Front;
 
-        private void ResetRearHeadlights()
-        {
-            RearSettings = HeadlightSettings.Rear;
-        }
+        private void ResetRearHeadlights() => RearSettings = HeadlightSettings.Rear;
 
         public override void AfterLoad()
         {
@@ -147,9 +141,6 @@ namespace CarChanger.Common.Configs
             error = string.Empty;
             return true;
         }
-
-        private bool EnableFrontHeadlights() => UseCustomFrontHeadlights;
-        private bool EnableRearHeadlights() => UseCustomRearHeadlights;
 
         public static bool CanCombine(LocoDE6Config a, LocoDE6Config b) =>
             CarWithInteriorAndBogiesConfig.CanCombine(a, b) &&

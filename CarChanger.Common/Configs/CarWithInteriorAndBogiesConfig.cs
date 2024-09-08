@@ -6,19 +6,17 @@ namespace CarChanger.Common.Configs
     {
         [Header("Bogies")]
         public bool UseCustomBogies = false;
-        [EnableIf(nameof(EnableBogies))]
+        [EnableIf(nameof(UseCustomBogies))]
         public float WheelRadius = 0.0f;
-        [EnableIf(nameof(EnableBogies))]
+        [EnableIf(nameof(UseCustomBogies))]
         public GameObject? FrontBogie;
-        [EnableIf(nameof(EnableBogies))]
+        [EnableIf(nameof(UseCustomBogies))]
         public GameObject? RearBogie;
 
         [Button(nameof(ResetBogies), "Reset"), SerializeField]
         protected bool ResetBogiesToDefaultButton;
 
         protected virtual float OriginalRadius => Constants.WheelRadiusDefault;
-
-        protected bool EnableBogies() => UseCustomBogies;
 
         protected void ResetBogies()
         {
