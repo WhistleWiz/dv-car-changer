@@ -30,8 +30,8 @@ namespace CarChanger.Common.Configs
                 LowBeamPosition = new Vector3(0.0f, 1.99f, -8.914f),
 
                 TopGlarePosition = new Vector3(0.0f, 3.449f, -8.28f),
-                LeftGlarePosition = new Vector3(-0.6184f, 2.0064f, -8.27f),
-                RightGlarePosition = new Vector3(0.6184f, 2.0064f, -8.27f),
+                LeftGlarePosition = new Vector3(0.6184f, 2.0064f, -8.27f),
+                RightGlarePosition = new Vector3(-0.6184f, 2.0064f, -8.27f),
 
                 RedGlarePosition = new Vector3(0.0f, 3.121f, -8.32f)
             };

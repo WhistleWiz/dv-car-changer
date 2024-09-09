@@ -78,7 +78,7 @@ namespace CarChanger.Game
 
                 if (window == null)
                 {
-                    window = gameObject.GetComponentInChildren<Window>();
+                    window = gameObject.GetComponentInChildren<Window>(true);
 
                     if (window == null) return;
                 }
@@ -112,7 +112,7 @@ namespace CarChanger.Game
             gameObject.SetActive(true);
         }
 
-        private static void ProcessHideTransforms(GameObject gameObject, Transform root)
+        public static void ProcessHideTransforms(GameObject gameObject, Transform root)
         {
             foreach (var item in gameObject.GetComponentsInChildren<HideTransformsOnChange>())
             {

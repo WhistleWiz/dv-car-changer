@@ -28,7 +28,7 @@ namespace CarChanger.Game.InteriorChanges
             // Interior unloaded, so don't apply.
             if (interior == null) return;
 
-            _cab = new ChangeObject(interior.transform, IsExploded ? _config.InteriorStaticPrefabExploded : _config.InteriorStaticPrefab,
+            _cab = new ChangeObject(interior.transform, IsExploded ? _config.InteriorPrefabExploded : _config.InteriorPrefab,
                 _paths.Select(x => interior.transform.Find(x).gameObject).ToArray(), _config.HideOriginalInterior, _materialHolder);
 
             _config.InteriorApplied(interior, IsExploded);

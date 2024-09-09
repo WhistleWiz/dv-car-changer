@@ -26,13 +26,13 @@ namespace CarChanger.Common.Configs
         [Button(nameof(ResetHeadlights), "Reset Position"), SerializeField]
         private bool _resetHeadlight;
 
+        public void ResetHeadlights() => BeamPosition = OriginalBeamPosition;
+
         public override bool DoValidation(out string error)
         {
             error = string.Empty;
             return true;
         }
-
-        public void ResetHeadlights() => BeamPosition = OriginalBeamPosition;
 
         public static bool CanCombine(LocoS282730AConfig a, LocoS282730AConfig b) =>
             CarWithInteriorConfig.CanCombine(a, b) &&

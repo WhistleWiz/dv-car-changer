@@ -32,6 +32,8 @@ namespace CarChanger.Common.Configs
         [Button(nameof(ResetHeadlights), "Reset Position"), SerializeField]
         private bool _resetHeadlight;
 
+        private void ResetHeadlights() => BeamPosition = OriginalBeamPosition;
+
         public override bool DoValidation(out string error)
         {
             if (!base.DoValidation(out error)) return false;
@@ -47,8 +49,6 @@ namespace CarChanger.Common.Configs
 
             return true;
         }
-
-        private void ResetHeadlights() => BeamPosition = OriginalBeamPosition;
 
         public static bool CanCombine(LocoS282730BConfig a, LocoS282730BConfig b) =>
             CarWithBogiesConfig.CanCombine(a, b) &&

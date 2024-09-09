@@ -107,5 +107,19 @@ namespace CarChanger.Game
 
             return null!;
         }
+
+        public static bool TryGetComponentInParent<T>(this GameObject go, out T comp)
+        {
+            comp = go.GetComponentInParent<T>();
+
+            return comp != null;
+        }
+
+        public static bool TryGetComponentInChildren<T>(this GameObject go, out T comp)
+        {
+            comp = go.GetComponentInChildren<T>();
+
+            return comp != null;
+        }
     }
 }

@@ -7,10 +7,10 @@ namespace CarChanger.Common.Configs
         [Header("Interior")]
         [Tooltip("The prefab to load on the interior\n" +
             "Only the static parts of the interior will be affected, all controls will remain as is")]
-        public GameObject? InteriorStaticPrefab;
+        public GameObject? InteriorPrefab;
         [Tooltip("The prefab to load on the exploded interior\n" +
             "Only the static parts of the interior will be affected, all controls will remain as is")]
-        public GameObject? InteriorStaticPrefabExploded;
+        public GameObject? InteriorPrefabExploded;
         [Tooltip("Whether to hide the original interior or not\n" +
             "Only the static parts of the interior will be affected, all controls will remain as is")]
         public bool HideOriginalInterior = false;

@@ -100,6 +100,9 @@ namespace CarChanger.Game.Components
                 case LocoDE6860Config de6:
                     ApplyDE6860(de6);
                     break;
+                case LocoDM3540Config dm3:
+                    ApplyDM3540(dm3);
+                    break;
                 case LocoS282730AConfig s282A:
                     ApplyS282730A(s282A);
                     break;
@@ -173,6 +176,11 @@ namespace CarChanger.Game.Components
                     return new List<GameObject>
                     {
                         transform.Find("LocoDE6_Body/Body").gameObject
+                    };
+                case LocoDM3540Config _:
+                    return new List<GameObject>
+                    {
+                        transform.Find("LocoDM3_Body/LocoDM3_exterior_LOD").gameObject
                     };
                 case LocoS282730AConfig _:
                     result = new List<GameObject>();
@@ -506,33 +514,32 @@ namespace CarChanger.Game.Components
 
         private void ResetBogies()
         {
-            if (_bogiesChanged)
+            if (!_bogiesChanged) return;
+
+            // States must be extracted before changing the bogies, and reapplied after
+            // the new bogies are instanced. Thus the mess.
+            PoweredWheel.State[] wheelStates = null!;
+
+            if (_bogiesPowered)
             {
-                // States must be extracted before changing the bogies, and reapplied after
-                // the new bogies are instanced. Thus the mess.
-                PoweredWheel.State[] wheelStates = null!;
-
-                if (_bogiesPowered)
-                {
-                    wheelStates = TrainCar.Bogies.SelectMany(x => x.Axles)
-                        .Select(x => x.transform)
-                        .OrderBy(x => TrainCar.transform.InverseTransformPoint(x.position).z)
-                        .Select(x => x.GetComponent<PoweredWheel>().state).ToArray();
-                }
-
-                var bogies = TrainCar.carLivery.prefab.GetComponentsInChildren<Bogie>()
-                    .OrderBy(x => x.transform.position.z)
-                    .Select(x => x.transform.GetChild(0).gameObject);
-                ChangeBogies(TrainCar, bogies.ElementAt(1), bogies.ElementAt(0), TrainCar.carLivery.parentType.wheelRadius);
-
-                if (_bogiesPowered)
-                {
-                    MakeBogiesPowered(TrainCar, wheelStates, TrainCar.carLivery.parentType.wheelRadius);
-                }
-
-                _bogiesChanged = false;
-                _bogiesPowered = false;
+                wheelStates = TrainCar.Bogies.SelectMany(x => x.Axles)
+                    .Select(x => x.transform)
+                    .OrderBy(x => TrainCar.transform.InverseTransformPoint(x.position).z)
+                    .Select(x => x.GetComponent<PoweredWheel>().state).ToArray();
             }
+
+            var bogies = TrainCar.carLivery.prefab.GetComponentsInChildren<Bogie>()
+                .OrderBy(x => x.transform.position.z)
+                .Select(x => x.transform.GetChild(0).gameObject);
+            ChangeBogies(TrainCar, bogies.ElementAt(1), bogies.ElementAt(0), TrainCar.carLivery.parentType.wheelRadius);
+
+            if (_bogiesPowered)
+            {
+                MakeBogiesPowered(TrainCar, wheelStates, TrainCar.carLivery.parentType.wheelRadius);
+            }
+
+            _bogiesChanged = false;
+            _bogiesPowered = false;
         }
 
         private void ResetBody()
@@ -569,22 +576,20 @@ namespace CarChanger.Game.Components
 
         private void ResetInterior()
         {
-            if (_interior != null)
-            {
-                TrainCar.InteriorLoaded -= _interior.Apply;
-                _interior.Unapply(TrainCar.loadedInterior);
-                _interior = null;
-            }
+            if (_interior == null) return;
+
+            TrainCar.InteriorLoaded -= _interior.Apply;
+            _interior.Unapply(TrainCar.loadedInterior);
+            _interior = null;
         }
 
         private void ResetInteractables()
         {
-            if (_interactables != null)
-            {
-                TrainCar.ExternalInteractableLoaded -= _interactables.Apply;
-                _interactables.Unapply(TrainCar.loadedExternalInteractables);
-                _interactables = null;
-            }
+            if (_interactables == null) return;
+
+            TrainCar.ExternalInteractableLoaded -= _interactables.Apply;
+            _interactables.Unapply(TrainCar.loadedExternalInteractables);
+            _interactables = null;
         }
 
         private void ResetHeadlights()
@@ -597,11 +602,10 @@ namespace CarChanger.Game.Components
 
         private void ResetColliders()
         {
-            if (_colliderHolder != null)
-            {
-                _colliderHolder.Unapply();
-                _colliderHolder = null;
-            }
+            if (_colliderHolder == null) return;
+
+            _colliderHolder.Unapply();
+            _colliderHolder = null;
         }
 
         #endregion

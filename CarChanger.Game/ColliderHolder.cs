@@ -35,6 +35,11 @@ namespace CarChanger.Game
             {
                 _collisionInstance = Object.Instantiate(_collision, roots.Collision);
                 Helpers.SetLayersForAllChildren(_collisionInstance, CollisionLayer);
+
+                if (_collisionInstance.TryGetComponentInParent<TrainCar>(out var root))
+                {
+                    ComponentProcessor.ProcessHideTransforms(_collisionInstance, root.transform);
+                }
             }
 
             if (_walkable != null)
@@ -42,12 +47,22 @@ namespace CarChanger.Game
                 _walkableInstance = Object.Instantiate(_walkable, roots.Walkable);
                 Helpers.SetLayersForAllChildren(_walkableInstance, WalkableLayer);
                 ComponentProcessor.ProcessTeleportPassThroughColliders(_walkableInstance);
+
+                if (_collisionInstance.TryGetComponentInParent<TrainCarInteriorObject>(out var root))
+                {
+                    ComponentProcessor.ProcessHideTransforms(_walkableInstance, root.transform);
+                }
             }
 
             if (_items != null)
             {
                 _itemsInstance = Object.Instantiate(_items, roots.Items);
                 Helpers.SetLayersForAllChildren(_itemsInstance, ItemLayer);
+
+                if (_collisionInstance.TryGetComponentInParent<TrainCarInteriorObject>(out var root))
+                {
+                    ComponentProcessor.ProcessHideTransforms(_itemsInstance, root.transform);
+                }
             }
         }
 

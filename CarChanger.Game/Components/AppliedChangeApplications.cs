@@ -226,6 +226,45 @@ namespace CarChanger.Game.Components
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
+        private void ApplyDM3540(LocoDM3540Config config)
+        {
+            LogChange();
+
+            MatHolder = new MaterialHolder(TrainCar)
+            {
+                Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
+                Interior = TrainCar.transform.Find(
+                    "[interior LOD]/LocoDM3_InteriorLOD/dm3_interior_LOD1").GetComponent<Renderer>().material,
+                Glass = TrainCar.transform.Find(
+                    "LocoDM3_Body/windows/window1").GetComponent<Renderer>().material,
+                BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
+                    "DoorsWindows/C_DoorL/ext cab_door2a").GetComponent<Renderer>().material,
+                InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
+                    "Cab").GetComponent<Renderer>().material,
+                GlassBroken = TrainCar.transform.Find(
+                    "LocoDM3_Body/broken_windows").GetComponent<Renderer>().material,
+            };
+
+            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+            ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder, config.HideGearPlaque ? new[] { "Cab", "GearPatternPlaque" } : new[] { "Cab" }));
+            ChangeInteractables(new LocoDM3540InteractablesChanger(config, MatHolder));
+
+            if (config.UseCustomFrontHeadlights)
+            {
+                _frontHeadlights = new LocoDM3540HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
+                _frontHeadlights.Apply();
+            }
+
+            if (config.UseCustomRearHeadlights)
+            {
+                _rearHeadlights = new LocoDM3540HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
+                _rearHeadlights.Apply();
+            }
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
+        }
+
         private void ApplyS282730A(LocoS282730AConfig config)
         {
             LogChange();
