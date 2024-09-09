@@ -88,7 +88,7 @@ namespace CarChanger.Game
             gameObject.SetActive(false);
             var dupes = window.duplicates.ToList();
 
-            foreach (var item in gameObject.GetComponentsInChildren<UseAsWindow>(true))
+            foreach (var item in gameObject.GetComponentsInChildren<WindowSetup>(true))
             {
                 // Initialise even the empty arrays, or they'll be null.
                 var dupe = item.gameObject.AddComponent<Window>();

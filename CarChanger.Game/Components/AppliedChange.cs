@@ -100,6 +100,9 @@ namespace CarChanger.Game.Components
                 case LocoDE6860Config de6:
                     ApplyDE6860(de6);
                     break;
+                case LocoDH4670Config dh4:
+                    ApplyDH4670(dh4);
+                    break;
                 case LocoDM3540Config dm3:
                     ApplyDM3540(dm3);
                     break;

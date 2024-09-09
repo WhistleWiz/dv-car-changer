@@ -176,6 +176,60 @@ namespace CarChanger.Game.Components
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
+        private void ApplyDH4670(LocoDH4670Config config)
+        {
+            LogChange();
+
+            MatHolder = new MaterialHolder(TrainCar)
+            {
+                Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
+                Interior = TrainCar.transform.Find(
+                    "[interior LOD]/InteriorLOD/cab_LOD1").GetComponent<Renderer>().material,
+                InteriorExtra = TrainCar.transform.Find(
+                    "[interior LOD]/InteriorLOD/deck_LOD1").GetComponent<Renderer>().material,
+                Glass = TrainCar.transform.Find(
+                    "LocoDE2_Body/windows/window_01").GetComponent<Renderer>().material,
+                BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
+                    "DoorsWindows/C_DoorR/ext cab_door1a").GetComponent<Renderer>().material,
+                InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
+                    "Cab").GetComponent<Renderer>().material,
+                InteriorExtraExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
+                    "Deck").GetComponent<Renderer>().material,
+                GlassBroken = TrainCar.transform.Find(
+                    "LocoDE2_Body/broken_windows").GetComponent<Renderer>().material,
+            };
+
+            if (config.UseCustomBogies)
+            {
+                _bogiesChanged = true;
+                _bogiesPowered = true;
+
+                var wheelStates = GetCurrentPoweredWheelStates();
+
+                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
+                MakeBogiesPowered(TrainCar, wheelStates, config.WheelRadius);
+            }
+
+            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+            ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
+            ChangeInteractables(new LocoDH4670InteractablesChanger(config, MatHolder));
+
+            if (config.UseCustomFrontHeadlights)
+            {
+                _frontHeadlights = new LocoDH4670HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
+                _frontHeadlights.Apply();
+            }
+
+            if (config.UseCustomRearHeadlights)
+            {
+                _rearHeadlights = new LocoDH4670HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
+                _rearHeadlights.Apply();
+            }
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
+        }
+
         private void ApplyDE6860(LocoDE6860Config config)
         {
             LogChange();

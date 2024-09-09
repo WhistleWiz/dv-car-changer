@@ -13,6 +13,8 @@ namespace CarChanger.Game.HeadlightChanges
 
         public HeadlightDirection Direction { get; }
 
+        protected string DirectionLetter => GetDirectionLetter(Direction);
+
         protected virtual float BeamOffset => 0.0f;
 
         public HeadlightChanger(TrainCar car, HeadlightDirection direction)
@@ -32,6 +34,14 @@ namespace CarChanger.Game.HeadlightChanges
             return Direction == HeadlightDirection.Front ?
                 car.transform.Find("[headlights]/FrontSide") :
                 car.transform.Find("[headlights]/RearSide");
+        }
+
+        protected void SetGlares(params Vector3[] glares)
+        {
+            for (int i = 0; i < glares.Length; i++)
+            {
+                Lights[i].glare.transform.localPosition = glares[i];
+            }
         }
 
         protected void ResetGlares()

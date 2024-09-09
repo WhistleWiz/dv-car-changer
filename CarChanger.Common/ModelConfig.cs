@@ -88,6 +88,7 @@ namespace CarChanger.Common
             {
                 case ModificationGroupConfig groupA:
                     return ModificationGroupConfig.CanCombine(groupA, b);
+
                 case WagonConfig wagonA:
                     if (b is WagonConfig wagonB) return WagonConfig.CanCombine(wagonA, wagonB);
                     else return false;
@@ -97,30 +98,40 @@ namespace CarChanger.Common
                 case CabooseConfig cabooseA:
                     if (b is CabooseConfig cabooseB) return CabooseConfig.CanCombine(cabooseA, cabooseB);
                     else return false;
+
                 case LocoDE2480Config de2480A:
                     if (b is LocoDE2480Config de2480B) return LocoDE2480Config.CanCombine(de2480A, de2480B);
                     else return false;
                 case LocoDE6860Config de6860A:
                     if (b is LocoDE6860Config de6860B) return LocoDE6860Config.CanCombine(de6860A, de6860B);
                     else return false;
+
+                case LocoDH4670Config dh4670A:
+                    if (b is LocoDH4670Config dh4670B) return LocoDH4670Config.CanCombine(dh4670A, dh4670B);
+                    else return false;
+
                 case LocoDM3540Config dm3540A:
                     if (b is LocoDM3540Config dm3540B) return LocoDM3540Config.CanCombine(dm3540A, dm3540B);
                     else return false;
+
                 case LocoS282730AConfig s282730AA:
                     if (b is LocoS282730AConfig s282730AB) return LocoS282730AConfig.CanCombine(s282730AA, s282730AB);
                     else return false;
                 case LocoS282730BConfig s282730BA:
                     if (b is LocoS282730BConfig s282730BB) return LocoS282730BConfig.CanCombine(s282730BA, s282730BB);
                     else return false;
+
                 case LocoBE2260Config be2260A:
                     if (b is LocoBE2260Config be2260B) return LocoBE2260Config.CanCombine(be2260A, be2260B);
                     else return false;
+
                 case LocoDE6860SlugConfig de6860SlugA:
                     if (b is LocoDE6860SlugConfig de6860SlugB) return LocoDE6860SlugConfig.CanCombine(de6860SlugA, de6860SlugB);
                     else return false;
                 case LocoHandcarConfig handcarA:
                     if (b is LocoHandcarConfig handcarB) return CarWithBogiesConfig.CanCombine(handcarA, handcarB);
                     else return false;
+
                 case CustomCarConfig _:
                     if (b is CustomCarConfig) return true;
                     else return false;

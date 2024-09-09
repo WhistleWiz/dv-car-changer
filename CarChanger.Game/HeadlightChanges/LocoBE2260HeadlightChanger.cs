@@ -12,7 +12,7 @@ namespace CarChanger.Game.HeadlightChanges
         public LocoBE2260HeadlightChanger(LocoBE2260Config config, TrainCar car, HeadlightDirection direction) : base(car, direction)
         {
             _config = config;
-            _white = Root.Find($"microshunter_headlight_glass_{GetDirectionLetter(direction)}").GetComponent<MeshFilter>();
+            _white = Root.Find($"microshunter_headlight_glass_{DirectionLetter}").GetComponent<MeshFilter>();
             _originalWhite = _white.sharedMesh;
         }
 

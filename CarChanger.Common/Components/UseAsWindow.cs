@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CarChanger.Common.Components
 {
-    public class UseAsWindow : MonoBehaviour
+    public class WindowSetup : MonoBehaviour
     {
         public Vector2 Size = Vector2.one;
         public MeshRenderer[] Renderers = new MeshRenderer[0];

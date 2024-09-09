@@ -17,8 +17,8 @@ namespace CarChanger.Game.HeadlightChanges
         {
             _config = direction == HeadlightDirection.Front ? config.FrontSettings : config.RearSettings;
 
-            _white = Root.Find($"ext headlights_glass_{GetDirectionLetter(direction)}").GetComponent<MeshFilter>();
-            _red = Root.Find($"ext headlights_glass_red_{GetDirectionLetter(direction)}").GetComponent<MeshFilter>();
+            _white = Root.Find($"ext headlights_glass_{DirectionLetter}").GetComponent<MeshFilter>();
+            _red = Root.Find($"ext headlights_glass_red_{DirectionLetter}").GetComponent<MeshFilter>();
             _originalWhite = _white.sharedMesh;
             _originalRed = _red.sharedMesh;
         }

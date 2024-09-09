@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace CarChanger.Game.InteractablesChanges
 {
-    internal class LocoDM3540InteractablesChanger : IInteractablesChanger
+    internal class LocoDH4670InteractablesChanger : IInteractablesChanger
     {
-        private LocoDM3540Config _config;
+        private LocoDH4670Config _config;
         private MaterialHolder _materialHolder;
         private ChangeObject? _doorL;
         private ChangeObject? _doorR;
@@ -14,7 +14,7 @@ namespace CarChanger.Game.InteractablesChanges
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
-        public LocoDM3540InteractablesChanger(LocoDM3540Config config, MaterialHolder matHolder)
+        public LocoDH4670InteractablesChanger(LocoDH4670Config config, MaterialHolder matHolder)
         {
             _config = config;
             _materialHolder = matHolder;
@@ -24,37 +24,39 @@ namespace CarChanger.Game.InteractablesChanges
         {
             if (interactables == null) return;
 
-            var doorL = interactables.transform.Find("DoorsWindows/C_DoorL");
-            var doorR = interactables.transform.Find("DoorsWindows/C_DoorR");
+            var doorL = interactables.transform.Find("DoorsWindows/DoorL/C_DoorL");
+            var doorR = interactables.transform.Find("DoorsWindows/DoorR/C_DoorR");
             var windowL = interactables.transform.Find("DoorsWindows/WindowSlideL/WindowSlideL pivot/C_WindowSlideL");
             var windowR = interactables.transform.Find("DoorsWindows/WindowSlideR/WindowSlideR pivot/C_WindowSlideR");
 
             _doorL = new ChangeObject(doorL, IsExploded ? _config.DoorLeftExploded : _config.DoorLeft, new[]
                 {
-                    doorL.Find("ext cab_door2a").gameObject,
-                    doorL.Find("cab_door2b").gameObject,
-                    doorL.Find("cab_door2b_window").gameObject,
-                    doorL.Find("ext cab_door2a_LOD").gameObject,
-                    doorL.Find("cab_door2a_LOD").gameObject
+                    doorL.Find("dh4_exterior_door_L").gameObject,
+                    doorL.Find("dh4_cab_door_L").gameObject,
+                    doorL.Find("dh4_cab_door_L_window").gameObject,
+                    doorL.Find("dh4_exterior_door_L_LOD").gameObject
                 },
                 _config.HideOriginalDoors, _materialHolder);
             _doorR = new ChangeObject(doorR, IsExploded ? _config.DoorRightExploded : _config.DoorRight, new[]
                 {
-                    doorR.Find("ext cab_door1a").gameObject,
-                    doorR.Find("cab_door1b").gameObject,
-                    doorR.Find("cab_door1b_window").gameObject,
-                    doorR.Find("ext cab_door1a_LOD").gameObject,
-                    doorR.Find("cab_door1a_LOD").gameObject
+                    doorR.Find("dh4_exterior_door_R").gameObject,
+                    doorR.Find("dh4_cab_door_R").gameObject,
+                    doorR.Find("dh4_cab_door_R_window").gameObject,
+                    doorR.Find("edh4_exterior_door_R_LOD").gameObject
                 },
                 _config.HideOriginalDoors, _materialHolder);
             _windowL = new ChangeObject(windowL, IsExploded ? _config.WindowLeftExploded : _config.WindowLeft, new[]
                 {
-                    windowL.Find("cab_window_frame_L").gameObject
+                    windowL.Find("dh4_window_farme_L").gameObject,
+                    windowL.Find("dh4_window_glass_L").gameObject,
+                    windowL.Find("window").gameObject
                 },
                 _config.HideOriginalWindows, _materialHolder);
             _windowR = new ChangeObject(windowR, IsExploded ? _config.WindowRightExploded : _config.WindowRight, new[]
                 {
-                    windowR.Find("cab_window_frame_R").gameObject
+                    windowR.Find("dh4_window_frame_R").gameObject,
+                    windowR.Find("dh4_window_frame_R").gameObject,
+                    windowR.Find("window").gameObject
                 },
                 _config.HideOriginalWindows, _materialHolder);
 
