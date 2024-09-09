@@ -16,7 +16,7 @@ namespace CarChanger.Common.Configs
         [Button(nameof(ResetBogies), "Reset"), SerializeField]
         protected bool ResetBogiesToDefaultButton;
 
-        protected virtual float OriginalRadius => Constants.WheelRadiusDefault;
+        protected virtual float OriginalRadius => Constants.Wheels.RadiusDefault;
 
         protected virtual void Reset()
         {
