@@ -11,8 +11,6 @@ namespace CarChanger.Game.HeadlightChanges
         private Mesh _originalWhite;
         private Mesh _originalRed;
 
-        protected override float BeamOffset => 0.0f;
-
         public LocoDE6SlugHeadlightChanger(LocoDE6SlugConfig config, TrainCar car, HeadlightDirection direction) : base(car, direction)
         {
             _config = direction == HeadlightDirection.Front ? config.FrontSettings : config.RearSettings;

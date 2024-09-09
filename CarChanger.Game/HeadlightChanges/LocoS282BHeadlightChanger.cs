@@ -9,8 +9,6 @@ namespace CarChanger.Game.HeadlightChanges
         private MeshFilter _mesh;
         private Mesh _originalMesh;
 
-        protected override float BeamOffset => 0.0f;
-
         public LocoS282BHeadlightChanger(LocoS282BConfig config, TrainCar car) : base(car, HeadlightDirection.Rear)
         {
             _config = config;

@@ -13,7 +13,7 @@ namespace CarChanger.Game.HeadlightChanges
 
         public HeadlightDirection Direction { get; }
 
-        protected abstract float BeamOffset { get; }
+        protected virtual float BeamOffset => 0.0f;
 
         public HeadlightChanger(TrainCar car, HeadlightDirection direction)
         {
