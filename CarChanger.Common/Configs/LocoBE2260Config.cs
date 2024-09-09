@@ -26,7 +26,6 @@ namespace CarChanger.Common.Configs
         public Mesh? FrontMesh;
         [EnableIf(nameof(UseCustomFrontHeadlights))]
         public Vector3 FrontBeamPosition = OriginalFrontBeamPosition;
-
         [Button(nameof(ResetFrontHeadlights), "Reset"), SerializeField]
         private bool _resetFrontButton;
 
@@ -35,7 +34,6 @@ namespace CarChanger.Common.Configs
         public Mesh? RearMesh;
         [EnableIf(nameof(UseCustomRearHeadlights))]
         public Vector3 RearBeamPosition = OriginalRearBeamPosition;
-
         [Button(nameof(ResetRearHeadlights), "Reset"), SerializeField]
         private bool _resetRearButton;
 

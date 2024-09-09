@@ -124,7 +124,7 @@ namespace CarChanger.Game
                     case LocoDE6Config _:
                         AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDiesel].parentType, item);
                         continue;
-                    case LocoS282AConfig _:
+                    case LocoS282730AConfig _:
                         AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoSteamHeavy].parentType, item);
                         continue;
                     case CustomCarConfig ccl:

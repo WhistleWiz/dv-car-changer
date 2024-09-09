@@ -226,7 +226,7 @@ namespace CarChanger.Game.Components
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
-        private void ApplyS282A(LocoS282AConfig config)
+        private void ApplyS282730A(LocoS282730AConfig config)
         {
             LogChange();
 
@@ -246,18 +246,18 @@ namespace CarChanger.Game.Components
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Static"));
-            ChangeInteractables(new LocoS282AInteractablesChanger(config, MatHolder));
+            ChangeInteractables(new LocoS282730AInteractablesChanger(config, MatHolder));
 
             if (config.UseCustomHeadlights)
             {
-                _frontHeadlights = new LocoS282AHeadlightChanger(config, TrainCar);
+                _frontHeadlights = new LocoS282730AHeadlightChanger(config, TrainCar);
                 _frontHeadlights.Apply();
             }
 
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
-        private void ApplyS282B(LocoS282BConfig config)
+        private void ApplyS282730B(LocoS282730BConfig config)
         {
             LogChange();
 
@@ -276,11 +276,11 @@ namespace CarChanger.Game.Components
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
-            ChangeInteractables(new LocoS282BInteractablesChanger(config, MatHolder));
+            ChangeInteractables(new LocoS282730BInteractablesChanger(config, MatHolder));
 
             if (config.UseCustomHeadlights)
             {
-                _rearHeadlights = new LocoS282BHeadlightChanger(config, TrainCar);
+                _rearHeadlights = new LocoS282730BHeadlightChanger(config, TrainCar);
                 _rearHeadlights.Apply();
             }
 

@@ -2,8 +2,8 @@
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/S282A Modification", order = Constants.MenuOrderConstants.Steam + 1)]
-    public class LocoS282AConfig : CarWithInteriorConfig
+    [CreateAssetMenu(menuName = "DVCarChanger/S282-730A Modification", order = Constants.MenuOrderConstants.Steam + 1)]
+    public class LocoS282730AConfig : CarWithInteriorConfig
     {
         private static readonly Vector3 OriginalBeamPosition = new Vector3(-0.00146591f, 3.579122f, 10.98136f);
 
@@ -34,7 +34,7 @@ namespace CarChanger.Common.Configs
 
         public void ResetHeadlights() => BeamPosition = OriginalBeamPosition;
 
-        public static bool CanCombine(LocoS282AConfig a, LocoS282AConfig b) =>
+        public static bool CanCombine(LocoS282730AConfig a, LocoS282730AConfig b) =>
             CarWithInteriorConfig.CanCombine(a, b) &&
             !(a.UseCustomHeadlights && b.UseCustomHeadlights);
     }

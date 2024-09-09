@@ -3,17 +3,17 @@ using UnityEngine;
 
 namespace CarChanger.Game.HeadlightChanges
 {
-    internal class LocoS282AHeadlightChanger : HeadlightChanger
+    internal class LocoS282730BHeadlightChanger : HeadlightChanger
     {
-        private LocoS282AConfig _config;
+        private LocoS282730BConfig _config;
         private MeshFilter _mesh;
         private Mesh _originalMesh;
 
-        public LocoS282AHeadlightChanger(LocoS282AConfig config, TrainCar car) : base(car, HeadlightDirection.Front)
+        public LocoS282730BHeadlightChanger(LocoS282730BConfig config, TrainCar car) : base(car, HeadlightDirection.Rear)
         {
             _config = config;
 
-            _mesh = Root.Find("ext headlights_glass_F").GetComponent<MeshFilter>();
+            _mesh = Root.Find("ext headlights_glass_R").GetComponent<MeshFilter>();
             _originalMesh = _mesh.sharedMesh;
         }
 
@@ -38,6 +38,6 @@ namespace CarChanger.Game.HeadlightChanges
             UpdateBeams();
         }
 
-        protected override Transform GetRoot(TrainCar car) => car.transform.Find("LocoS282A_Headlights/FrontSide");
+        protected override Transform GetRoot(TrainCar car) => car.transform.Find("LocoS282B_Headlights/RearSide");
     }
 }

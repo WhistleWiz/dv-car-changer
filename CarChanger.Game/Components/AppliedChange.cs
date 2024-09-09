@@ -100,11 +100,11 @@ namespace CarChanger.Game.Components
                 case LocoDE6Config de6:
                     ApplyDE6(de6);
                     break;
-                case LocoS282AConfig s282A:
-                    ApplyS282A(s282A);
+                case LocoS282730AConfig s282A:
+                    ApplyS282730A(s282A);
                     break;
-                case LocoS282BConfig s282B:
-                    ApplyS282B(s282B);
+                case LocoS282730BConfig s282B:
+                    ApplyS282730B(s282B);
                     break;
                 case LocoBE2260Config be2:
                     ApplyBE2260(be2);
@@ -174,14 +174,14 @@ namespace CarChanger.Game.Components
                     {
                         transform.Find("LocoDE6_Body/Body").gameObject
                     };
-                case LocoS282AConfig _:
+                case LocoS282730AConfig _:
                     result = new List<GameObject>();
                     result.AddRange(transform.Find("LocoS282A_Body/Static_LOD0").AllChildGOsExcept("s282_buffer_stems", "s282_brake_shoes"));
                     result.AddRange(transform.Find("LocoS282A_Body/Static_LOD1").AllChildGOsExcept("s282_buffer_stems_LOD1"));
                     result.AddRange(transform.Find("LocoS282A_Body/Static_LOD2").AllChildGOs());
                     result.AddRange(transform.Find("LocoS282A_Body/Static_LOD3").AllChildGOs());
                     return result;
-                case LocoS282BConfig _:
+                case LocoS282730BConfig _:
                     result = new List<GameObject>();
                     result.AddRange(transform.Find("LocoS282B_Body/LOD0").AllChildGOsExcept("s282_tender_buffer_stems"));
                     result.AddRange(transform.Find("LocoS282B_Body/LOD1").AllChildGOsExcept("s282_tender_buffer_stems_LOD1"));
