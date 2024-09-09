@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace CarChanger.Game.InteractablesChanges
 {
-    internal class LocoDE6InteractablesChanger : IInteractablesChanger
+    internal class LocoDE6860InteractablesChanger : IInteractablesChanger
     {
-        private LocoDE6Config _config;
+        private LocoDE6860Config _config;
         private MaterialHolder _materialHolder;
         private ChangeObject? _engR;
         private ChangeObject? _engL;
@@ -14,7 +14,7 @@ namespace CarChanger.Game.InteractablesChanges
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
-        public LocoDE6InteractablesChanger(LocoDE6Config config, MaterialHolder matHolder)
+        public LocoDE6860InteractablesChanger(LocoDE6860Config config, MaterialHolder matHolder)
         {
             _config = config;
             _materialHolder = matHolder;

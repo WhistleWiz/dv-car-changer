@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace CarChanger.Game.HeadlightChanges
 {
-    internal class LocoDE6SlugHeadlightChanger : HeadlightChanger
+    internal class LocoDE6860SlugHeadlightChanger : HeadlightChanger
     {
-        private LocoDE6SlugConfig.HeadlightSettings _config;
+        private LocoDE6860SlugConfig.HeadlightSettings _config;
         private MeshFilter _white;
         private MeshFilter _red;
         private Mesh _originalWhite;
         private Mesh _originalRed;
 
-        public LocoDE6SlugHeadlightChanger(LocoDE6SlugConfig config, TrainCar car, HeadlightDirection direction) : base(car, direction)
+        public LocoDE6860SlugHeadlightChanger(LocoDE6860SlugConfig config, TrainCar car, HeadlightDirection direction) : base(car, direction)
         {
             _config = direction == HeadlightDirection.Front ? config.FrontSettings : config.RearSettings;
 

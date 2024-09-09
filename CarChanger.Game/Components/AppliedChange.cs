@@ -97,8 +97,8 @@ namespace CarChanger.Game.Components
                 case LocoDE2480Config de2:
                     ApplyDE2480(de2);
                     break;
-                case LocoDE6Config de6:
-                    ApplyDE6(de6);
+                case LocoDE6860Config de6:
+                    ApplyDE6860(de6);
                     break;
                 case LocoS282730AConfig s282A:
                     ApplyS282730A(s282A);
@@ -109,8 +109,8 @@ namespace CarChanger.Game.Components
                 case LocoBE2260Config be2:
                     ApplyBE2260(be2);
                     break;
-                case LocoDE6SlugConfig de6Slug:
-                    ApplyDE6Slug(de6Slug);
+                case LocoDE6860SlugConfig de6Slug:
+                    ApplyDE6860Slug(de6Slug);
                     break;
                 case LocoHandcarConfig handcar:
                     ApplyHandcar(handcar);
@@ -169,7 +169,7 @@ namespace CarChanger.Game.Components
                         transform.Find("LocoDE2_Body/ext 621_exterior").gameObject,
                         transform.Find("LocoDE2_Body/LocoShunterExterior_lod").gameObject
                     };
-                case LocoDE6Config _:
+                case LocoDE6860Config _:
                     return new List<GameObject>
                     {
                         transform.Find("LocoDE6_Body/Body").gameObject
@@ -196,7 +196,7 @@ namespace CarChanger.Game.Components
                         transform.Find("LocoMicroshunter_Body/microshunter_body_LOD2").gameObject,
                         transform.Find("LocoMicroshunter_Body/microshunter_body_LOD3").gameObject
                     };
-                case LocoDE6SlugConfig _:
+                case LocoDE6860SlugConfig _:
                     return transform.Find("LocoDE6Slug_Body").AllChildGOsExcept("de6_slug_buffer_stems").ToList();
                 case LocoHandcarConfig _:
                     return transform.Find("LocoHandcar_Body").AllChildGOsExcept("crank mechanism").ToList();

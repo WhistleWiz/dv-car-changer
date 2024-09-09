@@ -121,7 +121,7 @@ namespace CarChanger.Game
                             AddToCarLivery(s_lastLoadedLivery, item);
                         }
                         break;
-                    case LocoDE6Config _:
+                    case LocoDE6860Config _:
                         AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDiesel].parentType, item);
                         continue;
                     case LocoS282730AConfig _:

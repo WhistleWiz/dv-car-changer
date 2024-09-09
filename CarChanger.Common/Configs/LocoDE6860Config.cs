@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/DE6 Modification", order = Constants.MenuOrderConstants.Diesel + 1)]
-    public class LocoDE6Config : CarWithInteriorAndBogiesConfig
+    [CreateAssetMenu(menuName = "DVCarChanger/DE6-860 Modification", order = Constants.MenuOrderConstants.Diesel + 1)]
+    public class LocoDE6860Config : CarWithInteriorAndBogiesConfig
     {
         [Serializable]
         public class HeadlightSettings
@@ -142,7 +142,7 @@ namespace CarChanger.Common.Configs
             return true;
         }
 
-        public static bool CanCombine(LocoDE6Config a, LocoDE6Config b) =>
+        public static bool CanCombine(LocoDE6860Config a, LocoDE6860Config b) =>
             CarWithInteriorAndBogiesConfig.CanCombine(a, b) &&
             !(a.HideOriginalEngineDoors && b.HideOriginalEngineDoors) &&
             !(a.HideOriginalCabDoors && b.HideOriginalCabDoors) &&

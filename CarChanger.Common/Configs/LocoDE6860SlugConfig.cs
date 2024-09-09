@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/DE6 Slug Modification", order = Constants.MenuOrderConstants.Extras + 0)]
-    public class LocoDE6SlugConfig : CarWithBogiesConfig
+    [CreateAssetMenu(menuName = "DVCarChanger/DE6-860S (Slug) Modification", order = Constants.MenuOrderConstants.Extras + 0)]
+    public class LocoDE6860SlugConfig : CarWithBogiesConfig
     {
         [Serializable]
         public class HeadlightSettings
@@ -130,7 +130,7 @@ namespace CarChanger.Common.Configs
             return true;
         }
 
-        public static bool CanCombine(LocoDE6SlugConfig a, LocoDE6SlugConfig b) =>
+        public static bool CanCombine(LocoDE6860SlugConfig a, LocoDE6860SlugConfig b) =>
             CarWithBogiesConfig.CanCombine(a, b) &&
             !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&
             !(a.UseCustomRearHeadlights && b.UseCustomRearHeadlights);

@@ -176,7 +176,7 @@ namespace CarChanger.Game.Components
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
-        private void ApplyDE6(LocoDE6Config config)
+        private void ApplyDE6860(LocoDE6860Config config)
         {
             LogChange();
 
@@ -209,17 +209,17 @@ namespace CarChanger.Game.Components
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
-            ChangeInteractables(new LocoDE6InteractablesChanger(config, MatHolder));
+            ChangeInteractables(new LocoDE6860InteractablesChanger(config, MatHolder));
 
             if (config.UseCustomFrontHeadlights)
             {
-                _frontHeadlights = new LocoDE6HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
+                _frontHeadlights = new LocoDE6860HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
                 _frontHeadlights.Apply();
             }
 
             if (config.UseCustomRearHeadlights)
             {
-                _rearHeadlights = new LocoDE6HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
+                _rearHeadlights = new LocoDE6860HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
                 _rearHeadlights.Apply();
             }
 
@@ -337,7 +337,7 @@ namespace CarChanger.Game.Components
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
-        private void ApplyDE6Slug(LocoDE6SlugConfig config)
+        private void ApplyDE6860Slug(LocoDE6860SlugConfig config)
         {
             LogChange();
 
@@ -371,13 +371,13 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomFrontHeadlights)
             {
-                _frontHeadlights = new LocoDE6SlugHeadlightChanger(config, TrainCar, HeadlightDirection.Front);
+                _frontHeadlights = new LocoDE6860SlugHeadlightChanger(config, TrainCar, HeadlightDirection.Front);
                 _frontHeadlights.Apply();
             }
 
             if (config.UseCustomRearHeadlights)
             {
-                _rearHeadlights = new LocoDE6SlugHeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
+                _rearHeadlights = new LocoDE6860SlugHeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
                 _rearHeadlights.Apply();
             }
 
