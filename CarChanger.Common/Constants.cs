@@ -16,14 +16,17 @@
         public const string BogieContactPointsPath = "bogie_car/ContactPoints";
         public const string Axle = "[axle]";
 
-        public const float WheelRadiusDefault = 0.459f;
-        public const float WheelRadiusDE2 = 0.5025f;
-        public const float WheelRadiusDE6 = 0.5335f;
-        public const float WheelRadiusDH4 = 0.535f;
-        public const float WheelRadiusHandcar = 0.290f;
-        public const float WheelRadiusMicroshunter = 0.325f;
+        public static class Wheels
+        {
+            public const float RadiusDefault = 0.459f;
+            public const float RadiusDE2 = 0.5025f;
+            public const float RadiusDE6 = 0.5335f;
+            public const float RadiusDH4 = 0.535f;
+            public const float RadiusHandcar = 0.290f;
+            public const float RadiusMicroshunter = 0.325f;
+        }
 
-        public class MenuOrderConstants
+        public static class MenuOrderConstants
         {
             public const int Pack = 0;
             public const int Unpowered = 100;

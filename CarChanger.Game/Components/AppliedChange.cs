@@ -37,8 +37,6 @@ namespace CarChanger.Game.Components
         private ExplosionModelHandler? _explosionHandler = null;
         private ColliderHolder? _colliderHolder = null;
 
-        private GameObject DefaultBogie => TrainCar.carLivery.prefab.GetComponentInChildren<Bogie>().transform.GetChild(0).gameObject;
-
         private void Awake()
         {
             TrainCar = TrainCar.Resolve(gameObject);
@@ -110,6 +108,9 @@ namespace CarChanger.Game.Components
                     break;
                 case LocoDE6SlugConfig de6Slug:
                     ApplyDE6Slug(de6Slug);
+                    break;
+                case LocoHandcarConfig handcar:
+                    ApplyHandcar(handcar);
                     break;
                 case CustomCarConfig custom:
                     ApplyCustomCar(custom);
@@ -186,6 +187,8 @@ namespace CarChanger.Game.Components
                     return result;
                 case LocoDE6SlugConfig _:
                     return transform.Find("LocoDE6Slug_Body").AllChildGOsExcept("de6_slug_buffer_stems").ToList();
+                case LocoHandcarConfig _:
+                    return transform.Find("LocoHandcar_Body").AllChildGOsExcept("crank mechanism").ToList();
                 default:
                     break;
             }
@@ -345,10 +348,11 @@ namespace CarChanger.Game.Components
             car.GetComponentInChildren<WheelSlideSparksController>().sparkAnchors = sparks.ToArray();
 
             // Finally, update the wheel rotation.
-            // This method only works on unpowered vehicles, since powered use a different location for this
-            // component, or something else only.
+            // This method only works on unpowered vehicles, since powered use a different thing.
             // For those a separate method is used to update.
-            if (car.TryGetComponent<WheelRotationViaCode>(out var wheelRotation))
+            var wheelRotation = car.GetComponentInChildren<WheelRotationViaCode>();
+
+            if (wheelRotation != null)
             {
                 wheelRotation.wheelRadius = radius ?? wheelRotation.wheelRadius;
 
@@ -505,7 +509,10 @@ namespace CarChanger.Game.Components
                         .Select(x => x.GetComponent<PoweredWheel>().state).ToArray();
                 }
 
-                ChangeBogies(TrainCar, DefaultBogie, DefaultBogie, TrainCar.carLivery.parentType.wheelRadius);
+                var bogies = TrainCar.carLivery.prefab.GetComponentsInChildren<Bogie>()
+                    .OrderBy(x => x.transform.position.z)
+                    .Select(x => x.transform.GetChild(0).gameObject);
+                ChangeBogies(TrainCar, bogies.ElementAt(1), bogies.ElementAt(0), TrainCar.carLivery.parentType.wheelRadius);
 
                 if (_bogiesPowered)
                 {

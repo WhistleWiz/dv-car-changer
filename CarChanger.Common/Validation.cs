@@ -7,25 +7,11 @@ namespace CarChanger.Common
     {
         public static string? ValidateBogie(GameObject bogie, int? requiredAxles = null, int? requiredPoweredAxles = null)
         {
-            int axles = 0;
-            int poweredAxles = 0;
-
-            foreach (Transform t in bogie.transform)
-            {
-                if (t.name == "[axle]")
-                {
-                    axles++;
-
-                    if (t.TryGetComponent<PoweredAxle>(out _))
-                    {
-                        poweredAxles++;
-                    }
-                }
-            }
+            (int axles, int poweredAxles) = GetAxleCount(bogie);
 
             if (axles < 1)
             {
-                return "no axles detected in bogie";
+                return "no axles detected";
             }
 
             if (requiredAxles.HasValue && axles != requiredAxles)
@@ -43,8 +29,11 @@ namespace CarChanger.Common
 
         public static string? ValidateBothBogies(GameObject? front, GameObject? rear,
             int? requiredAxlesF = null, int? requiredAxlesR = null,
-            int? requiredPoweredAxlesF = null, int? requiredPoweredAxlesR = null)
+            int? requiredPoweredAxlesF = null, int? requiredPoweredAxlesR = null,
+            int? minimumTotalPoweredAxles = null)
         {
+            int pwrAxles = 0;
+
             if (front != null)
             {
                 if (rear == null)
@@ -65,6 +54,8 @@ namespace CarChanger.Common
                 {
                     return $"front bogie: {result}";
                 }
+
+                pwrAxles += GetAxleCount(front).Powered;
             }
 
             if (rear != null)
@@ -75,9 +66,37 @@ namespace CarChanger.Common
                 {
                     return $"rear bogie: {result}";
                 }
+
+                pwrAxles += GetAxleCount(rear).Powered;
+            }
+
+            if (minimumTotalPoweredAxles.HasValue && pwrAxles < minimumTotalPoweredAxles)
+            {
+                return $"total powered axle count ({pwrAxles}) is below minimum ({minimumTotalPoweredAxles})";
             }
 
             return null;
+        }
+
+        private static (int Axles, int Powered) GetAxleCount(GameObject bogie)
+        {
+            int axles = 0;
+            int poweredAxles = 0;
+
+            foreach (Transform t in bogie.transform)
+            {
+                if (t.name == "[axle]")
+                {
+                    axles++;
+
+                    if (t.TryGetComponent<PoweredAxle>(out _))
+                    {
+                        poweredAxles++;
+                    }
+                }
+            }
+
+            return (axles, poweredAxles);
         }
     }
 }

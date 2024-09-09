@@ -334,6 +334,31 @@ namespace CarChanger.Game.Components
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
+        private void ApplyHandcar(LocoHandcarConfig config)
+        {
+            LogChange();
+
+            MatHolder = new MaterialHolder(TrainCar)
+            {
+                Body = _originalBody[0].GetComponentInChildren<Renderer>().material
+            };
+
+            if (config.UseCustomBogies)
+            {
+                _bogiesChanged = true;
+                _bogiesPowered = true;
+
+                var wheelStates = GetCurrentPoweredWheelStates();
+
+                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
+                MakeBogiesPowered(TrainCar, wheelStates, config.WheelRadius);
+            }
+
+            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
+        }
+
         private void ApplyCustomCar(CustomCarConfig config)
         {
             LogChange();

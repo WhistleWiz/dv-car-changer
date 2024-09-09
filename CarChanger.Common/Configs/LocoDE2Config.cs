@@ -45,7 +45,7 @@ namespace CarChanger.Common.Configs
             public Vector3 RedGlarePosition;
         }
 
-        protected override float OriginalRadius => Constants.WheelRadiusDE2;
+        protected override float OriginalRadius => Constants.Wheels.RadiusDE2;
 
         [Header("Doors and Windows")]
         public GameObject? DoorFront;
@@ -120,7 +120,7 @@ namespace CarChanger.Common.Configs
         {
             if (FrontBogie || RearBogie)
             {
-                var result = Validation.ValidateBothBogies(FrontBogie, RearBogie, null, null, 1, 1);
+                var result = Validation.ValidateBothBogies(FrontBogie, RearBogie, 1, 1, 1, 1);
 
                 if (!string.IsNullOrEmpty(result))
                 {

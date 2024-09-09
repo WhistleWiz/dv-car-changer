@@ -51,7 +51,7 @@ namespace CarChanger.Common.Configs
             public Vector3 RedGlarePosition;
         }
 
-        protected override float OriginalRadius => Constants.WheelRadiusDE6;
+        protected override float OriginalRadius => Constants.Wheels.RadiusDE6;
 
         [Header("Headlights")]
         public bool UseCustomFrontHeadlights = false;
