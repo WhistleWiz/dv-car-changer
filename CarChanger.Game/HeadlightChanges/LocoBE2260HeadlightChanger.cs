@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace CarChanger.Game.HeadlightChanges
 {
-    internal class LocoBE2HeadlightChanger : HeadlightChanger
+    internal class LocoBE2260HeadlightChanger : HeadlightChanger
     {
         private LocoBE2260Config _config;
         private MeshFilter _white;
         private Mesh _originalWhite;
 
-        public LocoBE2HeadlightChanger(LocoBE2260Config config, TrainCar car, HeadlightDirection direction) : base(car, direction)
+        public LocoBE2260HeadlightChanger(LocoBE2260Config config, TrainCar car, HeadlightDirection direction) : base(car, direction)
         {
             _config = config;
             _white = Root.Find($"microshunter_headlight_glass_{GetDirectionLetter(direction)}").GetComponent<MeshFilter>();

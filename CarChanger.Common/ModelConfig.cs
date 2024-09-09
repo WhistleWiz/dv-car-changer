@@ -97,8 +97,8 @@ namespace CarChanger.Common
                 case CabooseConfig cabooseA:
                     if (b is CabooseConfig cabooseB) return CabooseConfig.CanCombine(cabooseA, cabooseB);
                     else return false;
-                case LocoDE2Config de2A:
-                    if (b is LocoDE2Config de2B) return LocoDE2Config.CanCombine(de2A, de2B);
+                case LocoDE2480Config de2480A:
+                    if (b is LocoDE2480Config de2480B) return LocoDE2480Config.CanCombine(de2480A, de2480B);
                     else return false;
                 case LocoDE6Config de6A:
                     if (b is LocoDE6Config de6B) return LocoDE6Config.CanCombine(de6A, de6B);

@@ -94,8 +94,8 @@ namespace CarChanger.Game.Components
                 case CabooseConfig caboose:
                     ApplyCaboose(caboose);
                     break;
-                case LocoDE2Config de2:
-                    ApplyDE2(de2);
+                case LocoDE2480Config de2:
+                    ApplyDE2480(de2);
                     break;
                 case LocoDE6Config de6:
                     ApplyDE6(de6);
@@ -107,7 +107,7 @@ namespace CarChanger.Game.Components
                     ApplyS282B(s282B);
                     break;
                 case LocoBE2260Config be2:
-                    ApplyBE2(be2);
+                    ApplyBE2260(be2);
                     break;
                 case LocoDE6SlugConfig de6Slug:
                     ApplyDE6Slug(de6Slug);
@@ -163,7 +163,7 @@ namespace CarChanger.Game.Components
                         transform.Find("CarCaboose_exterior/CabooseExterior_LOD2").gameObject,
                         transform.Find("CarCaboose_exterior/Caboose_LOD3").gameObject
                     };
-                case LocoDE2Config _:
+                case LocoDE2480Config _:
                     return new List<GameObject>
                     {
                         transform.Find("LocoDE2_Body/ext 621_exterior").gameObject,
@@ -241,7 +241,7 @@ namespace CarChanger.Game.Components
                         transform.Find("CarPassenger/CarPassengerInterior_LOD1").gameObject,
                         transform.Find("CarPassenger/CarPassengerInterior_LOD2").gameObject
                     };
-                case LocoDE2Config de2:
+                case LocoDE2480Config de2:
                     result = new List<GameObject>
                     {
                         transform.Find("[interior LOD]/InteriorLOD/cab_LOD1").gameObject,

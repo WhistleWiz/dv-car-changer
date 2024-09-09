@@ -76,7 +76,12 @@ namespace CarChanger.Game
             {
                 window = gameObject.GetComponentInSiblings<Window>();
 
-                if (window == null) return;
+                if (window == null)
+                {
+                    window = gameObject.GetComponentInChildren<Window>();
+
+                    if (window == null) return;
+                }
             }
 
             // Deactivate the current object to prevent Awake() from being called too early.

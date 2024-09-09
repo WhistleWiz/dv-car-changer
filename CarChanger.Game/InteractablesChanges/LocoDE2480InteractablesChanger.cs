@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace CarChanger.Game.InteractablesChanges
 {
-    internal class LocoDE2InteractablesChanger : IInteractablesChanger
+    internal class LocoDE2480InteractablesChanger : IInteractablesChanger
     {
-        private LocoDE2Config _config;
+        private LocoDE2480Config _config;
         private MaterialHolder _materialHolder;
         private ChangeObject? _doorR;
         private ChangeObject? _doorF;
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
-        public LocoDE2InteractablesChanger(LocoDE2Config config, MaterialHolder matHolder)
+        public LocoDE2480InteractablesChanger(LocoDE2480Config config, MaterialHolder matHolder)
         {
             _config = config;
             _materialHolder = matHolder;

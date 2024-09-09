@@ -19,11 +19,11 @@
         public static class Wheels
         {
             public const float RadiusDefault = 0.459f;
-            public const float RadiusDE2 = 0.5025f;
+            public const float RadiusDE2480 = 0.5025f;
             public const float RadiusDE6 = 0.5335f;
             public const float RadiusDH4 = 0.535f;
+            public const float RadiusBE2260 = 0.325f;
             public const float RadiusHandcar = 0.290f;
-            public const float RadiusMicroshunter = 0.325f;
         }
 
         public static class MenuOrderConstants

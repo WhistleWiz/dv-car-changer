@@ -8,7 +8,7 @@ namespace CarChanger.Common.Configs
         private static readonly Vector3 OriginalFrontBeamPosition = new Vector3(0, 0, 0);
         private static readonly Vector3 OriginalRearBeamPosition = new Vector3(0, 0, 0);
 
-        protected override float OriginalRadius => Constants.Wheels.RadiusDE2;
+        protected override float OriginalRadius => Constants.Wheels.RadiusDE2480;
 
         [Header("Doors and Windows")]
         public GameObject? Door;

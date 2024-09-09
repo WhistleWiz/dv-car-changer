@@ -122,7 +122,7 @@ namespace CarChanger.Game.Components
             Destroy(this);
         }
 
-        private void ApplyDE2(LocoDE2Config config)
+        private void ApplyDE2480(LocoDE2480Config config)
         {
             LogChange();
 
@@ -159,17 +159,17 @@ namespace CarChanger.Game.Components
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, config.HideControlDeck ? new[] { "Cab", "Deck" } : new[] { "Cab" }));
-            ChangeInteractables(new LocoDE2InteractablesChanger(config, MatHolder));
+            ChangeInteractables(new LocoDE2480InteractablesChanger(config, MatHolder));
 
             if (config.UseCustomFrontHeadlights)
             {
-                _frontHeadlights = new LocoDE2HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
+                _frontHeadlights = new LocoDE2480HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
                 _frontHeadlights.Apply();
             }
 
             if (config.UseCustomRearHeadlights)
             {
-                _rearHeadlights = new LocoDE2HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
+                _rearHeadlights = new LocoDE2480HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
                 _rearHeadlights.Apply();
             }
 
@@ -287,7 +287,7 @@ namespace CarChanger.Game.Components
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
-        private void ApplyBE2(LocoBE2260Config config)
+        private void ApplyBE2260(LocoBE2260Config config)
         {
             LogChange();
 
@@ -320,17 +320,17 @@ namespace CarChanger.Game.Components
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
-            ChangeInteractables(new LocoBE2InteractablesChanger(config, MatHolder));
+            ChangeInteractables(new LocoBE2260InteractablesChanger(config, MatHolder));
 
             if (config.UseCustomFrontHeadlights)
             {
-                _frontHeadlights = new LocoBE2HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
+                _frontHeadlights = new LocoBE2260HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
                 _frontHeadlights.Apply();
             }
 
             if (config.UseCustomRearHeadlights)
             {
-                _rearHeadlights = new LocoBE2HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
+                _rearHeadlights = new LocoBE2260HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
                 _rearHeadlights.Apply();
             }
 

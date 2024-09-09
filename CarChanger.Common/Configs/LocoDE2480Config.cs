@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/DE2 Modification", order = Constants.MenuOrderConstants.Diesel + 0)]
-    public class LocoDE2Config : CarWithInteriorAndBogiesConfig
+    [CreateAssetMenu(menuName = "DVCarChanger/DE2-480 Modification", order = Constants.MenuOrderConstants.Diesel + 0)]
+    public class LocoDE2480Config : CarWithInteriorAndBogiesConfig
     {
         [Serializable]
         public class HeadlightSettings
@@ -45,7 +45,7 @@ namespace CarChanger.Common.Configs
             public Vector3 RedGlarePosition;
         }
 
-        protected override float OriginalRadius => Constants.Wheels.RadiusDE2;
+        protected override float OriginalRadius => Constants.Wheels.RadiusDE2480;
 
         [Header("Doors and Windows")]
         public GameObject? DoorFront;
@@ -60,6 +60,7 @@ namespace CarChanger.Common.Configs
         public HeadlightSettings FrontSettings = HeadlightSettings.Front;
         [Button(nameof(ResetFrontHeadlights), "Reset"), SerializeField]
         private bool _resetFrontButton;
+
         public bool UseCustomRearHeadlights = false;
         [EnableIf(nameof(UseCustomRearHeadlights))]
         public HeadlightSettings RearSettings = HeadlightSettings.Rear;
@@ -133,7 +134,7 @@ namespace CarChanger.Common.Configs
             return true;
         }
 
-        public static bool CanCombine(LocoDE2Config a, LocoDE2Config b) =>
+        public static bool CanCombine(LocoDE2480Config a, LocoDE2480Config b) =>
             CarWithInteriorAndBogiesConfig.CanCombine(a, b) &&
             !(a.HideOriginalCabDoors && b.HideOriginalCabDoors) &&
             !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&

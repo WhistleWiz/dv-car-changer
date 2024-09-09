@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CarChanger.Game.InteractablesChanges
 {
-    internal class LocoBE2InteractablesChanger : IInteractablesChanger
+    internal class LocoBE2260InteractablesChanger : IInteractablesChanger
     {
         private LocoBE2260Config _config;
         private MaterialHolder _materialHolder;
@@ -13,7 +13,7 @@ namespace CarChanger.Game.InteractablesChanges
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
-        public LocoBE2InteractablesChanger(LocoBE2260Config config, MaterialHolder matHolder)
+        public LocoBE2260InteractablesChanger(LocoBE2260Config config, MaterialHolder matHolder)
         {
             _config = config;
             _materialHolder = matHolder;
@@ -42,7 +42,7 @@ namespace CarChanger.Game.InteractablesChanges
                     windowF.Find("microshunter_window_FC").gameObject
                 },
                 _config.HideOriginalWindows, _materialHolder);
-            _windowF = new ChangeObject(windowR, IsExploded ? _config.WindowRearExploded : _config.WindowRear, new[]
+            _windowR = new ChangeObject(windowR, IsExploded ? _config.WindowRearExploded : _config.WindowRear, new[]
                 {
                     windowR.Find("microshunter_int_window_R").gameObject,
                     windowR.Find("microshunter_ext_window_R").gameObject,

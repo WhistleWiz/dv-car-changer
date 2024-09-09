@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace CarChanger.Game.HeadlightChanges
 {
-    internal class LocoDE2HeadlightChanger : HeadlightChanger
+    internal class LocoDE2480HeadlightChanger : HeadlightChanger
     {
-        private LocoDE2Config.HeadlightSettings _config;
+        private LocoDE2480Config.HeadlightSettings _config;
         private MeshFilter _white;
         private MeshFilter _red;
         private Mesh _originalWhite;
@@ -13,7 +13,7 @@ namespace CarChanger.Game.HeadlightChanges
 
         protected override float BeamOffset => 0.055f;
 
-        public LocoDE2HeadlightChanger(LocoDE2Config config, TrainCar car, HeadlightDirection direction) : base(car, direction)
+        public LocoDE2480HeadlightChanger(LocoDE2480Config config, TrainCar car, HeadlightDirection direction) : base(car, direction)
         {
             _config = direction == HeadlightDirection.Front ? config.FrontSettings : config.RearSettings;
 
