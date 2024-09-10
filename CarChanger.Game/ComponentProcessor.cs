@@ -45,7 +45,7 @@ namespace CarChanger.Game
         {
             foreach (var item in gameObject.GetComponentsInChildren<UseBodyMaterial>())
             {
-                item.GetRenderer().material = holder.GetMaterial(item.Material, item.MaterialObjectPath);
+                item.GetRenderer().material = holder.GetMaterial(item);
             }
         }
 

@@ -48,7 +48,7 @@ namespace CarChanger.Game
                 Helpers.SetLayersForAllChildren(_walkableInstance, WalkableLayer);
                 ComponentProcessor.ProcessTeleportPassThroughColliders(_walkableInstance);
 
-                if (_collisionInstance.TryGetComponentInParent<TrainCarInteriorObject>(out var root))
+                if (_walkableInstance.TryGetComponentInParent<TrainCarInteriorObject>(out var root))
                 {
                     ComponentProcessor.ProcessHideTransforms(_walkableInstance, root.transform);
                 }
@@ -59,7 +59,7 @@ namespace CarChanger.Game
                 _itemsInstance = Object.Instantiate(_items, roots.Items);
                 Helpers.SetLayersForAllChildren(_itemsInstance, ItemLayer);
 
-                if (_collisionInstance.TryGetComponentInParent<TrainCarInteriorObject>(out var root))
+                if (_itemsInstance.TryGetComponentInParent<TrainCarInteriorObject>(out var root))
                 {
                     ComponentProcessor.ProcessHideTransforms(_itemsInstance, root.transform);
                 }

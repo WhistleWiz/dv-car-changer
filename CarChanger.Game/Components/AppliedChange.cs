@@ -202,10 +202,12 @@ namespace CarChanger.Game.Components
                     };
 
                 case LocoS060440Config _:
-                    return transform.Find("LocoS060_Body/Static").AllChildGOsExcept("s060_brake_shoes", "s060_buffer_stems", "s060_cab_light_bulb").ToList();
+                    return transform.Find("LocoS060_Body/Static").AllChildGOsExcept(
+                        "s060_buffer_stems", "s060_brake_shoes", "s060_cab_light_bulb", "s060_gauge_lubricator_glass").ToList();
                 case LocoS282730AConfig _:
                     result = new List<GameObject>();
-                    result.AddRange(transform.Find("LocoS282A_Body/Static_LOD0").AllChildGOsExcept("s282_buffer_stems", "s282_brake_shoes"));
+                    result.AddRange(transform.Find("LocoS282A_Body/Static_LOD0").AllChildGOsExcept(
+                        "s282_buffer_stems", "s282_brake_shoes", "s282_glass", "s282_valve_gear_light", "s282_gauge_lubricator_glass"));
                     result.AddRange(transform.Find("LocoS282A_Body/Static_LOD1").AllChildGOsExcept("s282_buffer_stems_LOD1"));
                     result.AddRange(transform.Find("LocoS282A_Body/Static_LOD2").AllChildGOs());
                     result.AddRange(transform.Find("LocoS282A_Body/Static_LOD3").AllChildGOs());

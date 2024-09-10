@@ -373,7 +373,7 @@ namespace CarChanger.Game.Components
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
-            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Static"));
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder, new[] { "Static/Cab", "Static/Things" }));
             ChangeInteractables(new LocoS282730AInteractablesChanger(config, MatHolder));
 
             if (config.UseCustomHeadlights)
