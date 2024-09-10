@@ -14,6 +14,11 @@ namespace CarChanger.Common.Components
             DestroyEvent?.Invoke();
         }
 
+        private void OnValidate()
+        {
+            transform.localScale = Vector3.one;
+        }
+
         private void OnDrawGizmosSelected()
         {
             Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);

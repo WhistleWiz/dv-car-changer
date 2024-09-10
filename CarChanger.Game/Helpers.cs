@@ -155,5 +155,14 @@ namespace CarChanger.Game
                 }
             }
         }
+
+        internal static StaticInteractionArea? GetInteractionArea(ControlSpec control)
+        {
+            var t = control.GetType();
+            var f = t.GetField("nonVrStaticInteractionArea");
+
+            if (f == null) return null;
+            return (StaticInteractionArea)f.GetValue(control);
+        }
     }
 }
