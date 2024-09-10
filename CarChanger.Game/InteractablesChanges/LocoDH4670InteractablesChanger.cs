@@ -48,15 +48,13 @@ namespace CarChanger.Game.InteractablesChanges
             _windowL = new ChangeObject(windowL, IsExploded ? _config.WindowLeftExploded : _config.WindowLeft, new[]
                 {
                     windowL.Find("dh4_window_farme_L").gameObject,
-                    windowL.Find("dh4_window_glass_L").gameObject,
-                    windowL.Find("window").gameObject
+                    windowL.Find("dh4_window_glass_L").gameObject
                 },
                 _config.HideOriginalWindows, _materialHolder);
             _windowR = new ChangeObject(windowR, IsExploded ? _config.WindowRightExploded : _config.WindowRight, new[]
                 {
                     windowR.Find("dh4_window_frame_R").gameObject,
-                    windowR.Find("dh4_window_frame_R").gameObject,
-                    windowR.Find("window").gameObject
+                    windowR.Find("dh4_window_frame_R").gameObject
                 },
                 _config.HideOriginalWindows, _materialHolder);
 

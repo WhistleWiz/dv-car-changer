@@ -67,7 +67,7 @@ namespace CarChanger.Game.Components
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
-                Glass = TrainCar.transform.Find(
+                Windows = TrainCar.transform.Find(
                     "CarPassenger/CarPassengerWindowsSide").GetComponent<Renderer>().material,
             };
 
@@ -92,7 +92,7 @@ namespace CarChanger.Game.Components
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
                 Interior = TrainCar.transform.Find(
                     "[interior LOD]/CabooseInterior_LOD1").GetComponent<Renderer>().material,
-                Glass = TrainCar.transform.Find(
+                Windows = TrainCar.transform.Find(
                     "CarCaboose_exterior/CabooseWindowsStatic/CabooseWindowsStatic01").GetComponent<Renderer>().material
             };
 
@@ -133,7 +133,7 @@ namespace CarChanger.Game.Components
                     "[interior LOD]/InteriorLOD/cab_LOD1").GetComponent<Renderer>().material,
                 InteriorExtra = TrainCar.transform.Find(
                     "[interior LOD]/InteriorLOD/deck_LOD1").GetComponent<Renderer>().material,
-                Glass = TrainCar.transform.Find(
+                Windows = TrainCar.transform.Find(
                     "LocoDE2_Body/windows/window_01").GetComponent<Renderer>().material,
                 BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
                     "DoorsWindows/C_DoorR/ext cab_door1a").GetComponent<Renderer>().material,
@@ -141,7 +141,7 @@ namespace CarChanger.Game.Components
                     "Cab").GetComponent<Renderer>().material,
                 InteriorExtraExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
                     "Deck").GetComponent<Renderer>().material,
-                GlassBroken = TrainCar.transform.Find(
+                WindowsBroken = TrainCar.transform.Find(
                     "LocoDE2_Body/broken_windows").GetComponent<Renderer>().material,
             };
 
@@ -185,18 +185,14 @@ namespace CarChanger.Game.Components
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
                 Interior = TrainCar.transform.Find(
                     "[interior LOD]/InteriorLOD/cab_LOD1").GetComponent<Renderer>().material,
-                InteriorExtra = TrainCar.transform.Find(
-                    "[interior LOD]/InteriorLOD/deck_LOD1").GetComponent<Renderer>().material,
-                Glass = TrainCar.transform.Find(
-                    "LocoDE2_Body/windows/window_01").GetComponent<Renderer>().material,
+                Windows = TrainCar.transform.Find(
+                    "LocoDH4_Body/windows/dh4_window_FL").GetComponent<Renderer>().material,
                 BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
-                    "DoorsWindows/C_DoorR/ext cab_door1a").GetComponent<Renderer>().material,
+                    "DoorsWindows/DoorR/C_DoorR/dh4_exterior_door_R").GetComponent<Renderer>().material,
                 InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
                     "Cab").GetComponent<Renderer>().material,
-                InteriorExtraExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
-                    "Deck").GetComponent<Renderer>().material,
-                GlassBroken = TrainCar.transform.Find(
-                    "LocoDE2_Body/broken_windows").GetComponent<Renderer>().material,
+                WindowsBroken = TrainCar.transform.Find(
+                    "LocoDH4_Body/windows broken").GetComponent<Renderer>().material,
             };
 
             if (config.UseCustomBogies)
@@ -239,13 +235,13 @@ namespace CarChanger.Game.Components
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
                 Interior = TrainCar.transform.Find(
                     "[interior LOD]/LocoDE6_InteriorLOD/cab_LOD1").GetComponent<Renderer>().material,
-                Glass = TrainCar.transform.Find(
+                Windows = TrainCar.transform.Find(
                     "LocoDE6_Body/windows/window_01").GetComponent<Renderer>().material,
                 BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
                     "DoorsWindows/DoorR/C_DoorR/cab_door01a").GetComponent<Renderer>().material,
                 InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
                     "Cab").GetComponent<Renderer>().material,
-                GlassBroken = TrainCar.transform.Find(
+                WindowsBroken = TrainCar.transform.Find(
                     "LocoDE6_Body/broken_windows").GetComponent<Renderer>().material,
             };
 
@@ -289,13 +285,13 @@ namespace CarChanger.Game.Components
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
                 Interior = TrainCar.transform.Find(
                     "[interior LOD]/LocoDM3_InteriorLOD/dm3_interior_LOD1").GetComponent<Renderer>().material,
-                Glass = TrainCar.transform.Find(
+                Windows = TrainCar.transform.Find(
                     "LocoDM3_Body/windows/window1").GetComponent<Renderer>().material,
                 BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
                     "DoorsWindows/C_DoorL/ext cab_door2a").GetComponent<Renderer>().material,
                 InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
                     "Cab").GetComponent<Renderer>().material,
-                GlassBroken = TrainCar.transform.Find(
+                WindowsBroken = TrainCar.transform.Find(
                     "LocoDM3_Body/broken_windows").GetComponent<Renderer>().material,
             };
 
@@ -319,6 +315,45 @@ namespace CarChanger.Game.Components
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
+        private void ApplyS060440(LocoS060440Config config)
+        {
+            LogChange();
+
+            MatHolder = new MaterialHolder(TrainCar)
+            {
+                Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
+                Interior = TrainCar.transform.Find(
+                    "[interior LOD]/LocoS060_InteriorLOD/s060_cab_LOD1").GetComponent<Renderer>().material,
+                Windows = TrainCar.transform.Find(
+                    "LocoS060_Body/windows/s060_cab_window_CL").GetComponent<Renderer>().material,
+                BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
+                    "Interactables/Doors/DoorL/C_DoorL/s060_ext_door_L").GetComponent<Renderer>().material,
+                InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
+                    "Static/s060_cab").GetComponent<Renderer>().material,
+                WindowsBroken = TrainCar.transform.Find(
+                    "LocoS060_Body/broken_windows").GetComponent<Renderer>().material,
+            };
+
+            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+            ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder, new[] { "Static/s060_cab", "Static/s060_cab_extras" }));
+            ChangeInteractables(new LocoS060440InteractablesChanger(config, MatHolder));
+
+            if (config.UseCustomFrontHeadlights)
+            {
+                _frontHeadlights = new LocoS060440HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
+                _frontHeadlights.Apply();
+            }
+
+            if (config.UseCustomRearHeadlights)
+            {
+                _rearHeadlights = new LocoS060440HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
+                _rearHeadlights.Apply();
+            }
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
+        }
+
         private void ApplyS282730A(LocoS282730AConfig config)
         {
             LogChange();
@@ -328,7 +363,7 @@ namespace CarChanger.Game.Components
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
                 Interior = TrainCar.transform.Find(
                     "[interior LOD]/LocoS282A_InteriorLOD/s282_cab_LOD1").GetComponent<Renderer>().material,
-                Glass = TrainCar.carLivery.externalInteractablesPrefab.transform.Find(
+                Windows = TrainCar.carLivery.externalInteractablesPrefab.transform.Find(
                     "Interactables/WindowR/C_WindowR/model/s282_window_glass_R").GetComponent<Renderer>().material,
                 BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
                     "Interactables/Toolbox/C_Toolbox/model/s282_toolbox_lid_LOD1").GetComponent<Renderer>().material,
@@ -389,13 +424,13 @@ namespace CarChanger.Game.Components
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
                 Interior = TrainCar.transform.Find(
                     "[interior LOD]/LocoMicroshunter_InteriorLOD/microshunter_int_cab_LOD1").GetComponent<Renderer>().material,
-                Glass = TrainCar.transform.Find(
+                Windows = TrainCar.transform.Find(
                     "LocoMicroshunter_Body/windows/microshunter_window_FL").GetComponent<Renderer>().material,
                 BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
                     "DoorsWindows/Door/C_Door/microshunter_ext_door").GetComponent<Renderer>().material,
                 InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
                     "Cab").GetComponent<Renderer>().material,
-                GlassBroken = TrainCar.transform.Find(
+                WindowsBroken = TrainCar.transform.Find(
                     "LocoMicroshunter_Body/windows broken").GetComponent<Renderer>().material,
             };
 
@@ -439,13 +474,13 @@ namespace CarChanger.Game.Components
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
                 Interior = TrainCar.transform.Find(
                     "[interior LOD]/LocoDE6_InteriorLOD/cab_LOD1").GetComponent<Renderer>().material,
-                Glass = TrainCar.transform.Find(
+                Windows = TrainCar.transform.Find(
                     "LocoDE6_Body/windows/window_01").GetComponent<Renderer>().material,
                 BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
                     "DoorsWindows/DoorR/C_DoorR/cab_door01a").GetComponent<Renderer>().material,
                 InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
                     "Cab").GetComponent<Renderer>().material,
-                GlassBroken = TrainCar.transform.Find(
+                WindowsBroken = TrainCar.transform.Find(
                     "LocoDE6_Body/broken_windows").GetComponent<Renderer>().material,
             };
 

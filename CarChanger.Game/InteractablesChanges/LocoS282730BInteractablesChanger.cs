@@ -1,5 +1,4 @@
 ﻿using CarChanger.Common.Configs;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CarChanger.Game.InteractablesChanges
@@ -10,9 +9,7 @@ namespace CarChanger.Game.InteractablesChanges
         private MaterialHolder _materialHolder;
         private ChangeObject? _hatch;
         private ChangeObject? _water;
-        private IndicatorModelChanger _coal = null!;
-        private GameObject[] _ogCoal = null!;
-        private float[] _ogPercent = null!;
+        private IndicatorModelChangerHelper? _coal;
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
@@ -40,26 +37,12 @@ namespace CarChanger.Game.InteractablesChanges
                 },
                 _config.HideOriginalWater, _materialHolder);
 
-            _coal = interactables.transform.Find("Coal&Water/I_TenderCoal").GetComponent<IndicatorModelChanger>();
-
-            _ogCoal = _coal.indicatorModels;
-            _ogPercent = _coal.switchPercentage;
-
             if (_config.ReplaceCoal)
             {
-                var models = new List<GameObject>();
-
-                foreach (var item in _config.CoalModels)
-                {
-                    var newCoal = Helpers.InstantiateIfNotNull(item, _coal.transform);
-                    newCoal.gameObject.SetActive(false);
-                    models.Add(newCoal);
-                }
-
-                _coal.indicatorModels = models.ToArray();
-                _coal.switchPercentage = _config.SwitchPercentage;
-
-                Helpers.RefreshIndicator(_coal);
+                _coal = new IndicatorModelChangerHelper(
+                    interactables.transform.Find("Coal&Water/I_TenderCoal").GetComponent<IndicatorModelChanger>(),
+                    _config.CoalModels,
+                    _config.SwitchPercentage);
             }
 
             _config.InteractablesApplied(interactables, IsExploded);
@@ -71,19 +54,7 @@ namespace CarChanger.Game.InteractablesChanges
 
             _hatch?.Clear();
             _water?.Clear();
-
-            if (_config.ReplaceCoal && _coal != null)
-            {
-                foreach (var item in _coal.indicatorModels)
-                {
-                    Object.Destroy(item);
-                }
-
-                _coal.indicatorModels = _ogCoal;
-                _coal.switchPercentage = _ogPercent;
-
-                Helpers.RefreshIndicator(_coal);
-            }
+            _coal?.Clear();
 
             _config.InteractablesUnapplied(interactables);
         }

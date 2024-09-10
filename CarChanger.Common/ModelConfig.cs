@@ -114,6 +114,9 @@ namespace CarChanger.Common
                     if (b is LocoDM3540Config dm3540B) return LocoDM3540Config.CanCombine(dm3540A, dm3540B);
                     else return false;
 
+                case LocoS060440Config s060440A:
+                    if (b is LocoS060440Config s060440B) return LocoS060440Config.CanCombine(s060440A, s060440B);
+                    else return false;
                 case LocoS282730AConfig s282730AA:
                     if (b is LocoS282730AConfig s282730AB) return LocoS282730AConfig.CanCombine(s282730AA, s282730AB);
                     else return false;
