@@ -1,10 +1,10 @@
 ﻿using CarChanger.Common;
+using DV.CabControls;
 using DV.CabControls.Spec;
 using DV.Interaction;
 using DV.ThingTypes;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -137,6 +137,10 @@ namespace CarChanger.Game
 
         internal static void MoveControl(ControlSpec control, Joint joint, Vector3 move)
         {
+            // Reset the control to 0, preventing weird stacking of angles as you apply and revert changes.
+            var cBase = control.GetComponent<ControlImplBase>();
+            cBase?.SetValue(0);
+
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedAnchor += move;
 

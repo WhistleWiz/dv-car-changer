@@ -19,8 +19,8 @@ namespace CarChanger.Game.Components
         private List<GameObject> _disabledColliders = new List<GameObject>();
 
         private bool _moved = false;
-        private Vector2? _ogLimits = Vector2.zero;
-        private Vector3? _ogAxis = Vector3.up;
+        private Vector2? _ogLimits;
+        private Vector3? _ogAxis;
 
         private IEnumerator Start()
         {
@@ -85,35 +85,34 @@ namespace CarChanger.Game.Components
 
         private void OnDestroy()
         {
-            if (_moved)
+            if (!_moved) return;
+
+            Helpers.MoveControl(_control, -_localOffset);
+            var joint = _control.GetComponent<Joint>();
+
+            if (_replaceCollider != null)
             {
-                Helpers.MoveControl(_control, -_localOffset);
-                var joint = _control.GetComponent<Joint>();
+                Destroy(_replaceCollider);
+            }
 
-                if (_replaceCollider != null)
+            foreach (var item in _disabledColliders)
+            {
+                item.gameObject.SetActive(true);
+            }
+
+            if (joint != null)
+            {
+                if (_ogAxis.HasValue)
                 {
-                    Destroy(_replaceCollider);
+                    joint.axis = _ogAxis.Value;
                 }
 
-                foreach (var item in _disabledColliders)
+                if (_ogLimits.HasValue && joint is HingeJoint hinge && hinge.useLimits)
                 {
-                    item.gameObject.SetActive(true);
-                }
-
-                if (joint != null)
-                {
-                    if (_ogAxis.HasValue)
-                    {
-                        joint.axis = _ogAxis.Value;
-                    }
-
-                    if (_ogLimits.HasValue && joint is HingeJoint hinge && hinge.useLimits)
-                    {
-                        var limits = hinge.limits;
-                        limits.min = _ogLimits.Value.x;
-                        limits.max = _ogLimits.Value.y;
-                        hinge.limits = limits;
-                    }
+                    var limits = hinge.limits;
+                    limits.min = _ogLimits.Value.x;
+                    limits.max = _ogLimits.Value.y;
+                    hinge.limits = limits;
                 }
             }
         }
@@ -125,15 +124,8 @@ namespace CarChanger.Game.Components
             real._localOffset = comp.LocalOffset;
             real._replaceCollider = comp.ReplacementStaticCollider;
 
-            if (comp.ChangeAxis)
-            {
-                real._axis = comp.Axis;
-            }
-
-            if (comp.ChangeLimits)
-            {
-                real._limits = new Vector2(comp.Min, comp.Max);
-            }
+            real._axis = comp.ChangeAxis ? comp.Axis : (Vector3?)null;
+            real._limits = comp.ChangeLimits ? new Vector2(comp.Min, comp.Max) : (Vector2?)null;
 
             return real;
         }

@@ -109,6 +109,44 @@ namespace CarChanger.Game
 
                         AddToCarLivery(DV.Globals.G.Types.TrainCarType_to_v2[(TrainCarType)PassengerType.Blue], item);
                         continue;
+                    case CabooseConfig _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.CabooseRed].parentType, item);
+                        continue;
+
+                    case LocoDE2480Config _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoShunter].parentType, item);
+                        continue;
+                    case LocoDE6860Config _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDiesel].parentType, item);
+                        continue;
+                    case LocoDH4670Config _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDH4].parentType, item);
+                        continue;
+                    case LocoDM3540Config _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDM3].parentType, item);
+                        continue;
+
+                    case LocoS060440Config _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoS060].parentType, item);
+                        continue;
+                    case LocoS282730AConfig _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoSteamHeavy].parentType, item);
+                        continue;
+                    case LocoS282730BConfig _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.Tender].parentType, item);
+                        continue;
+
+                    case LocoBE2260Config _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoMicroshunter].parentType, item);
+                        continue;
+
+                    case LocoDE6860SlugConfig _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDE6Slug].parentType, item);
+                        continue;
+                    case LocoHandcarConfig _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoShunter].parentType, item);
+                        continue;
+
                     case ModificationGroupConfig group:
                         LoadConfigs(group.ModificationsToActivate);
 
@@ -121,19 +159,13 @@ namespace CarChanger.Game
                             AddToCarLivery(s_lastLoadedLivery, item);
                         }
                         break;
-                    case LocoDE6860Config _:
-                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDiesel].parentType, item);
-                        continue;
-                    case LocoS282730AConfig _:
-                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoSteamHeavy].parentType, item);
-                        continue;
-                    case CustomCarConfig ccl:
-                        if (!string.IsNullOrEmpty(ccl.CarTypeId) && DV.Globals.G.Types.TryGetCarType(ccl.CarTypeId, out var type))
+                    case CustomCarConfig ccc:
+                        if (!string.IsNullOrEmpty(ccc.CarTypeId) && DV.Globals.G.Types.TryGetCarType(ccc.CarTypeId, out var type))
                         {
                             AddToCarType(type, item);
                             continue;
                         }
-                        if (DV.Globals.G.Types.TryGetLivery(ccl.LiveryId, out var livery))
+                        if (DV.Globals.G.Types.TryGetLivery(ccc.LiveryId, out var livery))
                         {
                             AddToCarLivery(livery, item);
                         }
