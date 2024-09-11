@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CarChanger.Game.Components
 {
-    internal class MoveThisControlInternal : MonoBehaviour
+    internal class ChangeThisControlInternal : MonoBehaviour
     {
         // Prevent an infinite loop.
         private const int Safety = 1024;
@@ -53,6 +53,11 @@ namespace CarChanger.Game.Components
                 limits.min = _limits.Value.x;
                 limits.max = _limits.Value.y;
                 hinge.limits = limits;
+
+                if (_control.TryGetComponent(out SteppedJoint stepped))
+                {
+                    Helpers.ChangeSteppedJointLimits(hinge, stepped);
+                }
             }
 
             // Change the collider of the StaticInteractionArea if possible.
@@ -113,13 +118,18 @@ namespace CarChanger.Game.Components
                     limits.min = _ogLimits.Value.x;
                     limits.max = _ogLimits.Value.y;
                     hinge.limits = limits;
+
+                    if (_control.TryGetComponent(out SteppedJoint stepped))
+                    {
+                        Helpers.ChangeSteppedJointLimits(hinge, stepped);
+                    }
                 }
             }
         }
 
-        public static MoveThisControlInternal Create(MoveThisControl comp, ControlSpec control)
+        public static ChangeThisControlInternal Create(ChangeThisControl comp, ControlSpec control)
         {
-            var real = comp.gameObject.AddComponent<MoveThisControlInternal>();
+            var real = comp.gameObject.AddComponent<ChangeThisControlInternal>();
             real._control = control;
             real._localOffset = comp.LocalOffset;
             real._replaceCollider = comp.ReplacementStaticCollider;

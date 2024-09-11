@@ -3,6 +3,7 @@ using DV.CabControls;
 using DV.CabControls.Spec;
 using DV.Interaction;
 using DV.ThingTypes;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace CarChanger.Game
 {
     public static class Helpers
     {
+        private const BindingFlags Flags = BindingFlags.Instance | BindingFlags.NonPublic;
+
         private static Dictionary<string, TrainCarType_v2>? s_idToCarType;
         private static Dictionary<WagonType, string> s_carTypeEnumToId = new Dictionary<WagonType, string>()
         {
@@ -48,7 +51,7 @@ namespace CarChanger.Game
         public static void InvalidateBogieCache(Bogie b)
         {
             var t = typeof(Bogie);
-            var f = t.GetField("axles", BindingFlags.Instance | BindingFlags.NonPublic);
+            var f = t.GetField("axles", Flags);
             f.SetValue(b, null);
         }
 
@@ -167,6 +170,25 @@ namespace CarChanger.Game
 
             if (f == null) return null;
             return (StaticInteractionArea)f.GetValue(control);
+        }
+
+        public static void ChangeSteppedJointLimits(HingeJoint joint, SteppedJoint stepped)
+        {
+            var t = typeof(SteppedJoint);
+            var range = joint.useLimits ? (joint.limits.max - joint.limits.min) : 360f;
+
+            t.GetField("angleRange", Flags).SetValue(stepped, range);
+            t.GetProperty(nameof(stepped.SingleNotchAngle)).SetValue(stepped, range / (stepped.notches - (joint.useLimits ? 1 : 0)));
+
+            var a = AngleForNotch(stepped.innerLimitMinNotch);
+            var b = AngleForNotch(stepped.innerLimitMaxNotch);
+            t.GetField("innerLimitMinAngle", Flags).SetValue(stepped, Mathf.Min(a, b));
+            t.GetField("innerLimitMaxAngle", Flags).SetValue(stepped, Mathf.Max(a, b));
+
+            // Avoid calling the original one as this may run before Start() is called on that script.
+            float AngleForNotch(int notch) => stepped.invertDirection ?
+                    joint.limits.max - notch * stepped.SingleNotchAngle :
+                    joint.limits.min + notch * stepped.SingleNotchAngle;
         }
     }
 }

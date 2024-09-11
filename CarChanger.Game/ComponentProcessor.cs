@@ -51,13 +51,13 @@ namespace CarChanger.Game
 
         private static void ProcessMoveThisControl(GameObject gameObject)
         {
-            if (!gameObject.TryGetComponent(out MoveThisControl comp)) return;
+            if (!gameObject.TryGetComponent(out ChangeThisControl comp)) return;
 
             var control = comp.GetComponentInParent<ControlSpec>();
 
             if (control != null)
             {
-                MoveThisControlInternal.Create(comp, control);
+                ChangeThisControlInternal.Create(comp, control);
             }
             else
             {

@@ -3,7 +3,7 @@
 namespace CarChanger.Common.Components
 {
     [DisallowMultipleComponent]
-    public class MoveThisControl : MonoBehaviour
+    public class ChangeThisControl : MonoBehaviour
     {
         public Vector3 LocalOffset = Vector3.zero;
 
