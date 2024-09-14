@@ -35,6 +35,7 @@ namespace CarChanger.Game.Components
         private IInteriorChanger? _interior = null;
         private IInteractablesChanger? _interactables = null;
         private ExplosionModelHandler? _explosionHandler = null;
+        private ExplosionModelHandler? _explosionHandlerInteriorLod = null;
         private ColliderHolder? _colliderHolder = null;
 
         private void Awake()
@@ -144,6 +145,11 @@ namespace CarChanger.Game.Components
             if (_body != null)
             {
                 _explosionHandler = CarChangerExplosionManager.PrepareExplosionHandler(_body, MatHolder);
+            }
+            // Same with the interior LOD, unfortunately they have to be separate...
+            if (_interiorLod != null)
+            {
+                _explosionHandlerInteriorLod = CarChangerExplosionManager.PrepareExplosionHandler(_interiorLod, MatHolder);
             }
 
             _colliderHolder?.Apply();
@@ -640,6 +646,16 @@ namespace CarChanger.Game.Components
             CarChangerMod.Log($"Applying change {Config!.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
         }
 
+        internal void ForceApplyChange(string? reason)
+        {
+            if (!string.IsNullOrEmpty(reason))
+            {
+                CarChangerMod.Log($"Forcing change application due to: {reason}");
+            }
+
+            ApplyChange();
+        }
+
         public static bool CanApplyChange(TrainCar car, ModelConfig config)
         {
             foreach (var item in car.GetComponents<AppliedChange>())
@@ -655,6 +671,13 @@ namespace CarChanger.Game.Components
             return true;
         }
 
+        public static AppliedChange AddChange(TrainCar car, ModelConfig config)
+        {
+            var change = car.gameObject.AddComponent<AppliedChange>();
+            change.Config = config;
+            return change;
+        }
+
         public static AppliedChange OverrideChange(TrainCar car, ModelConfig config)
         {
             foreach (var item in car.GetComponents<AppliedChange>())
@@ -667,9 +690,7 @@ namespace CarChanger.Game.Components
             }
 
             // Add the intended config and apply.
-            var change = car.gameObject.AddComponent<AppliedChange>();
-            change.Config = config;
-            return change;
+            return AddChange(car, config);
         }
     }
 }

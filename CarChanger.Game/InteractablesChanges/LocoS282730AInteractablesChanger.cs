@@ -19,7 +19,7 @@ namespace CarChanger.Game.InteractablesChanges
             _materialHolder = matHolder;
         }
 
-        public void Apply(GameObject interactables)
+        public void Apply(GameObject? interactables)
         {
             if (interactables == null) return;
 
@@ -46,7 +46,7 @@ namespace CarChanger.Game.InteractablesChanges
             _config.InteractablesApplied(interactables, IsExploded);
         }
 
-        public void Unapply(GameObject interactables)
+        public void Unapply(GameObject? interactables)
         {
             if (interactables == null) return;
 

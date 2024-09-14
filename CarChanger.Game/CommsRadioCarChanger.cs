@@ -397,8 +397,7 @@ namespace CarChanger.Game
 
         private void ApplyConfig(ModelConfig config)
         {
-            var change = _selectedCar.gameObject.AddComponent<AppliedChange>();
-            change.Config = config;
+            var change = AppliedChange.AddChange(_selectedCar, config);
             change.OnApply += QueueDisplayUpdate;
             PlaySuccess();
         }

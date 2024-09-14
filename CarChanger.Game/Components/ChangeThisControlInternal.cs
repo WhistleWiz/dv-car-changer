@@ -1,7 +1,9 @@
 ﻿using CarChanger.Common.Components;
 using DV.CabControls.Spec;
+using DV.Interaction;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CarChanger.Game.Components
@@ -15,8 +17,10 @@ namespace CarChanger.Game.Components
         private Vector3 _localOffset = Vector3.zero;
         private Vector2? _limits;
         private Vector3? _axis;
-        private GameObject? _replaceCollider;
+        private List<GameObject> _replaceColliders = new List<GameObject>();
         private List<GameObject> _disabledColliders = new List<GameObject>();
+        private GameObject? _replaceStaticCollider;
+        private List<GameObject> _disabledStaticColliders = new List<GameObject>();
 
         private bool _moved = false;
         private Vector2? _ogLimits;
@@ -60,8 +64,27 @@ namespace CarChanger.Game.Components
                 }
             }
 
+            // Change the control's colliders.
+            if (_replaceColliders.Count > 0)
+            {
+                _disabledColliders = _control.colliderGameObjects.ToList();
+
+                foreach (var item in _disabledColliders)
+                {
+                    item.gameObject.SetActive(false);
+                }
+
+                foreach (var item in _replaceColliders)
+                {
+                    item.SetLayersRecursive(_control.gameObject.layer);
+                }
+
+                _control.colliderGameObjects = _replaceColliders.ToArray();
+                FixGrabColliders();
+            }
+
             // Change the collider of the StaticInteractionArea if possible.
-            if (_replaceCollider != null)
+            if (_replaceStaticCollider != null)
             {
                 var ia = Helpers.GetInteractionArea(_control);
 
@@ -72,16 +95,16 @@ namespace CarChanger.Game.Components
                         if (!item.gameObject.activeSelf) continue;
 
                         item.gameObject.SetActive(false);
-                        _disabledColliders.Add(item.gameObject);
+                        _disabledStaticColliders.Add(item.gameObject);
                     }
 
-                    _replaceCollider.transform.SetParent(ia.transform, false);
-                    _replaceCollider.SetLayersRecursive(ia.gameObject.layer);
+                    _replaceStaticCollider.transform.SetParent(ia.transform, false);
+                    _replaceStaticCollider.SetLayersRecursive(ia.gameObject.layer);
                 }
                 else
                 {
                     // Clean out the colliders if they are not supported.
-                    Destroy(_replaceCollider);
+                    Destroy(_replaceStaticCollider);
                 }
             }
 
@@ -90,21 +113,32 @@ namespace CarChanger.Game.Components
 
         private void OnDestroy()
         {
-            if (!_moved) return;
+            if (!_moved || _control == null || gameObject == null)
+            {
+                return;
+            }
 
             Helpers.MoveControl(_control, -_localOffset);
             var joint = _control.GetComponent<Joint>();
 
-            if (_replaceCollider != null)
-            {
-                Destroy(_replaceCollider);
-            }
-
+            // Return the original colliders.
             foreach (var item in _disabledColliders)
             {
                 item.gameObject.SetActive(true);
             }
 
+            _control.colliderGameObjects = _disabledColliders.ToArray();
+            FixGrabColliders();
+
+            // Restore the static interaction area.
+            Helpers.DestroyIfNotNull(_replaceStaticCollider);
+
+            foreach (var item in _disabledStaticColliders)
+            {
+                item.gameObject.SetActive(true);
+            }
+
+            // Restore the joint.
             if (joint != null)
             {
                 if (_ogAxis.HasValue)
@@ -127,12 +161,36 @@ namespace CarChanger.Game.Components
             }
         }
 
+        private void FixGrabColliders()
+        {
+            if (!_control.TryGetComponent(out AGrabHandler handler)) return;
+
+            handler.interactionColliders.Clear();
+
+            foreach (var go in _control.colliderGameObjects)
+            {
+                if (go == null) continue;
+
+                foreach (Collider collider in go.GetComponents<Collider>())
+                {
+                    handler.interactionColliders.Add(collider);
+                }
+            }
+
+            // Keep this warning.
+            if (handler.interactionColliders.Count == 0)
+            {
+                Debug.LogError("SetInteractionColliders found no colliders in colliderGameObjects. This should not happen. Interaction will probably be possible.", this);
+            }
+        }
+
         public static ChangeThisControlInternal Create(ChangeThisControl comp, ControlSpec control)
         {
             var real = comp.gameObject.AddComponent<ChangeThisControlInternal>();
             real._control = control;
             real._localOffset = comp.LocalOffset;
-            real._replaceCollider = comp.ReplacementStaticCollider;
+            real._replaceColliders = comp.ReplacementColliders;
+            real._replaceStaticCollider = comp.ReplacementStaticCollider;
 
             real._axis = comp.ChangeAxis ? comp.Axis : (Vector3?)null;
             real._limits = comp.ChangeLimits ? new Vector2(comp.Min, comp.Max) : (Vector2?)null;

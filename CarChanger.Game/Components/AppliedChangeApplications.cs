@@ -31,10 +31,8 @@ namespace CarChanger.Game.Components
             ResetInteractables();
             ResetColliders();
 
-            if (_explosionHandler != null)
-            {
-                Destroy(_explosionHandler.gameObject);
-            }
+            Helpers.DestroyIfNotNullGO(_explosionHandler);
+            Helpers.DestroyIfNotNullGO(_explosionHandlerInteriorLod);
 
             Config?.Unapplied(TrainCar.gameObject);
             _changeApplied = false;

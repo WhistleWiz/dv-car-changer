@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CarChanger.Common.Components
 {
@@ -19,6 +20,9 @@ namespace CarChanger.Common.Components
         [EnableIf(nameof(ChangeLimits))]
         public float Max = 90.0f;
 
+        [Space, Tooltip("Replaces the control's colliders if provided")]
+        public List<GameObject> ReplacementColliders = new List<GameObject>();
+
         [Space, Tooltip("Replaces the StaticInteractionArea colliders if provided")]
         public GameObject? ReplacementStaticCollider;
 
@@ -26,7 +30,7 @@ namespace CarChanger.Common.Components
         {
             if (Application.isEditor && transform.parent != null)
             {
-                Debug.LogWarning("MoveThisControl component needs to be at the root of the prefab, or it won't be detected!");
+                Debug.LogWarning("ChangeThisControl component needs to be at the root of the prefab, or it won't be detected!");
             }
 
             if (Max < Min)

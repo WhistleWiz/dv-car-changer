@@ -3,7 +3,6 @@ using DV.CabControls;
 using DV.CabControls.Spec;
 using DV.Interaction;
 using DV.ThingTypes;
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,6 +113,14 @@ namespace CarChanger.Game
             if (obj != null)
             {
                 UnityEngine.Object.Destroy(obj);
+            }
+        }
+
+        public static void DestroyIfNotNullGO(Component? obj)
+        {
+            if (obj != null)
+            {
+                UnityEngine.Object.Destroy(obj.gameObject);
             }
         }
 

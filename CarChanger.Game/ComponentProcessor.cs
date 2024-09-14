@@ -13,6 +13,11 @@ namespace CarChanger.Game
         {
             if (gameObject == null) return;
 
+            if (gameObject.transform.parent != null)
+            {
+                gameObject.SetLayersRecursive(gameObject.transform.parent.gameObject.layer);
+            }
+
             // Find the root car or interior transform.
             Transform? root = null;
             var interior = gameObject.GetComponentInParent<TrainCarInteriorObject>();

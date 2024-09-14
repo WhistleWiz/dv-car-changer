@@ -110,7 +110,9 @@ namespace CarChanger.Game.Components
         {
             return new ExplosionModelHandler.MaterialSwapData
             {
-                swapMaterial = comp.Material ?? holder.GetMaterial(comp.DefaultMaterial, comp.MaterialObjectPath),
+                swapMaterial = comp.Material ?
+                    (comp.GenerateExplodedMaterialProcedurally ? MaterialHolder.GenerateProceduralExplosionMaterial(comp.Material) : comp.Material) :
+                    holder.GetMaterial(comp.DefaultMaterial, comp.MaterialObjectPath, comp.GenerateExplodedMaterialProcedurally),
                 affectedGameObjects = comp.AffectedGameObjects
             };
         }

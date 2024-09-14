@@ -6,6 +6,8 @@ namespace CarChanger.Common.Components
 {
     public class HideTransformsOnChange : MonoBehaviour
     {
+        [Tooltip("The path to the transforms, if on the body it is relative to the car root, " +
+            "if on the interactables or interior it's relative to the interior root")]
         public string[] TransformPaths = new string[0];
 
         private List<Transform> _transforms = new List<Transform>();

@@ -46,7 +46,7 @@ namespace CarChanger.Game.Patches
                 {
                     if (ChangeManager.TryGetConfig(car.carLivery, item, out var config))
                     {
-                        car.gameObject.AddComponent<AppliedChange>().Config = config;
+                        AppliedChange.AddChange(car, config);
                     }
                     else
                     {
@@ -67,7 +67,7 @@ namespace CarChanger.Game.Patches
                         configs.TryFind(x => x.ModificationId == item, out var matching) &&
                         AppliedChange.CanApplyChange(car, matching))
                     {
-                        car.gameObject.AddComponent<AppliedChange>().Config = matching;
+                        AppliedChange.AddChange(car, matching);
                     }
                 }
 
@@ -78,8 +78,7 @@ namespace CarChanger.Game.Patches
             if (!Helpers.Chance(CarChangerMod.Settings.NoModificationChance) &&
                 ChangeManager.LoadedConfigs.TryGetValue(car.carLivery, out configs))
             {
-                // Component only added inside the if to not have an empty one.
-                car.gameObject.AddComponent<AppliedChange>().Config = configs.GetRandomElement();
+                AppliedChange.AddChange(car,  configs.GetRandomElement());
                 return;
             }
         }
