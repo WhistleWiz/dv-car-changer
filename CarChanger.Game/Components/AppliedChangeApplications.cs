@@ -541,6 +541,10 @@ namespace CarChanger.Game.Components
 
             MatHolder = new MaterialHolder(TrainCar);
             ChangeBody(config.BodyPrefab, false);
+            ChangeInteriorLod(config.InteriorLODPrefab, false);
+            ChangeInterior(new CustomCarInteriorChanger(config, MatHolder));
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
     }
 }

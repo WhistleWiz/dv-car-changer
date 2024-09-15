@@ -23,7 +23,7 @@ namespace CarChanger.Game.InteriorChanges
         public BasicInteriorChanger(CarWithInteriorConfig config, MaterialHolder matHolder, string staticObjectPath)
             : this(config, matHolder, new[] { staticObjectPath }) { }
 
-        public void Apply(GameObject interior)
+        public void Apply(GameObject? interior)
         {
             // Interior unloaded, so don't apply.
             if (interior == null) return;
@@ -34,7 +34,7 @@ namespace CarChanger.Game.InteriorChanges
             _config.InteriorApplied(interior, IsExploded);
         }
 
-        public void Unapply(GameObject interior)
+        public void Unapply(GameObject? interior)
         {
             // Already gone, skip.
             if (interior == null) return;

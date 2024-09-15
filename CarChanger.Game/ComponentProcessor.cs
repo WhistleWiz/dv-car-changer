@@ -43,6 +43,7 @@ namespace CarChanger.Game
             if (root != null)
             {
                 ProcessHideTransforms(gameObject, root);
+                ProcessMoveTransforms(gameObject, root);
             }
         }
 
@@ -122,6 +123,14 @@ namespace CarChanger.Game
             foreach (var item in gameObject.GetComponentsInChildren<HideTransformsOnChange>())
             {
                 item.Hide(root);
+            }
+        }
+
+        public static void ProcessMoveTransforms(GameObject gameObject, Transform root)
+        {
+            foreach (var item in gameObject.GetComponentsInChildren<MoveTransformsOnChange>())
+            {
+                item.Apply(root);
             }
         }
 

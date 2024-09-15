@@ -39,6 +39,7 @@ namespace CarChanger.Game
                 if (_collisionInstance.TryGetComponentInParent<TrainCar>(out var root))
                 {
                     ComponentProcessor.ProcessHideTransforms(_collisionInstance, root.transform);
+                    ComponentProcessor.ProcessMoveTransforms(_collisionInstance, root.transform);
                 }
             }
 
@@ -51,6 +52,7 @@ namespace CarChanger.Game
                 if (_walkableInstance.TryGetComponentInParent<TrainCarInteriorObject>(out var root))
                 {
                     ComponentProcessor.ProcessHideTransforms(_walkableInstance, root.transform);
+                    ComponentProcessor.ProcessMoveTransforms(_walkableInstance, root.transform);
                 }
             }
 
@@ -62,6 +64,7 @@ namespace CarChanger.Game
                 if (_itemsInstance.TryGetComponentInParent<TrainCarInteriorObject>(out var root))
                 {
                     ComponentProcessor.ProcessHideTransforms(_itemsInstance, root.transform);
+                    ComponentProcessor.ProcessMoveTransforms(_itemsInstance, root.transform);
                 }
             }
         }
