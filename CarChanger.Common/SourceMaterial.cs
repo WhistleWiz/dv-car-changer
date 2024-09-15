@@ -2,15 +2,15 @@
 {
     public enum SourceMaterial
     {
-        BodyDefault,
-        InteriorDefault,
-        InteriorExtra,
+        Body,
+        Interior,
         Windows,
+        Extra1,
 
         BodyExploded = 500,
         InteriorExploded,
-        InteriorExtraExploded,
         BrokenWindows,
+        Extra1Exploded,
 
         FromPath = 1000
     }

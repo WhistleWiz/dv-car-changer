@@ -25,7 +25,7 @@ namespace CarChanger.Common.Components
             {
                 case SourceMaterial.BodyExploded:
                 case SourceMaterial.InteriorExploded:
-                case SourceMaterial.InteriorExtraExploded:
+                case SourceMaterial.Extra1Exploded:
                 case SourceMaterial.FromPath:
                     return true;
                 default:

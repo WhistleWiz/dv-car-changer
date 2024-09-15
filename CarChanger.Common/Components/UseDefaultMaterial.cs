@@ -3,7 +3,7 @@
 namespace CarChanger.Common.Components
 {
     [RequireComponent(typeof(Renderer))]
-    public class UseBodyMaterial : MonoBehaviour
+    public class UseDefaultMaterial : MonoBehaviour
     {
         public SourceMaterial Material;
         [EnableIf(nameof(EnablePath)), Tooltip("Path to an object with the material")]
@@ -23,7 +23,7 @@ namespace CarChanger.Common.Components
             {
                 case SourceMaterial.BodyExploded:
                 case SourceMaterial.InteriorExploded:
-                case SourceMaterial.InteriorExtraExploded:
+                case SourceMaterial.Extra1Exploded:
                 case SourceMaterial.FromPath:
                     return true;
                 default:

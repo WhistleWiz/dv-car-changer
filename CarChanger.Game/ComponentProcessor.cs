@@ -36,7 +36,7 @@ namespace CarChanger.Game
                 }
             }
 
-            ProcessBodyMaterial(gameObject, holder);
+            ProcessDefaultMaterial(gameObject, holder);
             ProcessMoveThisControl(gameObject);
             ProcessWindows(gameObject);
 
@@ -47,9 +47,9 @@ namespace CarChanger.Game
             }
         }
 
-        private static void ProcessBodyMaterial(GameObject gameObject, MaterialHolder holder)
+        private static void ProcessDefaultMaterial(GameObject gameObject, MaterialHolder holder)
         {
-            foreach (var item in gameObject.GetComponentsInChildren<UseBodyMaterial>())
+            foreach (var item in gameObject.GetComponentsInChildren<UseDefaultMaterial>())
             {
                 item.GetRenderer().material = holder.GetMaterial(item);
             }
