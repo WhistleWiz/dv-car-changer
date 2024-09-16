@@ -7,6 +7,7 @@ namespace CarChanger.Game
         public class LiveryConfig
         {
             public string LiveryName = string.Empty;
+            public bool AllowOthersOnTop = false;
             public List<string> DefaultIds = new List<string>();
         }
 

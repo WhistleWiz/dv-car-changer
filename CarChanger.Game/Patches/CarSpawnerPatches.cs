@@ -2,6 +2,8 @@
 using DV;
 using HarmonyLib;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CarChanger.Game.Patches
@@ -61,14 +63,27 @@ namespace CarChanger.Game.Patches
             if (CarChangerMod.Settings.DefaultConfigSettings.TryGetLivery(car.carLivery.id, out var liveryConfig) &&
                 ChangeManager.LoadedConfigs.TryGetValue(car.carLivery, out var configs))
             {
+                var added = new List<AppliedChange>();
+
                 foreach (var item in liveryConfig.DefaultIds)
                 {
                     if (!string.IsNullOrEmpty(item) &&
                         configs.TryFind(x => x.ModificationId == item, out var matching) &&
                         AppliedChange.CanApplyChange(car, matching))
                     {
-                        AppliedChange.AddChange(car, matching);
+                        added.Add(AppliedChange.AddChange(car, matching));
                     }
+                }
+
+                // If randoms are not allowed, stop here.
+                if (!liveryConfig.AllowOthersOnTop) return;
+
+                // Only allow configs that aren't in use alrady.
+                var others = configs.Where(config => added.Any(change => config == change.Config)).ToList();
+
+                if (others.Count > 0)
+                {
+                    AppliedChange.AddChange(car, others.GetRandomElement());
                 }
 
                 return;
@@ -78,7 +93,7 @@ namespace CarChanger.Game.Patches
             if (!Helpers.Chance(CarChangerMod.Settings.NoModificationChance) &&
                 ChangeManager.LoadedConfigs.TryGetValue(car.carLivery, out configs))
             {
-                AppliedChange.AddChange(car,  configs.GetRandomElement());
+                AppliedChange.AddChange(car, configs.GetRandomElement());
                 return;
             }
         }

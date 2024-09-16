@@ -34,7 +34,8 @@ namespace CarChanger.Game
 
             // Begin by setting a vertical group, that way everything inside lines up.
             GUILayout.BeginVertical(GUILayout.MinWidth(400), GUILayout.ExpandWidth(false));
-            GUILayout.Label("<color=lightblue><b>Default Configs</b></color>", richStyle);
+            GUILayout.Label(new GUIContent("<color=lightblue><b>Default Configs</b></color>",
+                "Allows changing which configs will spawn by default for each car livery"), richStyle);
             GUILayout.Space(4);
 
             for (int i = 0; i < DefaultConfigSettings.Configs.Count; i++)
@@ -55,6 +56,15 @@ namespace CarChanger.Game
                 // Actual entry with label and text field.
                 GUILayout.Label("Livery", GUILayout.ExpandWidth(false));
                 config.LiveryName = GUILayout.TextField(config.LiveryName);
+
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(IndentWidth * 2);
+
+                GUILayout.Label(new GUIContent("Allow Randoms Together",
+                    "Allows spawning of random modifications on top of the default settings"), GUILayout.ExpandWidth(false));
+                config.AllowOthersOnTop = GUILayout.Toggle(config.AllowOthersOnTop, "", GUILayout.ExpandWidth(false));
 
                 GUILayout.EndHorizontal();
 
