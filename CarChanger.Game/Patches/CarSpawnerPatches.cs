@@ -60,9 +60,12 @@ namespace CarChanger.Game.Patches
             }
 
             // If the car is not in a save (it's new), try to see if there's a default setting for it from the config file.
-            if (CarChangerMod.Settings.DefaultConfigSettings.TryGetLivery(car.carLivery.id, out var liveryConfig) &&
-                ChangeManager.LoadedConfigs.TryGetValue(car.carLivery, out var configs))
+            var liveryConfigs = CarChangerMod.Settings.DefaultConfigSettings.Configs.FindAll(x => x.LiveryName == car.carLivery.id);
+
+            if (liveryConfigs.Count > 0 && ChangeManager.LoadedConfigs.TryGetValue(car.carLivery, out var configs))
             {
+                // Pick a random config setup.
+                var liveryConfig = liveryConfigs.GetRandomElement();
                 var added = new List<AppliedChange>();
 
                 foreach (var item in liveryConfig.DefaultIds)
@@ -79,7 +82,7 @@ namespace CarChanger.Game.Patches
                 if (!liveryConfig.AllowOthersOnTop) return;
 
                 // Only allow configs that aren't in use alrady.
-                var others = configs.Where(config => added.Any(change => config == change.Config)).ToList();
+                var others = configs.FindAll(config => !added.Any(change => change.Config == config));
 
                 if (others.Count > 0)
                 {

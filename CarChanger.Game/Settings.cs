@@ -29,13 +29,10 @@ namespace CarChanger.Game
 
         private void DrawConfigs()
         {
-            var richStyle = GUI.skin.label;
-            richStyle.richText = true;
-
             // Begin by setting a vertical group, that way everything inside lines up.
             GUILayout.BeginVertical(GUILayout.MinWidth(400), GUILayout.ExpandWidth(false));
-            GUILayout.Label(new GUIContent("<color=lightblue><b>Default Configs</b></color>",
-                "Allows changing which configs will spawn by default for each car livery"), richStyle);
+            GUILayout.Label(new GUIContent("Default Configs",
+                "Allows changing which configs will spawn by default for each car livery"), UnityModManager.UI.h2);
             GUILayout.Space(4);
 
             for (int i = 0; i < DefaultConfigSettings.Configs.Count; i++)
