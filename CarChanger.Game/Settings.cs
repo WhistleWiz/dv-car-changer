@@ -41,7 +41,7 @@ namespace CarChanger.Game
                 GUILayout.BeginHorizontal();
 
                 // Button to remove the current entry.
-                if (GUILayout.Button("-", GUILayout.Width(IndentWidth)))
+                if (GUILayout.Button(new GUIContent("-", "Remove this livery"), GUILayout.Width(IndentWidth)))
                 {
                     DefaultConfigSettings.Configs.RemoveAt(i);
                     i--;
@@ -69,7 +69,7 @@ namespace CarChanger.Game
 
                 // Add 2 buttons, one to add items to the array, another to remove them.
                 GUILayout.BeginHorizontal();
-                GUILayout.Space(IndentWidth);
+                GUILayout.Space(IndentWidth * 2);
 
                 if (GUILayout.Button("+", GUILayout.Width(IndentWidth)))
                 {
@@ -87,6 +87,7 @@ namespace CarChanger.Game
                 GUI.enabled = true;
 
                 GUILayout.EndHorizontal();
+                GUILayout.Space(10);
             }
 
             // Button to add new liveries.
