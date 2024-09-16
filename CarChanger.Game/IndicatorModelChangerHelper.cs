@@ -1,5 +1,4 @@
-﻿using DV.CabControls.Spec;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace CarChanger.Game
@@ -28,7 +27,7 @@ namespace CarChanger.Game
             _indicator.indicatorModels = newModels.ToArray();
             _indicator.switchPercentage = percents;
 
-            Helpers.RefreshIndicator(indicator);
+            Helpers.RefreshIndicator(_indicator);
         }
 
         public void Clear()

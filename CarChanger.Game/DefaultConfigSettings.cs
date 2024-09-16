@@ -2,7 +2,7 @@
 
 namespace CarChanger.Game
 {
-    internal class DefaultConfigSettings
+    public class DefaultConfigSettings
     {
         public class LiveryConfig
         {

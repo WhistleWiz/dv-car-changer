@@ -27,12 +27,11 @@ namespace CarChanger.Game
             Translations = new TranslationInjector(Guid);
             Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
 
-            Instance.OnGUI += Settings.Draw;
+            Instance.OnGUI += Settings.DrawGUI;
             Instance.OnSaveGUI += Settings.Save;
 
             BuildCache();
 
-            ChangeManager.LoadConfigFile();
             Localization.Inject();
 
             ScanMods();

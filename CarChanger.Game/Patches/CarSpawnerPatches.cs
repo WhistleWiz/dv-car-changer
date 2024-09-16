@@ -58,7 +58,7 @@ namespace CarChanger.Game.Patches
             }
 
             // If the car is not in a save (it's new), try to see if there's a default setting for it from the config file.
-            if (ChangeManager.DefaultConfigSettings.TryGetLivery(car.carLivery.id, out var liveryConfig) &&
+            if (CarChangerMod.Settings.DefaultConfigSettings.TryGetLivery(car.carLivery.id, out var liveryConfig) &&
                 ChangeManager.LoadedConfigs.TryGetValue(car.carLivery, out var configs))
             {
                 foreach (var item in liveryConfig.DefaultIds)

@@ -1,7 +1,6 @@
 ﻿using CarChanger.Common;
 using CarChanger.Common.Configs;
 using DV.ThingTypes;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -12,50 +11,10 @@ namespace CarChanger.Game
     public static class ChangeManager
     {
         internal static Dictionary<TrainCarLivery, List<ModelConfig>> LoadedConfigs = new Dictionary<TrainCarLivery, List<ModelConfig>>();
-        internal static DefaultConfigSettings DefaultConfigSettings = new DefaultConfigSettings();
         internal static Dictionary<string, List<string>> SaveData = new Dictionary<string, List<string>>();
 
         private static TrainCarType_v2? s_lastLoadedType;
         private static TrainCarLivery? s_lastLoadedLivery;
-
-        internal static void LoadConfigFile()
-        {
-            if (File.Exists(Path.Combine(CarChangerMod.Instance.Path, Constants.ConfigFile)))
-            {
-                using var reader = File.OpenText(Path.Combine(CarChangerMod.Instance.Path, Constants.ConfigFile));
-                var result = JsonConvert.DeserializeObject<DefaultConfigSettings>(reader.ReadToEnd());
-
-                if (result != null)
-                {
-                    DefaultConfigSettings = result;
-                }
-                else
-                {
-                    CarChangerMod.Error("Failure loading default configs file.");
-                    DefaultConfigSettings = new DefaultConfigSettings();
-                }
-            }
-            else
-            {
-                CarChangerMod.Log("Default configs file not found, creating new one...");
-                WriteSettingsFile();
-            }
-        }
-
-        internal static void WriteSettingsFile()
-        {
-            JsonSerializer serializer = new JsonSerializer
-            {
-                Formatting = Formatting.Indented
-            };
-
-            using (var file = File.Create(Path.Combine(CarChangerMod.Instance.Path, Constants.ConfigFile)))
-            using (var streamWriter = new StreamWriter(file))
-            using (var jsonWr = new JsonTextWriter(streamWriter))
-            {
-                serializer.Serialize(jsonWr, DefaultConfigSettings);
-            }
-        }
 
         internal static void LoadChanges(UnityModManager.ModEntry mod)
         {
