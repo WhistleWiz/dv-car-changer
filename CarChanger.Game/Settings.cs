@@ -29,9 +29,13 @@ namespace CarChanger.Game
 
         private void DrawConfigs()
         {
+            var richStyle = GUI.skin.label;
+            richStyle.richText = true;
+
             // Begin by setting a vertical group, that way everything inside lines up.
             GUILayout.BeginVertical(GUILayout.MinWidth(400), GUILayout.ExpandWidth(false));
-            GUILayout.Label("Configs");
+            GUILayout.Label("<color=lightblue><b>Default Configs</b></color>", richStyle);
+            GUILayout.Space(4);
 
             for (int i = 0; i < DefaultConfigSettings.Configs.Count; i++)
             {
@@ -49,7 +53,7 @@ namespace CarChanger.Game
                 }
 
                 // Actual entry with label and text field.
-                GUILayout.Label("Livery ID", GUILayout.ExpandWidth(false));
+                GUILayout.Label("Livery", GUILayout.ExpandWidth(false));
                 config.LiveryName = GUILayout.TextField(config.LiveryName);
 
                 GUILayout.EndHorizontal();
@@ -61,7 +65,7 @@ namespace CarChanger.Game
                     GUILayout.BeginHorizontal();
                     GUILayout.Space(IndentWidth * 2);
 
-                    GUILayout.Label("Modification ID", GUILayout.ExpandWidth(false));
+                    GUILayout.Label("Modification", GUILayout.ExpandWidth(false));
                     config.DefaultIds[j] = GUILayout.TextField(config.DefaultIds[j]);
 
                     GUILayout.EndHorizontal();
