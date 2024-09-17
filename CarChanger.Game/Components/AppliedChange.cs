@@ -354,24 +354,28 @@ namespace CarChanger.Game.Components
 
             // Get brake renderers. Includes those at the default path, and custom ones within the bogies
             // as defined by the components.
-            List<Renderer> brakes = new List<Renderer>();
-
-            var padsF = bogieF.transform.Find(Constants.BogieBrakePadsPath);
-            var padsR = bogieR.transform.Find(Constants.BogieBrakePadsPath);
-
-            if (padsF)
+            // Needs to check if it exist as some cars may not have it (caboose).
+            if (car.gameObject.TryGetComponentInChildren(out BrakesOverheatingController overheat))
             {
-                brakes.AddRange(padsF.GetComponentsInChildren<Renderer>());
-            }
-            if (padsR)
-            {
-                brakes.AddRange(padsR.GetComponentsInChildren<Renderer>());
-            }
+                List<Renderer> brakes = new List<Renderer>();
 
-            brakes.AddRange(bogieF.GetComponentsInChildren<ExtraBrakeRenderer>().Select(x => x.GetRenderer()));
-            brakes.AddRange(bogieR.GetComponentsInChildren<ExtraBrakeRenderer>().Select(x => x.GetRenderer()));
+                var padsF = bogieF.transform.Find(Constants.BogieBrakePadsPath);
+                var padsR = bogieR.transform.Find(Constants.BogieBrakePadsPath);
 
-            car.GetComponentInChildren<BrakesOverheatingController>().brakeRenderers = brakes.ToArray();
+                if (padsF)
+                {
+                    brakes.AddRange(padsF.GetComponentsInChildren<Renderer>());
+                }
+                if (padsR)
+                {
+                    brakes.AddRange(padsR.GetComponentsInChildren<Renderer>());
+                }
+
+                brakes.AddRange(bogieF.GetComponentsInChildren<ExtraBrakeRenderer>().Select(x => x.GetRenderer()));
+                brakes.AddRange(bogieR.GetComponentsInChildren<ExtraBrakeRenderer>().Select(x => x.GetRenderer()));
+
+                overheat.brakeRenderers = brakes.ToArray();
+            }
 
             // Wheel sparks too.
             List<Transform> sparks = new List<Transform>();

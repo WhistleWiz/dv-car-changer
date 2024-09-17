@@ -103,9 +103,7 @@ namespace CarChanger.Game.Patches
 
         private static void DespawnSequence(TrainCar car)
         {
-            var changes = car.GetAppliedChanges();
-
-            foreach (var change in changes)
+            foreach (var change in car.GetAppliedChanges())
             {
                 Object.Destroy(change);
             }
