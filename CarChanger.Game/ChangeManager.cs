@@ -60,14 +60,27 @@ namespace CarChanger.Game
                         AddToCarType(Helpers.EnumToCarType(wagon.CarType), item);
                         continue;
                     case PassengerConfig pax:
-                        if (pax.Livery == PassengerType.All)
+                        switch (pax.Livery)
                         {
-                            AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[(TrainCarType)PassengerType.Blue].parentType, item);
-                            continue;
+                            case PassengerType.All:
+                                AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[(TrainCarType)PassengerType.Blue].parentType, item);
+                                continue;
+                            case PassengerType.Red:
+                            case PassengerType.Green:
+                            case PassengerType.Blue:
+                                AddToCarLivery(DV.Globals.G.Types.TrainCarType_to_v2[(TrainCarType)pax.Livery], item);
+                                continue;
+                            case PassengerType.FirstClass:
+                                AddToCarLivery(DV.Globals.G.Types.TrainCarType_to_v2[(TrainCarType)PassengerType.Green], item);
+                                continue;
+                            case PassengerType.SecondClass:
+                                AddToCarLivery(DV.Globals.G.Types.TrainCarType_to_v2[(TrainCarType)PassengerType.Red], item);
+                                AddToCarLivery(DV.Globals.G.Types.TrainCarType_to_v2[(TrainCarType)PassengerType.Blue], item);
+                                continue;
+                            default:
+                                CarChangerMod.Error($"Unknown passenger livery {pax.Livery}");
+                                continue;
                         }
-
-                        AddToCarLivery(DV.Globals.G.Types.TrainCarType_to_v2[(TrainCarType)PassengerType.Blue], item);
-                        continue;
                     case CabooseConfig _:
                         AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.CabooseRed].parentType, item);
                         continue;

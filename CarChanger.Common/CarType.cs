@@ -59,6 +59,8 @@
         All = 0,
         Red = 600,
         Green = 601,
-        Blue = 602
+        Blue = 602,
+        FirstClass = 1000,
+        SecondClass
     }
 }
