@@ -69,6 +69,12 @@ namespace CarChanger.Common
 
         public static bool CanCombine(ModelConfig a, ModelConfig b)
         {
+            // Don't stack the same.
+            if (a == b)
+            {
+                return false;
+            }
+
             // If the modifications are incompatible return right away.
             if (a.IncompatibleModifications.Contains(b.ModificationId) ||
                 b.IncompatibleModifications.Contains(a.ModificationId))

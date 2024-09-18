@@ -10,6 +10,8 @@ namespace CarChanger.Common.Configs
         [Header("Resources")]
         public GameObject? WaterHatch;
         public bool HideOriginalHatch = false;
+        [EnableIf(nameof(HideOriginalHatch)), Tooltip("The colliders of where water is received (for servicing)")]
+        public GameObject? WaterAreaColliders;
         [Tooltip("The water object will scale from (1, 0, 1) to (1, 145, 1), so beware large objects\n" +
             "Adjust your prefab so it looks correct at those scales")]
         public GameObject? Water;
@@ -22,6 +24,8 @@ namespace CarChanger.Common.Configs
         public GameObject[] CoalModels = new GameObject[0];
         [EnableIf(nameof(ReplaceCoal)), Tooltip("In ascending order\n0 does not need to be included")]
         public float[] SwitchPercentage = new float[0];
+        [EnableIf(nameof(ReplaceCoal)), Tooltip("The colliders of where coal is received (for servicing)")]
+        public GameObject? CoalAreaColliders;
 
         [Header("Headlights")]
         public bool UseCustomHeadlights = false;

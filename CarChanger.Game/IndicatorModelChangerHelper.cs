@@ -24,6 +24,11 @@ namespace CarChanger.Game
                 newModels.Add(go);
             }
 
+            foreach (GameObject model in _models)
+            {
+                model.SetActive(false);
+            }
+
             _indicator.indicatorModels = newModels.ToArray();
             _indicator.switchPercentage = percents;
 
@@ -37,6 +42,11 @@ namespace CarChanger.Game
             foreach (var item in _indicator.indicatorModels)
             {
                 Object.Destroy(item);
+            }
+
+            foreach (GameObject model in _models)
+            {
+                model.SetActive(true);
             }
 
             _indicator.indicatorModels = _models;

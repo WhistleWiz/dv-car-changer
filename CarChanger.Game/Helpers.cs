@@ -54,6 +54,15 @@ namespace CarChanger.Game
             f.SetValue(b, null);
         }
 
+        public static void RefreshIndicator(IndicatorModelChanger indicator)
+        {
+            var t = typeof(IndicatorModelChanger);
+            var f = t.GetField("currentModelIndex", BindingFlags.Instance | BindingFlags.NonPublic);
+            f.SetValue(indicator, -1);
+
+            RefreshIndicator((Indicator)indicator);
+        }
+
         public static void RefreshIndicator(Indicator indicator)
         {
             var t = indicator.GetType();

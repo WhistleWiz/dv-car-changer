@@ -1,9 +1,9 @@
-﻿using CarChanger.Game.Components;
+﻿using CarChanger.Common;
+using CarChanger.Game.Components;
 using DV;
 using HarmonyLib;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace CarChanger.Game.Patches
@@ -66,7 +66,7 @@ namespace CarChanger.Game.Patches
             {
                 // Pick a random config setup.
                 var liveryConfig = liveryConfigs.GetRandomElement();
-                var added = new List<AppliedChange>();
+                var added = new List<ModelConfig>();
 
                 foreach (var item in liveryConfig.DefaultIds)
                 {
@@ -74,15 +74,16 @@ namespace CarChanger.Game.Patches
                         configs.TryFind(x => x.ModificationId == item, out var matching) &&
                         AppliedChange.CanApplyChange(car, matching))
                     {
-                        added.Add(AppliedChange.AddChange(car, matching));
+                        AppliedChange.AddChange(car, matching);
+                        added.Add(matching);
                     }
                 }
 
                 // If randoms are not allowed, stop here.
                 if (!liveryConfig.AllowOthersOnTop) return;
 
-                // Only allow configs that aren't in use alrady.
-                var others = configs.FindAll(config => !added.Any(change => change.Config == config));
+                // Only allow configs that aren't in use already.
+                var others = configs.FindAll(config => AppliedChange.CanApplyChange(car, config) && !added.Contains(config));
 
                 if (others.Count > 0)
                 {

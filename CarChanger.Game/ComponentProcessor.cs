@@ -3,6 +3,7 @@ using CarChanger.Game.Components;
 using DV.CabControls.Spec;
 using DV.Rain;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 
 namespace CarChanger.Game
@@ -39,6 +40,7 @@ namespace CarChanger.Game
             ProcessDefaultMaterial(gameObject, holder);
             ProcessMoveThisControl(gameObject);
             ProcessWindows(gameObject);
+            ProcessBlockResourceReceivers(gameObject);
 
             if (root != null)
             {
@@ -116,6 +118,15 @@ namespace CarChanger.Game
 
             window.duplicates = dupes.ToArray();
             gameObject.SetActive(true);
+        }
+
+        private static void ProcessBlockResourceReceivers(GameObject gameObject)
+        {
+            foreach (var item in gameObject.GetComponentsInChildren<BlockResourceReceivers>())
+            {
+                item.gameObject.AddComponent<InteriorNonStandardLayer>();
+                item.gameObject.layer = 15;
+            }
         }
 
         public static void ProcessHideTransforms(GameObject gameObject, Transform root)
