@@ -59,13 +59,17 @@ namespace CarChanger.Common.Configs
         public GameObject? Sunroof;
         public GameObject? SunroofExploded;
         public bool HideOriginalSunroof = false;
+
+        [Header("Resources")]
         public GameObject? WaterHatchLeft;
         public GameObject? WaterHatchRight;
         public GameObject? WaterHatchLeftExploded;
         public GameObject? WaterHatchRightExploded;
         public bool HideOriginalHatches = false;
-
-        [Header("Resources")]
+        [EnableIf(nameof(HideOriginalHatches)), Tooltip("The colliders of where water is received on the left side (for servicing)")]
+        public GameObject? WaterAreaCollidersLeft;
+        [EnableIf(nameof(HideOriginalHatches)), Tooltip("The colliders of where water is received on the right side (for servicing)")]
+        public GameObject? WaterAreaCollidersRight;
         [Tooltip("The water object will scale from (1, 0, 1) to (1, 114, 0.45), so beware large objects\n" +
             "Adjust your prefab so it looks correct at those scales")]
         public GameObject? WaterLeft;
@@ -79,6 +83,8 @@ namespace CarChanger.Common.Configs
         public GameObject[] CoalModels = new GameObject[0];
         [EnableIf(nameof(ReplaceCoal)), Tooltip("In ascending order\n0 does not need to be included")]
         public float[] SwitchPercentage = new float[0];
+        [EnableIf(nameof(ReplaceCoal)), Tooltip("The colliders of where coal is received (for servicing)")]
+        public GameObject? CoalAreaColliders;
 
         [Header("Headlights")]
         public bool UseCustomFrontHeadlights = false;

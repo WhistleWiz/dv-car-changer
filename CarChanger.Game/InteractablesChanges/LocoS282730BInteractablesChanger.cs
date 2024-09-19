@@ -1,4 +1,5 @@
 ﻿using CarChanger.Common.Configs;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CarChanger.Game.InteractablesChanges

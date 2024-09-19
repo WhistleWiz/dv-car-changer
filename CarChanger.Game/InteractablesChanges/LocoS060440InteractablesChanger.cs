@@ -1,4 +1,5 @@
 ﻿using CarChanger.Common.Configs;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CarChanger.Game.InteractablesChanges
@@ -16,7 +17,10 @@ namespace CarChanger.Game.InteractablesChanges
         private ChangeObject? _hatchR;
         private ChangeObject? _waterL;
         private ChangeObject? _waterR;
+        private LocoResourceReceiverHelper? _waterReceiverL;
+        private LocoResourceReceiverHelper? _waterReceiverR;
         private IndicatorModelChangerHelper? _coal;
+        private LocoResourceReceiverHelper? _coalReceiver;
 
         private bool IsExploded => _materialHolder.Car.isExploded;
 
@@ -91,12 +95,38 @@ namespace CarChanger.Game.InteractablesChanges
                 },
                 _config.HideOriginalWater, _materialHolder);
 
+            if (_config.HideOriginalHatches)
+            {
+                if (_config.WaterAreaCollidersLeft != null)
+                {
+                    _waterReceiverL = new LocoResourceReceiverHelper(
+                        interactables.transform.Find("Interactables/WaterHatchL/WaterRefillTargetL").GetComponent<LocoResourceReceiver>(),
+                        _config.WaterAreaCollidersLeft,
+                        interactables.transform.Find("Interactables/WaterHatchL/C_WaterHatchL/WaterRefillBlockerL").gameObject);
+                }
+
+                if (_config.WaterAreaCollidersRight != null)
+                {
+                    _waterReceiverR = new LocoResourceReceiverHelper(
+                        interactables.transform.Find("Interactables/WaterHatchR/WaterRefillTargetR").GetComponent<LocoResourceReceiver>(),
+                        _config.WaterAreaCollidersRight,
+                        interactables.transform.Find("Interactables/WaterHatchR/C_WaterHatchR/WaterRefillBlockerR").gameObject);
+                }
+            }
+
             if (_config.ReplaceCoal)
             {
                 _coal = new IndicatorModelChangerHelper(
                     interactables.transform.Find("Indicators/I_CoalStorage").GetComponent<IndicatorModelChanger>(),
                     _config.CoalModels,
                     _config.SwitchPercentage);
+
+                if (_config.CoalAreaColliders != null)
+                {
+                    _coalReceiver = new LocoResourceReceiverHelper(
+                        interactables.transform.Find("Interactables/Coal/CoalRefillTarget").GetComponent<LocoResourceReceiver>(),
+                        _config.CoalAreaColliders);
+                }
             }
 
             _config.InteractablesApplied(interactables, IsExploded);
@@ -115,7 +145,10 @@ namespace CarChanger.Game.InteractablesChanges
             _hatchR?.Clear();
             _waterL?.Clear();
             _waterR?.Clear();
+            _waterReceiverL?.Clear();
+            _waterReceiverR?.Clear();
             _coal?.Clear();
+            _coalReceiver?.Clear();
 
             _config.InteractablesUnapplied(interactables);
         }
