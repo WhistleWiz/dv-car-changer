@@ -148,6 +148,21 @@ namespace CarChanger.Common.Configs
 
         public override bool DoValidation(out string error)
         {
+            if (ReplaceCoal)
+            {
+                if (CoalModels.Length != SwitchPercentage.Length + 1)
+                {
+                    error = "number of coal models should be 1 larger than the number of switch percentages";
+                    return false;
+                }
+
+                if (SwitchPercentage.Length == 0)
+                {
+                    error = "need at least 1 change percentage";
+                    return false;
+                }
+            }
+
             error = string.Empty;
             return true;
         }
