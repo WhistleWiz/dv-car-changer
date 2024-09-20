@@ -367,6 +367,8 @@ namespace CarChanger.Game
                 {
                     PlayConfirm();
                 }
+
+                return;
             }
             else
             {

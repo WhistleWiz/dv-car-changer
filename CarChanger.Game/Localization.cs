@@ -12,7 +12,7 @@ namespace CarChanger.Game
         private const string OverrideKey = "carchanger/override";
         private const string RadioBeginKey = "carchanger/radio_begin";
         private const string IncompatibleModificationKey = "carchanger/incomp_mod";
-        private const string NoModificationsKey = "carchanger/incomp_mod";
+        private const string NoModificationsKey = "carchanger/no_config";
 
         public static string Enable => LocalizationAPI.L(EnableKey);
         public static string Disable => LocalizationAPI.L(DisableKey);
