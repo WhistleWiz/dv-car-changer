@@ -17,10 +17,8 @@ namespace CarChanger.Game
         public float NoModificationChance = 0.0f;
         public DefaultConfigSettings DefaultConfigSettings = new DefaultConfigSettings();
 
-        [NonSerialized]
-        private int _selectedLivery = 0;
-        [NonSerialized]
-        private Dictionary<string, int> _selectedConfigs = new Dictionary<string, int>();
+        private static int s_selectedLivery = 0;
+        private static Dictionary<DefaultConfigSettings.LiveryConfig, int> s_selectedConfigs = new Dictionary<DefaultConfigSettings.LiveryConfig, int>();
 
         public override void Save(UnityModManager.ModEntry modEntry)
         {
@@ -47,6 +45,12 @@ namespace CarChanger.Game
             {
                 var config = DefaultConfigSettings.Configs[i];
 
+                // Ensure the selected dictionary is updated.
+                if (!s_selectedConfigs.ContainsKey(config))
+                {
+                    s_selectedConfigs.Add(config, 0);
+                }
+
                 // Need to make an horizontal group for every line to have labels...
                 GUILayout.BeginHorizontal();
 
@@ -54,6 +58,7 @@ namespace CarChanger.Game
                 if (GUILayout.Button(new GUIContent("×", "Remove this livery"), GUILayout.Width(IndentWidth)))
                 {
                     DefaultConfigSettings.Configs.RemoveAt(i);
+                    s_selectedConfigs.Remove(config);
                     i--;
                     continue;
                 }
@@ -61,7 +66,7 @@ namespace CarChanger.Game
                 // Actual entry with label and text field. Highlight if livery does not exist.
                 GUILayout.Label("Livery", GUILayout.ExpandWidth(false));
                 bool hasLivery = DV.Globals.G.Types.TryGetLivery(config.LiveryName, out var livery);
-                using (new GUIColorScope(newContent: hasLivery ? GUI.contentColor : Color.yellow))
+                using (new GUIColorScope(newContent: hasLivery ? (Color?)null : Color.yellow))
                 {
                     config.LiveryName = GUILayout.TextField(config.LiveryName);
                 }
@@ -79,7 +84,7 @@ namespace CarChanger.Game
                 GUILayout.EndHorizontal();
 
                 DrawConfigEntries(config, hasLivery, livery);
-                DrawConfigButtons(config, hasLivery, livery, _selectedConfigs);
+                DrawConfigButtons(config, hasLivery, livery, i);
 
                 GUILayout.Space(10);
             }
@@ -89,12 +94,14 @@ namespace CarChanger.Game
             var liveries = DV.Globals.G.Types.Liveries.Select(x => x.id).ToArray();
 
             // Show a popup to select a livery to add.
-            UnityModManager.UI.PopupToggleGroup(ref _selectedLivery, liveries);
+            UnityModManager.UI.PopupToggleGroup(ref s_selectedLivery, liveries, "All installed liveries");
 
             // Button to add new liveries.
             if (GUILayout.Button("Add New Livery ID"))
             {
-                DefaultConfigSettings.Configs.Add(new DefaultConfigSettings.LiveryConfig() { LiveryName = liveries[_selectedLivery] });
+                var config = new DefaultConfigSettings.LiveryConfig() { LiveryName = liveries[s_selectedLivery] };
+                DefaultConfigSettings.Configs.Add(config);
+                s_selectedConfigs.Add(config, 0);
             }
 
             GUILayout.EndHorizontal();
@@ -122,21 +129,14 @@ namespace CarChanger.Game
             }
         }
 
-        private static void DrawConfigButtons(DefaultConfigSettings.LiveryConfig config, bool hasLivery, TrainCarLivery livery, Dictionary<string, int> selectedConfigs)
+        private static void DrawConfigButtons(DefaultConfigSettings.LiveryConfig config, bool hasLivery, TrainCarLivery livery, int index)
         {
             string[] configs;
-            int selected = 0;
+            int selected = s_selectedConfigs[config];
 
             if (hasLivery && ChangeManager.LoadedConfigs.TryGetValue(livery, out var loaded))
             {
                 configs = loaded.Select(x => x.ModificationId).ToArray();
-
-                // For actual liveries add or get the entry for the selected value.
-                if (!selectedConfigs.TryGetValue(livery.id, out selected))
-                {
-                    selected = 0;
-                    selectedConfigs.Add(livery.id, 0);
-                }
             }
             else
             {
@@ -150,16 +150,14 @@ namespace CarChanger.Game
             // If there are configs for the current livery, show a selector popup.
             if (configs.Length > 0)
             {
-                UnityModManager.UI.PopupToggleGroup(ref selected, configs);
-
-                // Update the currently selected one.
-                if (selectedConfigs.ContainsKey(livery.id))
-                {
-                    selectedConfigs[livery.id] = selected;
-                }
+                UnityModManager.UI.PopupToggleGroup(ref selected, configs, $"Installed changes for {config.LiveryName}", index);
             }
 
-            if (GUILayout.Button("+", GUILayout.Width(IndentWidth)))
+            // Update the currently selected one.
+            s_selectedConfigs[config] = selected;
+
+            // Add the selected config if it exists or an empty slot if it doesn't.
+            if (GUILayout.Button(new GUIContent("+", "Add new modification"), GUILayout.Width(IndentWidth)))
             {
                 if (configs.Length > 0)
                 {
@@ -174,7 +172,7 @@ namespace CarChanger.Game
             // Disable remove button if the array is already empty.
             GUI.enabled = config.DefaultIds.Count > 0;
 
-            if (GUILayout.Button("-", GUILayout.Width(IndentWidth)))
+            if (GUILayout.Button(new GUIContent("-", "Remove last modification"), GUILayout.Width(IndentWidth)))
             {
                 config.DefaultIds.RemoveAt(config.DefaultIds.Count - 1);
             }
