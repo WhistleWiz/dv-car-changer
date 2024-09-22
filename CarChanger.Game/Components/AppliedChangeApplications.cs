@@ -315,6 +315,10 @@ namespace CarChanger.Game.Components
                     "[interior LOD]/LocoS060_InteriorLOD/s060_cab_LOD1").GetComponent<Renderer>().material,
                 Windows = TrainCar.transform.Find(
                     "LocoS060_Body/windows/s060_cab_window_CL").GetComponent<Renderer>().material,
+                Extra1 = TrainCar.carLivery.externalInteractablesPrefab.transform.Find(
+                    "Indicators/I_CoalStorage/LocoS060_coal1").GetComponent<Renderer>().material,
+                Extra2 = TrainCar.carLivery.externalInteractablesPrefab.transform.Find(
+                    "Indicators/I_WaterStorageR/scaler/water").GetComponent<Renderer>().material,
                 BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
                     "Interactables/Doors/DoorL/C_DoorL/s060_ext_door_L").GetComponent<Renderer>().material,
                 InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
@@ -383,7 +387,11 @@ namespace CarChanger.Game.Components
                 Body = TrainCar.transform.Find(
                     "LocoS282B_Body/LOD0/s282_tender").GetComponent<Renderer>().material,
                 Interior = TrainCar.transform.Find(
-                    "LocoS282B_Body/LOD0/s282_tender_cab").GetComponent<Renderer>().material
+                    "LocoS282B_Body/LOD0/s282_tender_cab").GetComponent<Renderer>().material,
+                Extra1 = TrainCar.carLivery.externalInteractablesPrefab.transform.Find(
+                    "Coal&Water/I_TenderCoal/coal1").GetComponent<Renderer>().material,
+                Extra2 = TrainCar.carLivery.externalInteractablesPrefab.transform.Find(
+                    "Coal&Water/I_TenderWater/tender_water_scaler/tender_water").GetComponent<Renderer>().material
             };
 
             if (config.UseCustomBogies)

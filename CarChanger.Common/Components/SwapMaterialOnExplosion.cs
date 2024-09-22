@@ -21,16 +21,11 @@ namespace CarChanger.Common.Components
         {
             if (Material != null) return true;
 
-            switch (DefaultMaterial)
+            return DefaultMaterial switch
             {
-                case SourceMaterial.BodyExploded:
-                case SourceMaterial.InteriorExploded:
-                case SourceMaterial.Extra1Exploded:
-                case SourceMaterial.FromPath:
-                    return true;
-                default:
-                    return false;
-            }
+                SourceMaterial.BrokenWindows => false,
+                _ => DefaultMaterial >= SourceMaterial.BodyExploded,
+            };
         }
     }
 }

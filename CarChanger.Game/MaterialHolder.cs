@@ -18,11 +18,15 @@ namespace CarChanger.Game
         public Material Body = null!;
         public Material Interior = null!;
         public Material Windows = null!;
+        public Material Bogie = null!;
         public Material Extra1 = null!;
+        public Material Extra2 = null!;
         public Material BodyExploded = null!;
         public Material InteriorExploded = null!;
         public Material WindowsBroken = null!;
+        public Material BogieExploded = null!;
         public Material Extra1Exploded = null!;
+        public Material Extra2Exploded = null!;
 
         public MaterialHolder(TrainCar car)
         {

@@ -17,18 +17,10 @@ namespace CarChanger.Common.Components
 
         private bool EnablePath() => Material == SourceMaterial.FromPath;
 
-        private bool EnableProcedural()
+        private bool EnableProcedural() => Material switch
         {
-            switch (Material)
-            {
-                case SourceMaterial.BodyExploded:
-                case SourceMaterial.InteriorExploded:
-                case SourceMaterial.Extra1Exploded:
-                case SourceMaterial.FromPath:
-                    return true;
-                default:
-                    return false;
-            }
-        }
+            SourceMaterial.BrokenWindows => false,
+            _ => Material >= SourceMaterial.BodyExploded,
+        };
     }
 }
