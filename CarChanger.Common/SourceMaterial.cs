@@ -5,12 +5,14 @@
         Body,
         Interior,
         Windows,
-        Extra1,
+
+        Extra1 = 100,
 
         BodyExploded = 500,
         InteriorExploded,
         BrokenWindows,
-        Extra1Exploded,
+
+        Extra1Exploded = 600,
 
         FromPath = 1000
     }

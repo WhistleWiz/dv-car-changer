@@ -21,8 +21,9 @@ namespace CarChanger.Game.Components
         private List<GameObject> _disabledColliders = new List<GameObject>();
         private GameObject? _replaceStaticCollider;
         private List<GameObject> _disabledStaticColliders = new List<GameObject>();
-
-        private bool _moved = false;
+        private Transform? _replaceInteraction;
+        private Transform? _ogInteraction;
+        private bool _changed = false;
         private Vector2? _ogLimits;
         private Vector3? _ogAxis;
 
@@ -34,7 +35,11 @@ namespace CarChanger.Game.Components
             // Wait for the joint to get created.
             while (!_control.TryGetComponent(out joint))
             {
-                if (counter-- < 0) yield break;
+                if (counter-- < 0)
+                {
+                    CarChangerMod.Warning($"Failed to get joint for ChangeThisControl '{name}'");
+                    yield break;
+                }
 
                 yield return null;
             }
@@ -108,12 +113,18 @@ namespace CarChanger.Game.Components
                 }
             }
 
-            _moved = true;
+            // Replace the interaction point.
+            if (_replaceInteraction != null)
+            {
+                _ogInteraction = Helpers.ReplaceInteractionPoint(_control, _replaceInteraction);
+            }
+
+            _changed = true;
         }
 
         private void OnDestroy()
         {
-            if (!_moved || _control == null || gameObject == null)
+            if (!_changed || _control == null || gameObject == null)
             {
                 return;
             }
@@ -159,6 +170,12 @@ namespace CarChanger.Game.Components
                     }
                 }
             }
+
+            // Restore the interaction point.
+            if (_ogInteraction != null)
+            {
+                Helpers.ReplaceInteractionPoint(_control, _ogInteraction);
+            }
         }
 
         private void FixGrabColliders()
@@ -191,6 +208,7 @@ namespace CarChanger.Game.Components
             real._localOffset = comp.LocalOffset;
             real._replaceColliders = comp.ReplacementColliders;
             real._replaceStaticCollider = comp.ReplacementStaticCollider;
+            real._replaceInteraction = comp.ReplacementInteractionPoint;
 
             real._axis = comp.ChangeAxis ? comp.Axis : (Vector3?)null;
             real._limits = comp.ChangeLimits ? new Vector2(comp.Min, comp.Max) : (Vector2?)null;

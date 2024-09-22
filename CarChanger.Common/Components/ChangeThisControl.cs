@@ -26,6 +26,9 @@ namespace CarChanger.Common.Components
         [Space, Tooltip("Replaces the StaticInteractionArea colliders if provided")]
         public GameObject? ReplacementStaticCollider;
 
+        [Space, Tooltip("Replaces the interaction point if provided")]
+        public Transform? ReplacementInteractionPoint;
+
         private void OnValidate()
         {
             if (Application.isEditor && transform.parent != null)

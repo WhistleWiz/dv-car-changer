@@ -37,7 +37,7 @@ namespace CarChanger.Game
         {
             // Begin by setting a vertical group, that way everything inside lines up.
             GUILayout.BeginVertical(GUILayout.MinWidth(400), GUILayout.ExpandWidth(false));
-            GUILayout.Label(new GUIContent("Preset Modifications",
+            GUILayout.Label(new GUIContent("Presets",
                 "Allows changing which configs will spawn by default for each car livery"), UnityModManager.UI.h2);
             GUILayout.Space(4);
 

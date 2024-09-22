@@ -132,14 +132,27 @@ namespace CarChanger.Game
                         }
                         break;
                     case CustomCarConfig ccc:
-                        if (!string.IsNullOrEmpty(ccc.CarTypeId) && DV.Globals.G.Types.TryGetCarType(ccc.CarTypeId, out var type))
+                        if (ccc.IsLivery)
                         {
-                            AddToCarType(type, item);
-                            continue;
+                            if (DV.Globals.G.Types.TryGetLivery(ccc.TypeId, out var livery))
+                            {
+                                AddToCarLivery(livery, item);
+                            }
+                            else
+                            {
+                                CarChangerMod.Warning($"Could not find livery '{ccc.TypeId}'");
+                            }
                         }
-                        if (DV.Globals.G.Types.TryGetLivery(ccc.LiveryId, out var livery))
+                        else
                         {
-                            AddToCarLivery(livery, item);
+                            if (DV.Globals.G.Types.TryGetCarType(ccc.TypeId, out var type))
+                            {
+                                AddToCarType(type, item);
+                            }
+                            else
+                            {
+                                CarChangerMod.Warning($"Could not find car type '{ccc.TypeId}'");
+                            }
                         }
                         continue;
                     default:

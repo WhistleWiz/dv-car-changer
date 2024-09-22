@@ -1,4 +1,5 @@
 ﻿using CarChanger.Common;
+using DV;
 using DV.CabControls;
 using DV.CabControls.Spec;
 using DV.Interaction;
@@ -125,7 +126,7 @@ namespace CarChanger.Game
             }
         }
 
-        public static void DestroyIfNotNullGO(Component? obj)
+        public static void DestroyGameObjectIfNotNull(Component? obj)
         {
             if (obj != null)
             {
@@ -203,8 +204,41 @@ namespace CarChanger.Game
 
             // Avoid calling the original one as this may run before Start() is called on that script.
             float AngleForNotch(int notch) => stepped.invertDirection ?
-                    joint.limits.max - notch * stepped.SingleNotchAngle :
-                    joint.limits.min + notch * stepped.SingleNotchAngle;
+                joint.limits.max - notch * stepped.SingleNotchAngle :
+                joint.limits.min + notch * stepped.SingleNotchAngle;
+        }
+
+        public static Transform? ReplaceInteractionPoint(ControlSpec control, Transform replacePoint)
+        {
+            if (control.TryGetComponent(out PointHandSnapper point))
+            {
+                var t = point.pointMarker;
+                point.pointMarker = replacePoint;
+                return t;
+            }
+
+            if (control.TryGetComponent(out LineHandSnapper line))
+            {
+                var t = line.lineStart;
+                line.lineStart = replacePoint;
+                return t;
+            }
+
+            if (control.TryGetComponent(out ValveHandSnapper valve))
+            {
+                var t = valve.axis;
+                valve.axis = replacePoint;
+                return t;
+            }
+
+            if (control.TryGetComponent(out CircleHandSnapper circle))
+            {
+                var t = circle.centerUpward;
+                circle.centerUpward = replacePoint;
+                return t;
+            }
+
+            return null;
         }
     }
 }

@@ -5,12 +5,12 @@ namespace CarChanger.Common.Configs
     [CreateAssetMenu(menuName = "DVCarChanger/Custom Car Modification", order = Constants.MenuOrderConstants.Other + 1)]
     public class CustomCarConfig : ModelConfig
     {
-        [Tooltip("The car type this modification will apply to\n" +
-            "Leaving it empty will instead apply to the livery")]
-        public string CarTypeId = string.Empty;
-        [EnableIf(nameof(EnableLivery)), Tooltip("The livery this modification will apply to")]
-        public string LiveryId = string.Empty;
+        [Tooltip("The car type or livery this modification will apply to")]
+        public string TypeId = string.Empty;
+        [Tooltip("If true, applies to a single livery instead of the car type")]
+        public bool IsLivery = false;
 
+        [Header("Body")]
         [Tooltip("The prefab to load on the body")]
         public GameObject BodyPrefab = null!;
 
@@ -35,8 +35,6 @@ namespace CarChanger.Common.Configs
             "This is the part of the interior shown while the interior itself is unloaded")]
         public GameObject? InteriorLODPrefab;
 
-        protected bool EnableLivery() => string.IsNullOrEmpty(CarTypeId);
-
         public override bool DoValidation(out string error)
         {
             error = string.Empty;
@@ -45,17 +43,7 @@ namespace CarChanger.Common.Configs
 
         public static bool SameTargets(CustomCarConfig a, CustomCarConfig b)
         {
-            if (a.CarTypeId != b.CarTypeId)
-            {
-                return false;
-            }
-
-            if (a.EnableLivery())
-            {
-                return a.LiveryId == b.LiveryId;
-            }
-
-            return true;
+            return a.TypeId == b.TypeId;
         }
     }
 }
