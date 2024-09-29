@@ -44,11 +44,6 @@ namespace CarChanger.Game
                 Object.Destroy(item);
             }
 
-            foreach (GameObject model in _models)
-            {
-                model.SetActive(true);
-            }
-
             _indicator.indicatorModels = _models;
             _indicator.switchPercentage = _percents;
 

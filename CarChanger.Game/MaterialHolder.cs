@@ -18,13 +18,13 @@ namespace CarChanger.Game
         public Material Body = null!;
         public Material Interior = null!;
         public Material Windows = null!;
-        public Material Bogie = null!;
+        //public Material Bogie = null!;
         public Material Extra1 = null!;
         public Material Extra2 = null!;
         public Material BodyExploded = null!;
         public Material InteriorExploded = null!;
         public Material WindowsBroken = null!;
-        public Material BogieExploded = null!;
+        //public Material BogieExploded = null!;
         public Material Extra1Exploded = null!;
         public Material Extra2Exploded = null!;
 
@@ -43,11 +43,17 @@ namespace CarChanger.Game
             SourceMaterial.Body => Body,
             SourceMaterial.Interior => Interior,
             SourceMaterial.Windows => Windows,
+
             SourceMaterial.Extra1 => Extra1,
+            SourceMaterial.Extra2 => Extra2,
+
             SourceMaterial.BodyExploded => Helpers.GetCached(ref BodyExploded!, () => proceduralExplodeMaterials ? GenerateProceduralExplosionMaterial(Body) : null!),
             SourceMaterial.InteriorExploded => Helpers.GetCached(ref InteriorExploded!, () => proceduralExplodeMaterials ? GenerateProceduralExplosionMaterial(Interior) : null!),
             SourceMaterial.BrokenWindows => WindowsBroken,
+
             SourceMaterial.Extra1Exploded => Helpers.GetCached(ref Extra1Exploded!, () => proceduralExplodeMaterials ? GenerateProceduralExplosionMaterial(Extra1) : null!),
+            SourceMaterial.Extra2Exploded => Helpers.GetCached(ref Extra2Exploded!, () => proceduralExplodeMaterials ? GenerateProceduralExplosionMaterial(Extra2) : null!),
+
             SourceMaterial.FromPath => GetFromPath(path, isInterior, proceduralExplodeMaterials),
             _ => null!
         };
