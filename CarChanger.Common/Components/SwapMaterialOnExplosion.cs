@@ -5,17 +5,16 @@ namespace CarChanger.Common.Components
     public class SwapMaterialOnExplosion : MonoBehaviour
     {
         public Material Material = null!;
-        [EnableIf(nameof(EnableMat)), Tooltip("Use a default material instead of a custom one")]
+        [Tooltip("Use a default material instead of a custom one")]
         public SourceMaterial DefaultMaterial;
-        [EnableIf(nameof(EnablePath)), Tooltip("Path to an object with the material")]
+        [Tooltip("Path to an object with the material")]
         public string MaterialObjectPath = string.Empty;
+        [Tooltip("If the path is in the interior object (for interior and interactables)")]
+        public bool FromInterior;
         [EnableIf(nameof(EnableProcedural)), Tooltip("Turns the material into a procedurally generated exploded version")]
         public bool GenerateExplodedMaterialProcedurally = false;
 
         public GameObject[] AffectedGameObjects = new GameObject[0];
-
-        private bool EnableMat() => Material == null;
-        private bool EnablePath() => EnableMat() && DefaultMaterial == SourceMaterial.FromPath;
 
         private bool EnableProcedural()
         {

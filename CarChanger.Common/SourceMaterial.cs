@@ -18,6 +18,8 @@
         Extra1Exploded = 600,
         Extra2Exploded,
 
-        FromPath = 1000
+        // Extra options.
+        FromPath = 1000,
+        FromName
     }
 }

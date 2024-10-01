@@ -420,72 +420,72 @@ namespace CarChanger.Game.Components
             var wheelRotation = car.GetComponentInChildren<PoweredWheelRotationViaCode>();
             var manager = car.GetComponentInChildren<PoweredWheelsManager>();
 
-            if (wheelRotation && manager)
+            // Can't make them powered in this case.
+            if (!wheelRotation || !manager) return;
+
+            wheelRotation.wheelRadius = radius ?? wheelRotation.wheelRadius;
+
+            // Get all axles, ordered by position in relation to the car for consistency.
+            var axles = car.Bogies.SelectMany(x => x.Axles).Select(x => x.transform).OrderBy(x => car.transform.InverseTransformPoint(x.position).z);
+            int i = 0;
+            List<PoweredWheel> powered = new List<PoweredWheel>();
+
+            foreach (var item in axles)
             {
-                wheelRotation.wheelRadius = radius ?? wheelRotation.wheelRadius;
-
-                // Get all axles, ordered by position in relation to the car for consistency.
-                var axles = car.Bogies.SelectMany(x => x.Axles).Select(x => x.transform).OrderBy(x => car.transform.InverseTransformPoint(x.position).z);
-                int i = 0;
-                List<PoweredWheel> powered = new List<PoweredWheel>();
-
-                foreach (var item in axles)
+                if (item.TryGetComponent<PoweredWheel>(out var wheel))
                 {
-                    if (item.TryGetComponent<PoweredWheel>(out var wheel))
-                    {
-                        wheel.state = wheelStates[i++];
-                        powered.Add(wheel);
-                        continue;
-                    }
-
-                    if (item.TryGetComponent<PoweredAxle>(out var axle))
-                    {
-                        wheel = item.gameObject.AddComponent<PoweredWheel>();
-                        wheel.wheelTransform = item;
-                        wheel.localRotationAxis = axle.Axis;
-                        wheel.state = wheelStates[i++];
-                        powered.Add(wheel);
-                        Destroy(axle);
-                        continue;
-                    }
+                    wheel.state = wheelStates[i++];
+                    powered.Add(wheel);
+                    continue;
                 }
 
-                manager.poweredWheels = powered.ToArray();
-
-                var wheelSlip = car.GetComponentInChildren<WheelslipSparksController>();
-
-                if (wheelSlip)
+                if (item.TryGetComponent<PoweredAxle>(out var axle))
                 {
-                    var sparks = car.GetComponentInChildren<WheelSlideSparksController>().sparkAnchors;
-                    var anchors = new List<WheelslipSparksController.WheelSparksDefinition>();
+                    wheel = item.gameObject.AddComponent<PoweredWheel>();
+                    wheel.wheelTransform = item;
+                    wheel.localRotationAxis = axle.Axis;
+                    wheel.state = wheelStates[i++];
+                    powered.Add(wheel);
+                    Destroy(axle);
+                    continue;
+                }
+            }
 
-                    if (sparks != null && sparks.Length > 1)
+            manager.poweredWheels = powered.ToArray();
+
+            var wheelSlip = car.GetComponentInChildren<WheelslipSparksController>();
+
+            if (wheelSlip)
+            {
+                var sparks = car.GetComponentInChildren<WheelSlideSparksController>().sparkAnchors;
+                var anchors = new List<WheelslipSparksController.WheelSparksDefinition>();
+
+                if (sparks != null && sparks.Length > 1)
+                {
+                    foreach (var item in powered)
                     {
-                        foreach (var item in powered)
+                        // Find the 2 closest anchors to the axle. If set up properly, they are the right ones.
+                        // Order them by their X coordinate for left/right.
+                        var axleAnchors = sparks.OrderBy(x => (item.wheelTransform.position - x.position).sqrMagnitude)
+                            .Take(2).OrderBy(x => x.position.x);
+
+                        var definition = new WheelslipSparksController.WheelSparksDefinition
                         {
-                            // Find the 2 closest anchors to the axle. If set up properly, they are the right ones.
-                            // Order them by their X coordinate for left/right.
-                            var axleAnchors = sparks.OrderBy(x => (item.wheelTransform.position - x.position).sqrMagnitude)
-                                .Take(2).OrderBy(x => x.position.x);
+                            poweredWheel = item,
+                            sparksLeftAnchor = axleAnchors.ElementAt(0),
+                            sparksRightAnchor = axleAnchors.ElementAt(1)
+                        };
 
-                            var definition = new WheelslipSparksController.WheelSparksDefinition
-                            {
-                                poweredWheel = item,
-                                sparksLeftAnchor = axleAnchors.ElementAt(0),
-                                sparksRightAnchor = axleAnchors.ElementAt(1)
-                            };
-
-                            definition.Init();
-                            anchors.Add(definition);
-                        }
+                        definition.Init();
+                        anchors.Add(definition);
                     }
-                    else
-                    {
-                        CarChangerMod.Error("Wheel contact points were not setup correctly! Wheel slip sparks will not work.");
-                    }
-
-                    wheelSlip.wheelSparks = anchors.ToArray();
                 }
+                else
+                {
+                    CarChangerMod.Error("Wheel contact points were not setup correctly! Wheel slip sparks will not work.");
+                }
+
+                wheelSlip.wheelSparks = anchors.ToArray();
             }
         }
 

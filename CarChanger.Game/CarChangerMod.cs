@@ -1,9 +1,7 @@
-﻿using CarChanger.Common;
-using DVLangHelper.Runtime;
+﻿using DVLangHelper.Runtime;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -18,6 +16,7 @@ namespace CarChanger.Game
         public static UnityModManager.ModEntry Instance { get; private set; } = null!;
         public static TranslationInjector Translations { get; private set; } = null!;
         public static Dictionary<string, AudioClip> SoundCache { get; private set; } = null!;
+        public static Dictionary<string, Material> MaterialCache { get; private set; } = null!;
         public static Settings Settings { get; private set; } = null!;
 
         // Unity Mod Manager Wiki: https://wiki.nexusmods.com/index.php/Category:Unity_Mod_Manager
@@ -79,9 +78,49 @@ namespace CarChanger.Game
 
         private static void BuildCache()
         {
+            // For timing.
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+
+            // For sounds just take the first one, they are unique.
             SoundCache = Resources.FindObjectsOfTypeAll<AudioClip>()
                     .GroupBy(x => x.name, StringComparer.Ordinal)
                     .ToDictionary(k => k.Key, v => v.First());
+
+            sw.Stop();
+            Log($"Built sound cache {sw.Elapsed.TotalSeconds:F4}");
+            sw.Restart();
+
+            MaterialCache = new Dictionary<string, Material>();
+
+            // For materials, first group by material name.
+            var mats = Resources.FindObjectsOfTypeAll<Material>()
+                    .GroupBy(x => x.name, StringComparer.Ordinal);
+
+            foreach (var group in mats)
+            {
+                // If there's only 1 material per name, add it directly.
+                if (group.Count() == 1)
+                {
+                    MaterialCache.Add(group.Key, group.First());
+                    continue;
+                }
+
+                // For multiple materials with the same name (ex. Glass), group by the texture name too.
+                var organised = group.GroupBy(x => x.mainTexture.name, StringComparer.Ordinal);
+
+                // Finally add the first element of these new groups. If it's still the same name just
+                // ignore that material, too much hassle.
+                foreach (var newGroup in organised)
+                {
+                    MaterialCache.Add($"{group.Key}/{newGroup.Key}", newGroup.First());
+                }
+            }
+
+            sw.Stop();
+            Log($"Built material cache cache {sw.Elapsed.TotalSeconds:F4}");
+
+            //Log($"\"{string.Join("\",\n\"", MaterialCache.Keys)}\"");
         }
     }
 }
