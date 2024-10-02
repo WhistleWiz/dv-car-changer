@@ -88,14 +88,15 @@ namespace CarChanger.Game
                     .ToDictionary(k => k.Key, v => v.First());
 
             sw.Stop();
-            Log($"Built sound cache {sw.Elapsed.TotalSeconds:F4}");
+            Log($"Built sound cache [{sw.Elapsed.TotalSeconds:F4}s]");
             sw.Restart();
 
             MaterialCache = new Dictionary<string, Material>();
 
             // For materials, first group by material name.
             var mats = Resources.FindObjectsOfTypeAll<Material>()
-                    .GroupBy(x => x.name, StringComparer.Ordinal);
+                .Where(x => x != null)
+                .GroupBy(x => x.name, StringComparer.Ordinal);
 
             foreach (var group in mats)
             {
@@ -107,20 +108,35 @@ namespace CarChanger.Game
                 }
 
                 // For multiple materials with the same name (ex. Glass), group by the texture name too.
-                var organised = group.GroupBy(x => x.mainTexture.name, StringComparer.Ordinal);
+                var organised = group.GroupBy(x => GetSortingName(x), StringComparer.Ordinal);
 
-                // Finally add the first element of these new groups. If it's still the same name just
-                // ignore that material, too much hassle.
+                // Finally add the first element of these new groups.
                 foreach (var newGroup in organised)
                 {
+                    // Same for materials with no texture, just take the first one.
+                    if (string.IsNullOrEmpty(newGroup.Key))
+                    {
+                        MaterialCache.Add(group.Key, newGroup.First());
+                        continue;
+                    }
+
                     MaterialCache.Add($"{group.Key}/{newGroup.Key}", newGroup.First());
                 }
             }
 
             sw.Stop();
-            Log($"Built material cache cache {sw.Elapsed.TotalSeconds:F4}");
+            Log($"Built material cache [{sw.Elapsed.TotalSeconds:F4}s]");
 
-            //Log($"\"{string.Join("\",\n\"", MaterialCache.Keys)}\"");
+            //Log($"\"{string.Join("\",\n\"", MaterialCache.Keys.OrderBy(x => x))}\"");
+
+            static string GetSortingName(Material mat)
+            {
+                var tex = mat.mainTexture;
+
+                if (tex != null) return tex.name;
+
+                return string.Empty;
+            }
         }
     }
 }

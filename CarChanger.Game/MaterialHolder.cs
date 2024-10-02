@@ -55,7 +55,7 @@ namespace CarChanger.Game
             SourceMaterial.Extra2Exploded => Helpers.GetCached(ref Extra2Exploded!, () => proceduralExplodeMaterials ? GenerateProceduralExplosionMaterial(Extra2) : null!),
 
             SourceMaterial.FromPath => GetFromPath(path, isInterior, proceduralExplodeMaterials),
-            SourceMaterial.FromName => CarChangerMod.MaterialCache[path],
+            SourceMaterial.FromName => GetFromCache(path, proceduralExplodeMaterials),
             _ => null!
         };
 
@@ -81,6 +81,21 @@ namespace CarChanger.Game
             }
 
             return renderer.material;
+        }
+
+        public static Material GetFromCache(string name, bool proceduralExplodeMaterials = false)
+        {
+            if (!CarChangerMod.MaterialCache.TryGetValue(name, out Material mat))
+            {
+                return null!;
+            }
+
+            if (proceduralExplodeMaterials)
+            {
+                return GenerateProceduralExplosionMaterial(mat);
+            }
+
+            return mat;
         }
 
         public static Material GenerateProceduralExplosionMaterial(Material original)

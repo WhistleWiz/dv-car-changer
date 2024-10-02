@@ -154,6 +154,9 @@ namespace CarChanger.Game.Components
 
             _colliderHolder?.Apply();
 
+            // Handle other mods.
+            ModIntegrations.ZCouplers.HandleBuffersToggled(TrainCar);
+
             Config.Applied(TrainCar.gameObject);
             OnApply?.Invoke(this);
 
