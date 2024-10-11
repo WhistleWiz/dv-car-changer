@@ -16,12 +16,15 @@ namespace CarChanger.Game.Components
 {
     internal partial class AppliedChange : MonoBehaviour
     {
+        private const string InteriorLODNamingEnd = " LOD CHANGE";
+
         public TrainCar TrainCar = null!;
         public ModelConfig? Config = null;
         public event Action<AppliedChange>? OnApply = null;
         public MaterialHolder MatHolder = null!;
 
         private bool _changeApplied = false;
+        private bool _applying = false;
         private List<GameObject> _originalBody = new List<GameObject>();
         private List<GameObject> _originalInteriorLod = new List<GameObject>();
         private GameObject _body = null!;
@@ -68,15 +71,33 @@ namespace CarChanger.Game.Components
 
         private void ApplyChange()
         {
+            StartCoroutine(ApplyChangeRoutine(0));
+        }
+
+        private System.Collections.IEnumerator ApplyChangeRoutine(int delay)
+        {
             if (Config == null)
             {
                 CarChangerMod.Warning($"No config on AppliedChange '{name}'!");
-                return;
+                yield break;
             }
+
+            while (_applying)
+            {
+                yield return null;
+            }
+
+            _applying = true;
 
             if (_changeApplied)
             {
                 ReturnToDefault();
+            }
+
+            while (delay > 0)
+            {
+                delay--;
+                yield return null;
             }
 
             _originalBody.Clear();
@@ -138,7 +159,7 @@ namespace CarChanger.Game.Components
                     ApplyGroup(group);
                     break;
                 default:
-                    return;
+                    yield break;
             }
 
             // If the applied change resulted in a body GameObject, see if it explodes.
@@ -161,6 +182,7 @@ namespace CarChanger.Game.Components
             OnApply?.Invoke(this);
 
             _changeApplied = true;
+            _applying = false;
         }
 
         private List<GameObject> GetOriginalBody()
@@ -306,7 +328,8 @@ namespace CarChanger.Game.Components
             if (lod == null) return new List<GameObject>();
 
             // By default, return all children of that object.
-            return lod.AllChildGOs().ToList();
+            // Exclude stuff added by changes.
+            return lod.AllChildGOs().Where(x => !x.name.EndsWith(InteriorLODNamingEnd)).ToList();
         }
 
         private PoweredWheel.State[] GetCurrentPoweredWheelStates()
@@ -342,6 +365,8 @@ namespace CarChanger.Game.Components
 
                 var bogie = Instantiate(frontBogie, bogieF.transform);
                 bogie.name = Constants.BogieName;
+
+                ModIntegrations.Gauge.RegaugeBogie(bogieF);
             }
 
             if (rearBogie != null)
@@ -353,6 +378,8 @@ namespace CarChanger.Game.Components
 
                 var bogie = Instantiate(rearBogie, bogieR.transform);
                 bogie.name = Constants.BogieName;
+
+                ModIntegrations.Gauge.RegaugeBogie(bogieR);
             }
 
             // Get brake renderers. Includes those at the default path, and custom ones within the bogies
@@ -517,6 +544,8 @@ namespace CarChanger.Game.Components
             {
                 _interiorLod = Instantiate(interior, transform.Find("[interior LOD]") ?? transform);
                 ComponentProcessor.ProcessComponents(_interiorLod, MatHolder);
+
+                _interiorLod.name = $"{_interiorLod.name}{InteriorLODNamingEnd}";
             }
 
             if (hideOriginal)
@@ -653,14 +682,14 @@ namespace CarChanger.Game.Components
             CarChangerMod.Log($"Applying change {Config!.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
         }
 
-        internal void ForceApplyChange(string? reason)
+        internal void ForceApplyChange(string? reason, int delay = 1)
         {
             if (!string.IsNullOrEmpty(reason))
             {
                 CarChangerMod.Log($"Forcing change application due to: {reason}");
             }
 
-            ApplyChange();
+            StartCoroutine(ApplyChangeRoutine(delay));
         }
 
         public static bool CanApplyChange(TrainCar car, ModelConfig config)

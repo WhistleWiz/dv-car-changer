@@ -7,6 +7,30 @@ namespace CarChanger.Common.Configs
     [CreateAssetMenu(menuName = "DVCarChanger/S060-440 Modification", order = Constants.MenuOrderConstants.Steam + 0)]
     public class LocoS060440Config : CarWithInteriorConfig
     {
+        [Flags]
+        public enum ChangeRegions
+        {
+            None                = 0,
+            FrontBufferBeam     = 1 << 0,
+            RearBufferBeam      = 1 << 1,
+            SmokeDeflectors     = 1 << 2,
+            SmokeboxDoor        = 1 << 3,
+            Chimney             = 1 << 4,
+            Cylinders           = 1 << 5,
+            SideTanks           = 1 << 6,
+            FrontSandDome       = 1 << 7,
+            RearSandDome        = 1 << 8,
+            SteamDome           = 1 << 9,
+            Firebox             = 1 << 10,
+            Bunker              = 1 << 11,
+            
+            Cab                 = 1 << 27,
+            CabRoof             = 1 << 28,
+            Whistle             = 1 << 29,
+            Bell                = 1 << 30,
+            Buffers             = 1 << 31,
+        }
+
         [Serializable]
         public class HeadlightSettings
         {
@@ -99,6 +123,10 @@ namespace CarChanger.Common.Configs
         [Button(nameof(ResetRearHeadlights), "Reset"), SerializeField]
         private bool _resetRearButton;
 
+        [Header("Change Regions"), Tooltip("Which areas does this change block\n" +
+            "Other changes with the same areas selected are marked as incompatible with this one")]
+        public ChangeRegions BlockedRegions = ChangeRegions.None;
+
         #region Serialization
 
         [SerializeField, HideInInspector]
@@ -176,6 +204,7 @@ namespace CarChanger.Common.Configs
             !(a.HideOriginalWater && b.HideOriginalWater) &&
             !(a.ReplaceCoal && b.ReplaceCoal) &&
             !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&
-            !(a.UseCustomRearHeadlights && b.UseCustomRearHeadlights);
+            !(a.UseCustomRearHeadlights && b.UseCustomRearHeadlights) &&
+            (a.BlockedRegions & b.BlockedRegions) == 0;
     }
 }

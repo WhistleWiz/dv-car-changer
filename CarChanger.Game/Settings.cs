@@ -37,8 +37,18 @@ namespace CarChanger.Game
         {
             // Begin by setting a vertical group, that way everything inside lines up.
             GUILayout.BeginVertical(GUILayout.MinWidth(400), GUILayout.ExpandWidth(false));
+            GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Presets",
                 "Allows changing which configs will spawn by default for each car livery"), UnityModManager.UI.h2);
+            
+            // Help button linking to the wiki.
+            GUILayout.Space(4);
+            if (GUILayout.Button("?", GUILayout.Width(IndentWidth)))
+            {
+                Application.OpenURL("https://github.com/WhistleWiz/dv-car-changer/wiki/Preset-Modifications");
+            }
+
+            GUILayout.EndHorizontal();
             GUILayout.Space(4);
 
             for (int i = 0; i < DefaultConfigSettings.Configs.Count; i++)

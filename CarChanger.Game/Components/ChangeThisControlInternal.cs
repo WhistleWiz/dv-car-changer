@@ -135,6 +135,8 @@ namespace CarChanger.Game.Components
             // Return the original colliders.
             foreach (var item in _disabledColliders)
             {
+                if (item == null) continue;
+
                 item.gameObject.SetActive(true);
             }
 
@@ -146,6 +148,8 @@ namespace CarChanger.Game.Components
 
             foreach (var item in _disabledStaticColliders)
             {
+                if (item == null) continue;
+
                 item.gameObject.SetActive(true);
             }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime;
+using static UnityModManagerNet.UnityModManager.Param;
 
 namespace CarChanger.Game
 {
@@ -12,7 +14,7 @@ namespace CarChanger.Game
         {
             private static Type s_typeSettings;
             private static Type s_typeKnuckles;
-            private static MethodInfo? s_method;
+            private static MethodInfo? s_toggleMMethod;
             private static object s_settings;
             private static bool s_loaded = false;
 
@@ -36,7 +38,7 @@ namespace CarChanger.Game
                     Assembly assembly = Assembly.LoadFile(path);
                     s_typeSettings = assembly.GetType("DvMod.ZCouplers.Settings");
                     s_typeKnuckles = assembly.GetType("DvMod.ZCouplers.KnuckleCouplers");
-                    s_method = s_typeKnuckles.GetMethod("ToggleBuffers", FlagsStaticPrivate);
+                    s_toggleMMethod = s_typeKnuckles.GetMethod("ToggleBuffers", FlagsStaticPrivate);
 
                     var tm = assembly.GetType("DvMod.ZCouplers.Main");
                     var ts = assembly.GetType("DvMod.ZCouplers.Settings");
@@ -51,7 +53,7 @@ namespace CarChanger.Game
                     return;
                 }
 
-                if (s_method == null)
+                if (s_toggleMMethod == null)
                 {
                     CarChangerMod.Warning($"Could not load ZCouplers (method is null)");
                     return;
@@ -91,8 +93,57 @@ namespace CarChanger.Game
                     return;
                 }
 
+                s_toggleMMethod?.Invoke(null, new object[] { car.gameObject, car.carLivery, visible });
+            }
+        }
 
-                s_method?.Invoke(null, new object[] { car.gameObject, car.carLivery, visible });
+        public static class Gauge
+        {
+            private static MethodInfo? s_method;
+            private static bool s_loaded = false;
+
+            public static bool Loaded => s_loaded;
+
+            static Gauge()
+            {
+                string path = $"{Directory.GetCurrentDirectory()}\\Mods\\Gauge\\Gauge.dll";
+
+                if (!File.Exists(path))
+                {
+                    CarChangerMod.Log($"Gauge is not installed, skipping integration.");
+                    return;
+                }
+
+                try
+                {
+                    Assembly assembly = Assembly.LoadFile(path);
+                    var t = assembly.GetType("Gauge.Patches.Bogie_Start_Patch");
+                    s_method = t.GetMethod("Postfix", FlagsStaticPrivate);
+                }
+                catch (Exception e)
+                {
+                    CarChangerMod.Warning($"Could not load Gauge ({e.Message})");
+                    return;
+                }
+
+                s_loaded = true;
+            }
+
+            public static void RegaugeBogie(Bogie bogie)
+            {
+                if (!Loaded)
+                {
+                    return;
+                }
+
+                if (s_method == null)
+                {
+                    CarChangerMod.Error("Gauge call failed! Setting Gauge loaded to false.");
+                    s_loaded = false;
+                    return;
+                }
+
+                s_method?.Invoke(null, new[] { bogie });
             }
         }
     }
