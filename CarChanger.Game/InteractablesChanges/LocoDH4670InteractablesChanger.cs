@@ -42,7 +42,7 @@ namespace CarChanger.Game.InteractablesChanges
                     doorR.Find("dh4_exterior_door_R").gameObject,
                     doorR.Find("dh4_cab_door_R").gameObject,
                     doorR.Find("dh4_cab_door_R_window").gameObject,
-                    doorR.Find("edh4_exterior_door_R_LOD").gameObject
+                    doorR.Find("dh4_exterior_door_R_LOD").gameObject
                 },
                 _config.HideOriginalDoors, _materialHolder);
             _windowL = new ChangeObject(windowL, IsExploded ? _config.WindowLeftExploded : _config.WindowLeft, new[]

@@ -2,6 +2,7 @@
 using CarChanger.Game.Components;
 using DV.CabControls.Spec;
 using DV.Rain;
+using DV.Simulation.Cars;
 using System.Linq;
 using UnityEngine;
 
@@ -40,6 +41,7 @@ namespace CarChanger.Game
             ProcessMoveThisControl(gameObject);
             ProcessWindows(gameObject);
             ProcessBlockResourceReceivers(gameObject);
+            ProcessPortValueToAnimators(gameObject, holder.Car);
 
             if (root != null)
             {
@@ -125,6 +127,31 @@ namespace CarChanger.Game
             {
                 item.gameObject.AddComponent<InteriorNonStandardLayer>();
                 item.gameObject.layer = 15;
+            }
+        }
+
+        private static void ProcessPortValueToAnimators(GameObject gameObject, TrainCar car)
+        {
+            var simController = car.GetComponent<SimController>();
+
+            // No sim, no fun.
+            if (simController == null)
+            {
+                return;
+            }
+
+            var flow = simController.SimulationFlow;
+
+            foreach (var item in gameObject.GetComponentsInChildren<PortValueToAnimation>())
+            {
+                if (flow.TryGetPort(item.PortId, out var port))
+                {
+                    item.GetValue = () => port.Value;
+                }
+                else
+                {
+                    CarChangerMod.Error($"Could not find port ID '{item.PortId}' for PortValueToAnimation '{item.name}'");
+                }
             }
         }
 

@@ -223,7 +223,7 @@ namespace CarChanger.Game.Components
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
                 Interior = TrainCar.transform.Find(
-                    "[interior LOD]/InteriorLOD/cab_LOD1").GetComponent<Renderer>().material,
+                    "[interior LOD]/LocoDH4_InteriorLOD/dh4_cab_LOD1").GetComponent<Renderer>().material,
                 Windows = TrainCar.transform.Find(
                     "LocoDH4_Body/windows/dh4_window_FL").GetComponent<Renderer>().material,
                 BodyExploded = TrainCar.carLivery.explodedExternalInteractablesPrefab.transform.Find(
