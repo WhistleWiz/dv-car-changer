@@ -10,10 +10,14 @@ namespace CarChanger.Common.Components
         [Tooltip("The name of the parameter in the animator")]
         public string ParameterName = string.Empty;
         public float Multiplier = 1.0f;
+        [Tooltip("The smoothing applied to the value"), Min(0.0f)]
+        public float ValueSmoothing = 0.0f;
 
-        public Func<float> GetValue = DefaultGetValue;
+        public Func<float> ValueGetter = DefaultGetValue;
 
         private int _id;
+        private float _value;
+        private float _delta;
 
         private void Awake()
         {
@@ -29,7 +33,17 @@ namespace CarChanger.Common.Components
 
         private void Update()
         {
-            Animator.SetFloat(_id, GetValue.Invoke() * Multiplier);
+            if (ValueSmoothing > 0.001f)
+            {
+                _value = Mathf.SmoothDamp(_value, ValueGetter.Invoke() * Multiplier, ref _delta, ValueSmoothing);
+                Animator.SetFloat(_id, _value);
+            }
+            else
+            {
+                _value = ValueGetter.Invoke() * Multiplier;
+            }
+
+            Animator.SetFloat(_id, _value);
         }
 
         protected static float DefaultGetValue()

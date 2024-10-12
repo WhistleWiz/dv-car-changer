@@ -41,6 +41,7 @@ namespace CarChanger.Game
             ProcessMoveThisControl(gameObject);
             ProcessWindows(gameObject);
             ProcessBlockResourceReceivers(gameObject);
+            ProcessPortValueToRotations(gameObject, holder.Car);
             ProcessPortValueToAnimators(gameObject, holder.Car);
 
             if (root != null)
@@ -130,6 +131,31 @@ namespace CarChanger.Game
             }
         }
 
+        private static void ProcessPortValueToRotations(GameObject gameObject, TrainCar car)
+        {
+            var simController = car.GetComponent<SimController>();
+
+            // No sim, no fun.
+            if (simController == null)
+            {
+                return;
+            }
+
+            var flow = simController.SimulationFlow;
+
+            foreach (var item in gameObject.GetComponentsInChildren<PortValueToRotation>())
+            {
+                if (flow.TryGetPort(item.PortId, out var port))
+                {
+                    item.ValueGetter = () => port.Value;
+                }
+                else
+                {
+                    CarChangerMod.Error($"Could not find port ID '{item.PortId}' for PortValueToRotation '{item.name}'");
+                }
+            }
+        }
+
         private static void ProcessPortValueToAnimators(GameObject gameObject, TrainCar car)
         {
             var simController = car.GetComponent<SimController>();
@@ -146,7 +172,7 @@ namespace CarChanger.Game
             {
                 if (flow.TryGetPort(item.PortId, out var port))
                 {
-                    item.GetValue = () => port.Value;
+                    item.ValueGetter = () => port.Value;
                 }
                 else
                 {
