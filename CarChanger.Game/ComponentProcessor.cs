@@ -3,6 +3,7 @@ using CarChanger.Game.Components;
 using DV.CabControls.Spec;
 using DV.Rain;
 using DV.Simulation.Cars;
+using LocoSim.Implementations;
 using System.Linq;
 using UnityEngine;
 
@@ -18,6 +19,11 @@ namespace CarChanger.Game
             {
                 gameObject.SetLayersRecursive(gameObject.transform.parent.gameObject.layer);
             }
+
+            ProcessDefaultMaterial(gameObject, holder);
+            ProcessMoveThisControl(gameObject);
+            ProcessWindows(gameObject);
+            ProcessBlockResourceReceivers(gameObject);
 
             // Find the root car or interior transform.
             Transform? root = null;
@@ -37,17 +43,20 @@ namespace CarChanger.Game
                 }
             }
 
-            ProcessDefaultMaterial(gameObject, holder);
-            ProcessMoveThisControl(gameObject);
-            ProcessWindows(gameObject);
-            ProcessBlockResourceReceivers(gameObject);
-            ProcessPortValueToRotations(gameObject, holder.Car);
-            ProcessPortValueToAnimators(gameObject, holder.Car);
-
+            // If a root was found, process these types of components.
             if (root != null)
             {
                 ProcessHideTransforms(gameObject, root);
                 ProcessMoveTransforms(gameObject, root);
+            }
+
+            // Similar to the root but for the car simulation.
+            var simController = holder.Car.GetComponent<SimController>();
+
+            if (simController != null)
+            {
+                ProcessPortValueToRotations(gameObject, simController.SimulationFlow);
+                ProcessPortValueToAnimators(gameObject, simController.SimulationFlow);
             }
         }
 
@@ -131,18 +140,8 @@ namespace CarChanger.Game
             }
         }
 
-        private static void ProcessPortValueToRotations(GameObject gameObject, TrainCar car)
+        private static void ProcessPortValueToRotations(GameObject gameObject, SimulationFlow flow)
         {
-            var simController = car.GetComponent<SimController>();
-
-            // No sim, no fun.
-            if (simController == null)
-            {
-                return;
-            }
-
-            var flow = simController.SimulationFlow;
-
             foreach (var item in gameObject.GetComponentsInChildren<PortValueToRotation>())
             {
                 if (flow.TryGetPort(item.PortId, out var port))
@@ -156,18 +155,8 @@ namespace CarChanger.Game
             }
         }
 
-        private static void ProcessPortValueToAnimators(GameObject gameObject, TrainCar car)
+        private static void ProcessPortValueToAnimators(GameObject gameObject, SimulationFlow flow)
         {
-            var simController = car.GetComponent<SimController>();
-
-            // No sim, no fun.
-            if (simController == null)
-            {
-                return;
-            }
-
-            var flow = simController.SimulationFlow;
-
             foreach (var item in gameObject.GetComponentsInChildren<PortValueToAnimation>())
             {
                 if (flow.TryGetPort(item.PortId, out var port))

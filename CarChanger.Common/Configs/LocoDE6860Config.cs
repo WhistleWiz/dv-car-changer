@@ -7,6 +7,35 @@ namespace CarChanger.Common.Configs
     [CreateAssetMenu(menuName = "DVCarChanger/DE6-860 Modification", order = Constants.MenuOrderConstants.Diesel + 1)]
     public class LocoDE6860Config : CarWithInteriorAndBogiesConfig
     {
+        [Flags]
+        public enum ChangeRegions
+        {
+            None                = 0,
+            ShortNose           = 1 << 0,
+            LongNose            = 1 << 1,
+            FrontRailings       = 1 << 2,
+            SideRailings        = 1 << 3,
+            RearRailings        = 1 << 4,
+            Fans                = 1 << 5,
+            Exhaust             = 1 << 6,
+            FuelTanks           = 1 << 7,
+            NumberBoards        = 1 << 8,
+
+            ControlStand        = 1 << 15,
+            Speedometre         = 1 << 16,
+            CabHeater           = 1 << 17,
+            Table               = 1 << 18,
+            ToiletDoor          = 1 << 19,
+            Fridge              = 1 << 20,
+            CabLight            = 1 << 21,
+
+            Cab                 = 1 << 27,
+            CabRoof             = 1 << 28,
+            Horn                = 1 << 29,
+            //Bell                = 1 << 30,
+            Buffers             = 1 << 31,
+        }
+
         [Serializable]
         public class HeadlightSettings
         {
@@ -76,6 +105,10 @@ namespace CarChanger.Common.Configs
         public HeadlightSettings RearSettings = HeadlightSettings.Rear;
         [Button(nameof(ResetRearHeadlights), "Reset"), SerializeField]
         private bool _resetRearButton;
+
+        [Header("Change Regions"), Tooltip("Which areas does this change block\n" +
+            "Other changes with the same areas selected are marked as incompatible with this one")]
+        public ChangeRegions BlockedRegions = ChangeRegions.None;
 
         #region Serialization
 
@@ -147,6 +180,7 @@ namespace CarChanger.Common.Configs
             !(a.HideOriginalEngineDoors && b.HideOriginalEngineDoors) &&
             !(a.HideOriginalCabDoors && b.HideOriginalCabDoors) &&
             !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&
-            !(a.UseCustomRearHeadlights && b.UseCustomRearHeadlights);
+            !(a.UseCustomRearHeadlights && b.UseCustomRearHeadlights) &&
+            (a.BlockedRegions & b.BlockedRegions) == 0;
     }
 }

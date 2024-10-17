@@ -16,8 +16,8 @@ namespace CarChanger.Common.Components
         public Func<float> ValueGetter = DefaultGetValue;
 
         private int _id;
-        private float _value;
-        private float _delta;
+        private float _value = 0.0f;
+        private float _delta = 0.0f;
 
         private void Awake()
         {
@@ -35,15 +35,15 @@ namespace CarChanger.Common.Components
         {
             if (ValueSmoothing > 0.001f)
             {
-                _value = Mathf.SmoothDamp(_value, ValueGetter.Invoke() * Multiplier, ref _delta, ValueSmoothing);
+                _value = Mathf.SmoothDamp(_value, ValueGetter.Invoke(), ref _delta, ValueSmoothing);
                 Animator.SetFloat(_id, _value);
             }
             else
             {
-                _value = ValueGetter.Invoke() * Multiplier;
+                _value = ValueGetter.Invoke();
             }
 
-            Animator.SetFloat(_id, _value);
+            Animator.SetFloat(_id, _value * Multiplier);
         }
 
         protected static float DefaultGetValue()
