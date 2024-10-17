@@ -22,7 +22,7 @@ namespace CarChanger.Common.Configs
             NumberBoards        = 1 << 8,
 
             ControlStand        = 1 << 15,
-            Speedometre         = 1 << 16,
+            Speedometer         = 1 << 16,
             CabHeater           = 1 << 17,
             Table               = 1 << 18,
             ToiletDoor          = 1 << 19,

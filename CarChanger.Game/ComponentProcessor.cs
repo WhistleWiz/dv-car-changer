@@ -46,6 +46,7 @@ namespace CarChanger.Game
             // If a root was found, process these types of components.
             if (root != null)
             {
+                ProcessDuplicateTransforms(gameObject, root);
                 ProcessHideTransforms(gameObject, root);
                 ProcessMoveTransforms(gameObject, root);
             }
@@ -167,6 +168,14 @@ namespace CarChanger.Game
                 {
                     CarChangerMod.Error($"Could not find port ID '{item.PortId}' for PortValueToAnimation '{item.name}'");
                 }
+            }
+        }
+
+        public static void ProcessDuplicateTransforms(GameObject gameObject, Transform root)
+        {
+            foreach (var item in gameObject.GetComponentsInChildren<DuplicateTransformsOnChange>())
+            {
+                item.Duplicate(root);
             }
         }
 
