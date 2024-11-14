@@ -181,6 +181,11 @@ namespace CarChanger.Game.Components
             Config.Applied(TrainCar.gameObject);
             OnApply?.Invoke(this);
 
+            if (Config.ForcePrefabReloadOnApply)
+            {
+                TrainCar.ForceRefreshLoadedPrefabs();
+            }
+
             _changeApplied = true;
             _applying = false;
         }

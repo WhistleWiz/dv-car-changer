@@ -16,6 +16,10 @@ namespace CarChanger.Common
         public TranslationData ModificationName = new TranslationData();
         [Tooltip("Specific modification IDs that can't be used with this one")]
         public string[] IncompatibleModifications = new string[0];
+        [Tooltip("Forces prefabs to be reloaded when this modification is applied/unapplied\n" +
+            "Has a performance cost, so avoid if not needed\n" +
+            "Can be useful if the modification wants to change controls")]
+        public bool ForcePrefabReloadOnApply = false;
 
         [SerializeField, HideInInspector]
         private string? _jsonName = null;

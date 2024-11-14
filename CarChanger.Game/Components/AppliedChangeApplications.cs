@@ -125,7 +125,7 @@ namespace CarChanger.Game.Components
                 InteriorExploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
                     "Cab").GetComponent<Renderer>().material,
                 WindowsBroken = TrainCar.transform.Find(
-                    "LocoDE2_Body/broken_windows").GetComponent<Renderer>().material,
+                    "LocoDE2_Body/brokenWindows").GetComponent<Renderer>().material,
                 Extra1Exploded = TrainCar.carLivery.explodedInteriorPrefab.transform.Find(
                     "Deck").GetComponent<Renderer>().material
             };
