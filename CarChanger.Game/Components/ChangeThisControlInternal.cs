@@ -140,8 +140,14 @@ namespace CarChanger.Game.Components
                 item.gameObject.SetActive(true);
             }
 
-            _control.colliderGameObjects = _disabledColliders.ToArray();
-            FixGrabColliders();
+            // This is only needed if there were replacement colliders.
+            // If there weren't, this will empty out the original ones
+            // and make interaction impossible.
+            if (_replaceColliders.Count > 0)
+            {
+                _control.colliderGameObjects = _disabledColliders.ToArray();
+                FixGrabColliders();
+            }
 
             // Restore the static interaction area.
             Helpers.DestroyIfNotNull(_replaceStaticCollider);
