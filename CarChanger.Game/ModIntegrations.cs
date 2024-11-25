@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Runtime;
-using static UnityModManagerNet.UnityModManager.Param;
+using UnityModManagerNet;
 
 namespace CarChanger.Game
 {
@@ -10,8 +9,15 @@ namespace CarChanger.Game
     {
         public const BindingFlags FlagsStaticPrivate = BindingFlags.Static | BindingFlags.NonPublic;
 
+        public static bool IsModActive(string modId)
+        {
+            return UnityModManager.modEntries.TryFind(x => x.Info.Id == modId, out var mod) && mod.Active;
+        }
+
         public static class ZCouplers
         {
+            public const string Id = "ZCouplers";
+
             private static Type s_typeSettings;
             private static Type s_typeKnuckles;
             private static MethodInfo? s_toggleMMethod;
@@ -72,7 +78,7 @@ namespace CarChanger.Game
 
             public static void HandleBuffersToggled(TrainCar car)
             {
-                if (!Loaded)
+                if (!Loaded || !IsModActive(Id))
                 {
                     return;
                 }
@@ -99,6 +105,8 @@ namespace CarChanger.Game
 
         public static class Gauge
         {
+            public const string Id = "Gauge";
+
             private static MethodInfo? s_method;
             private static bool s_loaded = false;
 
@@ -131,7 +139,7 @@ namespace CarChanger.Game
 
             public static void RegaugeBogie(Bogie bogie)
             {
-                if (!Loaded)
+                if (!Loaded || !IsModActive(Id))
                 {
                     return;
                 }

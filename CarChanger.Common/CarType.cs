@@ -1,10 +1,14 @@
-﻿namespace CarChanger.Common
+﻿using UnityEngine;
+
+namespace CarChanger.Common
 {
     public enum WagonType
     {
         Flatbed,
         FlatbedStakes,
         FlatbedMilitary,
+        [InspectorName("Utility Flatbed")]
+        FlatbedShort,
         Autorack,
         TankOil,
         TankGas,
@@ -15,6 +19,7 @@
         BoxcarMilitary,
         Refrigerator,
         Hopper,
+        HopperCovered,
         Gondola,
         NuclearFlask,
         UseLivery = 1000
@@ -25,6 +30,8 @@
         FlatbedEmpty = 200,
         FlatbedStakes = 201,
         FlatbedMilitary = 202,
+        [InspectorName("Utility Flatbed")]
+        FlatbedShort = 220,
         AutorackRed = 250,
         AutorackBlue = 251,
         AutorackGreen = 252,
@@ -48,6 +55,7 @@
         HopperBrown = 500,
         HopperTeal = 501,
         HopperYellow = 502,
+        HopperCoveredBrown = 510,
         GondolaRed = 550,
         GondolaGreen = 551,
         GondolaGray = 552,
