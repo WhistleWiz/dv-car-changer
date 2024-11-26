@@ -304,6 +304,51 @@ namespace CarChanger.Game.Components
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
+        private void ApplyDM1U150(LocoDM1U150Config config)
+        {
+            LogChange();
+
+            MatHolder = new MaterialHolder(TrainCar)
+            {
+                Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
+                Windows = TrainCar.transform.Find(
+                    "LocoDM1U_Body/windows/dm1u-150_window_FL1").GetComponent<Renderer>().material,
+                Extra1 = _originalBody[1].GetComponentInChildren<Renderer>().material,
+                WindowsBroken = TrainCar.transform.Find(
+                    "LocoDM1U_Body/broken_windows").GetComponent<Renderer>().material
+            };
+
+            if (config.UseCustomBogies)
+            {
+                _bogiesChanged = true;
+                _bogiesPowered = true;
+
+                var wheelStates = GetCurrentPoweredWheelStates();
+
+                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
+                MakeBogiesPowered(TrainCar, wheelStates, config.WheelRadius);
+            }
+
+            ChangeBody(config.BodyPrefab, config.HideOriginalBody);
+            ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
+            ChangeInteractables(new LocoDM1U150InteractablesChanger(config, MatHolder));
+
+            if (config.UseCustomFrontHeadlights)
+            {
+                _frontHeadlights = new LocoDM1U150HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
+                _frontHeadlights.Apply();
+            }
+
+            if (config.UseCustomRearHeadlights)
+            {
+                _rearHeadlights = new LocoDM1U150HeadlightChanger(config, TrainCar, HeadlightDirection.Rear);
+                _rearHeadlights.Apply();
+            }
+
+            _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
+        }
+
         private void ApplyS060440(LocoS060440Config config)
         {
             LogChange();

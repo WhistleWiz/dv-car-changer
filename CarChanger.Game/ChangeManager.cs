@@ -97,6 +97,9 @@ namespace CarChanger.Game
                     case LocoDM3540Config _:
                         AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDM3].parentType, item);
                         continue;
+                    case LocoDM1U150Config _:
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDM1U].parentType, item);
+                        continue;
 
                     case LocoS060440Config _:
                         AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoS060].parentType, item);

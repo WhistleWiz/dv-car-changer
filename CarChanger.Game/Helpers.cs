@@ -42,7 +42,7 @@ namespace CarChanger.Game
         public static System.Random RNG => GetCached(ref s_random, () => new System.Random());
 
         public static Dictionary<string, TrainCarType_v2> IdToCarType => GetCached(ref s_idToCarType,
-            () => DV.Globals.G.Types.carTypes.ToDictionary(x => x.id, x => x));
+            () => Globals.G.Types.carTypes.ToDictionary(x => x.id, x => x));
 
         public static T GetCached<T>(ref T? cacheValue, Func<T> getter) where T : class
         {

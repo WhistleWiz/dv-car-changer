@@ -13,9 +13,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="Assembly-CSharp" />
-		<Reference Include="UnityEngine.IMGUIModule">
-		  <HintPath>..\..\..\..\Steam High Speed Library\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-		</Reference>
 		<Reference Include="UnityModManager" />
 		<Reference Include="0Harmony" />
     <Reference Include="Unity.TextMeshPro" />
@@ -24,6 +21,7 @@
     <Reference Include="UnityEngine.AudioModule" />
     <Reference Include="UnityEngine.CoreModule" />
     <Reference Include="UnityEngine.ImageConversionModule" />
+    <Reference Include="UnityEngine.IMGUIModule" />
     <Reference Include="UnityEngine.PhysicsModule" />
 		<Reference Include="UnityEngine.UI" />
 		<Reference Include="DVLangHelper.Data" />

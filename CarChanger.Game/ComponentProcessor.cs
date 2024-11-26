@@ -126,11 +126,24 @@ namespace CarChanger.Game
                     list.Remove(dupe);
                     window.duplicates = list.ToArray();
                 };
+
+                //CoroutineManager.Instance.Run(WindowFixRoutine(window));
             }
 
             window.duplicates = dupes.ToArray();
             gameObject.SetActive(true);
         }
+
+        //private static System.Collections.IEnumerator WindowFixRoutine(Window window)
+        //{
+        //    yield return null;
+        //    yield return null;
+
+        //    if (window != null)
+        //    {
+
+        //    }
+        //}
 
         private static void ProcessBlockResourceReceivers(GameObject gameObject)
         {

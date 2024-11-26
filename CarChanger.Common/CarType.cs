@@ -4,24 +4,24 @@ namespace CarChanger.Common
 {
     public enum WagonType
     {
-        Flatbed,
-        FlatbedStakes,
-        FlatbedMilitary,
+        Flatbed = 200,
+        FlatbedStakes = 201,
+        FlatbedMilitary = 202,
         [InspectorName("Utility Flatbed")]
-        FlatbedShort,
-        Autorack,
-        TankOil,
-        TankGas,
-        TankChem,
-        TankShortFood,
-        Stock,
-        Boxcar,
-        BoxcarMilitary,
-        Refrigerator,
-        Hopper,
-        HopperCovered,
-        Gondola,
-        NuclearFlask,
+        FlatbedShort = 220,
+        Autorack = 250,
+        TankOil = 301,
+        TankGas = 303,
+        TankChem = 305,
+        TankShortFood = 325,
+        Stock = 350,
+        Boxcar = 400,
+        BoxcarMilitary = 404,
+        Refrigerator = 450,
+        Hopper = 500,
+        HopperCovered = 510,
+        Gondola = 550,
+        NuclearFlask = 800,
         UseLivery = 1000
     }
 

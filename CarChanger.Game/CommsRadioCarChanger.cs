@@ -300,8 +300,11 @@ namespace CarChanger.Game
                 _pointedCar = null!;
             }
 
-            _highlighter.SetActive(false);
-            _highlighter.transform.SetParent(null);
+            if (_highlighter != null)
+            {
+                _highlighter.SetActive(false);
+                _highlighter.transform.SetParent(null);
+            }
         }
 
         private void PointToCar(TrainCar car)

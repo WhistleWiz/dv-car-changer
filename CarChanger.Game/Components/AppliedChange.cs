@@ -4,6 +4,7 @@ using CarChanger.Common.Configs;
 using CarChanger.Game.HeadlightChanges;
 using CarChanger.Game.InteractablesChanges;
 using CarChanger.Game.InteriorChanges;
+using DV.Customization.Paint;
 using DV.Simulation.Brake;
 using DV.Wheels;
 using LocoSim.Implementations.Wheels;
@@ -55,6 +56,18 @@ namespace CarChanger.Game.Components
         private void Start()
         {
             ApplyChange();
+
+            if (TrainCar != null)
+            {
+                if (TrainCar.PaintExterior != null)
+                {
+                    TrainCar.PaintExterior.OnThemeChanged += ReapplyForPaint;
+                }
+                if (TrainCar.PaintInterior != null)
+                {
+                    TrainCar.PaintInterior.OnThemeChanged += ReapplyForPaint;
+                }
+            }
         }
 
         private void OnDestroy()
@@ -67,6 +80,18 @@ namespace CarChanger.Game.Components
             }
 
             ReturnToDefault();
+
+            if (TrainCar != null)
+            {
+                if (TrainCar.PaintExterior != null)
+                {
+                    TrainCar.PaintExterior.OnThemeChanged -= ReapplyForPaint;
+                }
+                if (TrainCar.PaintInterior != null)
+                {
+                    TrainCar.PaintInterior.OnThemeChanged -= ReapplyForPaint;
+                }
+            }
         }
 
         private void ApplyChange()
@@ -128,6 +153,9 @@ namespace CarChanger.Game.Components
                     break;
                 case LocoDM3540Config dm3:
                     ApplyDM3540(dm3);
+                    break;
+                case LocoDM1U150Config dm1u:
+                    ApplyDM1U150(dm1u);
                     break;
 
                 case LocoS060440Config s060:
@@ -236,6 +264,12 @@ namespace CarChanger.Game.Components
                     {
                         transform.Find("LocoDM3_Body/LocoDM3_exterior_LOD").gameObject
                     };
+                case LocoDM1U150Config _:
+                    return new List<GameObject>
+                    {
+                        transform.Find("LocoDM1U_Body/body").gameObject,
+                        transform.Find("LocoDM1U_Body/bed").gameObject,
+                    };
 
                 case LocoS060440Config _:
                     return transform.Find("LocoS060_Body/Static").AllChildGOsExcept(
@@ -269,6 +303,7 @@ namespace CarChanger.Game.Components
                     return transform.Find("LocoDE6Slug_Body").AllChildGOsExcept("de6_slug_buffer_stems").ToList();
                 case LocoHandcarConfig _:
                     return transform.Find("LocoHandcar_Body").AllChildGOsExcept("crank mechanism").ToList();
+
                 default:
                     break;
             }
@@ -695,6 +730,11 @@ namespace CarChanger.Game.Components
             }
 
             StartCoroutine(ApplyChangeRoutine(delay));
+        }
+
+        internal void ReapplyForPaint(TrainCarPaint paint)
+        {
+            ForceApplyChange("repaint");
         }
 
         public static bool CanApplyChange(TrainCar car, ModelConfig config)
