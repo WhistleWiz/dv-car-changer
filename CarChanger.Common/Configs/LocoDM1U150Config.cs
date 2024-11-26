@@ -60,8 +60,9 @@ namespace CarChanger.Common.Configs
 
         [Header("Doors and Windows")]
         public GameObject? DoorRear;
-        public GameObject? DoorRearExploded;
         public bool HideOriginalDoors = false;
+        public GameObject? DoorInterior;
+        public bool HideOriginalInteriorDoor = false;
 
         [Header("Headlights")]
         public bool UseCustomFrontHeadlights = false;
@@ -74,6 +75,10 @@ namespace CarChanger.Common.Configs
         public HeadlightSettings RearSettings = HeadlightSettings.Rear;
         [Button(nameof(ResetRearHeadlights), "Reset"), SerializeField]
         private bool _resetRearButton;
+
+        [Header("Other")]
+        [EnableIf(nameof(HideOriginalInterior)), Tooltip("Only active if hiding the interior is also active")]
+        public bool HideDash = false;
 
         #region Serialization
 
@@ -151,6 +156,7 @@ namespace CarChanger.Common.Configs
         public static bool CanCombine(LocoDM1U150Config a, LocoDM1U150Config b) =>
             CarWithInteriorAndBogiesConfig.CanCombine(a, b) &&
             !(a.HideOriginalDoors && b.HideOriginalDoors) &&
+            !(a.HideOriginalInteriorDoor && b.HideOriginalInteriorDoor) &&
             !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&
             !(a.UseCustomRearHeadlights && b.UseCustomRearHeadlights);
     }

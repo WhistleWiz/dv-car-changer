@@ -143,7 +143,9 @@ namespace CarChanger.Game.Components
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
-            ChangeInterior(new BasicInteriorChanger(config, MatHolder, config.HideControlDeck ? new[] { "Cab", "Deck" } : new[] { "Cab" }));
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder,
+                ("Cab", true),
+                ("Deck", config.HideControlDeck)));
             ChangeInteractables(new LocoDE2480InteractablesChanger(config, MatHolder));
 
             if (config.UseCustomFrontHeadlights)
@@ -286,7 +288,9 @@ namespace CarChanger.Game.Components
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
-            ChangeInterior(new BasicInteriorChanger(config, MatHolder, config.HideGearPlaque ? new[] { "Cab", "GearPatternPlaque" } : new[] { "Cab" }));
+            ChangeInterior(new BasicInteriorChanger(config, MatHolder,
+                ("Cab", true),
+                ("GearPatternPlaque", config.HideGearPlaque)));
             ChangeInteractables(new LocoDM3540InteractablesChanger(config, MatHolder));
 
             if (config.UseCustomFrontHeadlights)
@@ -331,7 +335,7 @@ namespace CarChanger.Game.Components
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
-            ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
+            ChangeInterior(new DM1U150InteriorChanger(config, MatHolder));
             ChangeInteractables(new LocoDM1U150InteractablesChanger(config, MatHolder));
 
             if (config.UseCustomFrontHeadlights)

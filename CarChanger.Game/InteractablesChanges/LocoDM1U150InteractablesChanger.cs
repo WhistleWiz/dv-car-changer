@@ -19,14 +19,13 @@ namespace CarChanger.Game.InteractablesChanges
         {
             if (interactables == null) return;
 
-            var doorR = interactables.transform.Find("DoorsWindows/DoorR/C_DoorR");
+            var doorR = interactables.transform.Find("DoorsWindows/C_DoorRear");
 
             _doorR = new ChangeObject(doorR, _config.DoorRear, new[]
                 {
-                    doorR.Find("dh4_exterior_door_R").gameObject,
-                    doorR.Find("dh4_cab_door_R").gameObject,
-                    doorR.Find("dh4_cab_door_R_window").gameObject,
-                    doorR.Find("dh4_exterior_door_R_LOD").gameObject
+                    doorR.Find("dm1u-150_door").gameObject,
+                    doorR.Find("dm1u-150_door_LOD1").gameObject,
+                    doorR.Find("dm1u-150_window_door").gameObject
                 },
                 _config.HideOriginalDoors, _materialHolder);
 
