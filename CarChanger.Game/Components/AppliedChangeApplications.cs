@@ -315,6 +315,8 @@ namespace CarChanger.Game.Components
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
+                Interior = TrainCar.transform.Find(
+                    "[interior LOD]/LocoDM1U_InteriorLOD/cab_LOD2").GetComponent<Renderer>().material,
                 Windows = TrainCar.transform.Find(
                     "LocoDM1U_Body/windows/dm1u-150_window_FL1").GetComponent<Renderer>().material,
                 Extra1 = _originalBody[1].GetComponentInChildren<Renderer>().material,

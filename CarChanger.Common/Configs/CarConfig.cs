@@ -20,8 +20,8 @@ namespace CarChanger.Common.Configs
         [Tooltip("The colliders of the car with items")]
         public GameObject? ItemsCollider;
 
-        public bool ImcompatibleBodyHiding => HideOriginalBody || PreventBodyHiding;
+        public bool IncompatibleBodyHiding => HideOriginalBody || PreventBodyHiding;
 
-        public static bool CanCombine(CarConfig a, CarConfig b) => !(a.ImcompatibleBodyHiding && b.ImcompatibleBodyHiding);
+        public static bool CanCombine(CarConfig a, CarConfig b) => !(a.IncompatibleBodyHiding && b.IncompatibleBodyHiding);
     }
 }

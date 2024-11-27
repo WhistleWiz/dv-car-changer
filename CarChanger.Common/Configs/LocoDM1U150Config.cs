@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
-    [CreateAssetMenu(menuName = "DVCarChanger/DM1U-150 Modification", order = Constants.MenuOrderConstants.Diesel + 5)]
+    [CreateAssetMenu(menuName = "DVCarChanger/DM1U-150 (Utility Rail Vehicle) Modification", order = Constants.MenuOrderConstants.Diesel + 5)]
     public class LocoDM1U150Config : CarWithInteriorAndBogiesConfig
     {
         [Serializable]

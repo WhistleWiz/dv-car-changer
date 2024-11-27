@@ -1,9 +1,12 @@
 ﻿using CarChanger.Common.Components;
 using CarChanger.Game.Components;
+using DV;
 using DV.CabControls.Spec;
+using DV.Customization.Gadgets;
 using DV.Rain;
 using DV.Simulation.Cars;
 using LocoSim.Implementations;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -24,6 +27,7 @@ namespace CarChanger.Game
             ProcessMoveThisControl(gameObject);
             ProcessWindows(gameObject);
             ProcessBlockResourceReceivers(gameObject);
+            ProcessCustomizationMeshes(gameObject);
 
             // Find the root car or interior transform.
             Transform? root = null;
@@ -215,6 +219,57 @@ namespace CarChanger.Game
                 var comp = item.gameObject.AddComponent<TeleportArcPassThrough>();
                 comp.twoSided = item.TwoSided;
                 comp.colliders = item.OtherColliders.ToHashSet();
+            }
+        }
+
+        public static void ProcessCustomizationMeshes(GameObject gameObject)
+        {
+            var meshes = gameObject.GetComponentInChildren<CustomizationPlacementMeshes>();
+
+            if (meshes == null) return;
+
+            var car = TrainCar.Resolve(gameObject);
+
+            if (car == null) return;
+
+            var real = car.GetComponent<DV.Customization.CustomizationPlacementMeshes>();
+
+            if (real == null) return;
+
+            var root = Helpers.GetCustomizationRoot(car, real);
+            int layer = Layers.DVLayer.Gadget_Mesh_Placing.ToInt();
+
+            List<GameObject> colliders = new List<GameObject>();
+
+            foreach (var item in meshes.CollisionMeshes)
+            {
+                colliders.Add(Create(item));
+            }
+
+            foreach (var item in meshes.DrillDisableMeshes)
+            {
+                colliders.Add(Create(item).AddComponent<DrillingDisabler>().gameObject);
+            }
+
+            meshes.ClearListOnDestroy = () =>
+            {
+                foreach (var item in colliders)
+                {
+                    Object.Destroy(item);
+                }
+            };
+
+            GameObject Create(MeshFilter filter)
+            {
+                GameObject obj = new GameObject("[GadgetMeshCollider][" + filter.name + "]");
+                obj.transform.SetParent(root.holder, worldPositionStays: false);
+                Vector3 position = meshes.transform.InverseTransformPoint(filter.transform.position);
+                Quaternion rotation = Quaternion.Inverse(meshes.transform.rotation) * filter.transform.rotation;
+                obj.transform.position = root.holder.TransformPoint(position);
+                obj.transform.rotation = root.holder.rotation * rotation;
+                obj.layer = layer;
+                obj.AddComponent<MeshCollider>().sharedMesh = filter.sharedMesh;
+                return obj;
             }
         }
     }
