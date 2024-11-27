@@ -39,6 +39,7 @@ Please visit <a href="https://github.com/WhistleWiz/dv-car-changer/wiki">the wik
 ## Future Plans
 
 * Changing simulations.
+* Support for gadget placement colliders.
 
 
 
@@ -47,7 +48,7 @@ Please visit <a href="https://github.com/WhistleWiz/dv-car-changer/wiki">the wik
 
 ## Known Bugs
 
-* None at the moment.
+* Windows may turn black for unknown reasons. Gets fixed with rain.
 
 
 
