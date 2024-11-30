@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static CarChanger.Common.Components.PaintMaterial;
 
 namespace CarChanger.Common.Components
 {
@@ -12,6 +13,12 @@ namespace CarChanger.Common.Components
         public bool FromInterior;
         [EnableIf(nameof(EnableProcedural))]
         public bool GenerateExplodedMaterialProcedurally = false;
+        [Tooltip("If true, this material is only used when the current paint is one of the ones below")]
+        public bool UseForPaint = false;
+        [EnableIf(nameof(UseForPaint))]
+        public TargetArea Area = TargetArea.Exterior;
+        [EnableIf(nameof(UseForPaint))]
+        public string[] Paints = new string[0];
 
         public Renderer GetRenderer() => gameObject.GetComponent<Renderer>();
 

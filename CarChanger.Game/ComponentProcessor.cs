@@ -24,7 +24,8 @@ namespace CarChanger.Game
             }
 
             ProcessDefaultMaterial(gameObject, holder);
-            ProcessMoveThisControl(gameObject);
+            ProcessPaintMaterial(gameObject, holder.Car);
+            ProcessChangeThisControl(gameObject);
             ProcessWindows(gameObject);
             ProcessBlockResourceReceivers(gameObject);
             ProcessCustomizationMeshes(gameObject);
@@ -65,15 +66,56 @@ namespace CarChanger.Game
             }
         }
 
+        public static void ProcessComponentsMinimal(GameObject gameObject, MaterialHolder holder)
+        {
+            if (gameObject == null) return;
+
+            ProcessDefaultMaterial(gameObject, holder);
+            ProcessPaintMaterial(gameObject, holder.Car);
+        }
+
         private static void ProcessDefaultMaterial(GameObject gameObject, MaterialHolder holder)
         {
-            foreach (var item in gameObject.GetComponentsInChildren<UseDefaultMaterial>())
+            // This is orderered so components with paint assigned are processed after,
+            // thus allowing overriding the default one.
+            foreach (var item in gameObject.GetComponentsInChildren<UseDefaultMaterial>().OrderBy(x => x.UseForPaint))
             {
-                item.GetRenderer().material = holder.GetMaterial(item);
+                // If it doesn't depend on a specific paint...
+                // Or matches the exterior paint...
+                // Or matches the interior paint...
+                if (!item.UseForPaint ||
+                    item.Area == PaintMaterial.TargetArea.Exterior &&
+                    holder.Car.PaintExterior != null &&
+                    item.Paints.Any(x => x == holder.Car.PaintExterior.CurrentTheme.AssetName) ||
+                    item.Area == PaintMaterial.TargetArea.Interior &&
+                    holder.Car.PaintInterior != null &&
+                    item.Paints.Any(x => x == holder.Car.PaintInterior.CurrentTheme.AssetName))
+                {
+                    item.GetRenderer().material = holder.GetMaterial(item);
+                }
             }
         }
 
-        private static void ProcessMoveThisControl(GameObject gameObject)
+        private static void ProcessPaintMaterial(GameObject gameObject, TrainCar car)
+        {
+            foreach (var item in gameObject.GetComponentsInChildren<PaintMaterial>())
+            {
+                switch (item.Area)
+                {
+                    case PaintMaterial.TargetArea.Exterior when car.PaintExterior != null && item.Paints.Any(x => x == car.PaintExterior.CurrentTheme.AssetName):
+                    case PaintMaterial.TargetArea.Interior when car.PaintInterior != null && item.Paints.Any(x => x == car.PaintInterior.CurrentTheme.AssetName):
+                        foreach (var renderer in item.AffectedRenderers)
+                        {
+                            renderer.material = item.Material;
+                        }
+                        continue;
+                    default:
+                        continue;
+                }
+            }
+        }
+
+        private static void ProcessChangeThisControl(GameObject gameObject)
         {
             if (!gameObject.TryGetComponent(out ChangeThisControl comp)) return;
 

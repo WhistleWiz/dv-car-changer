@@ -30,8 +30,6 @@ namespace CarChanger.Game.Components
         private List<GameObject> _originalInteriorLod = new List<GameObject>();
         private GameObject _body = null!;
         private GameObject _interiorLod = null!;
-        private bool _bogiesChanged = false;
-        private bool _bogiesPowered = false;
         private bool _bodyHidden = false;
         private bool _interiorLodHidden = false;
         private HeadlightChanger? _frontHeadlights = null;
@@ -41,6 +39,7 @@ namespace CarChanger.Game.Components
         private ExplosionModelHandler? _explosionHandler = null;
         private ExplosionModelHandler? _explosionHandlerInteriorLod = null;
         private ColliderHolder? _colliderHolder = null;
+        private BogieChanger? _bogieChanger = null;
 
         private void Awake()
         {
@@ -372,192 +371,7 @@ namespace CarChanger.Game.Components
             return lod.AllChildGOs().Where(x => !x.name.EndsWith(InteriorLODNamingEnd)).ToList();
         }
 
-        private PoweredWheel.State[] GetCurrentPoweredWheelStates()
-        {
-            // Pick the axles, order them for consistency, then get the state
-            // from the PoweredWheel component attached to them.
-            return TrainCar.Bogies.SelectMany(x => x.Axles)
-                .Select(x => x.transform)
-                .OrderBy(x => TrainCar.transform.InverseTransformPoint(x.position).z)
-                .Select(x => x.GetComponent<PoweredWheel>().state).ToArray();
-        }
-
         #region Changing
-
-        public static void ChangeBogies(TrainCar car, GameObject? frontBogie, GameObject? rearBogie, float? radius)
-        {
-            // Store them for quick access.
-            var bogies = car.Bogies;
-            var bogieF = bogies[1];
-            var bogieR = bogies[0];
-
-            // Invalidate cached axles.
-            Helpers.InvalidateBogieCache(bogieF);
-            Helpers.InvalidateBogieCache(bogieR);
-
-            if (frontBogie != null)
-            {
-                // Yeet the original bogie by unparenting and deleting.
-                // If it is not unparented the game will still find it.
-                var orig = bogieF.transform.GetChild(0);
-                orig.parent = null;
-                Destroy(orig.gameObject);
-
-                var bogie = Instantiate(frontBogie, bogieF.transform);
-                bogie.name = Constants.BogieName;
-
-                ModIntegrations.Gauge.RegaugeBogie(bogieF);
-            }
-
-            if (rearBogie != null)
-            {
-                // Do the same with the rear bogie.
-                var orig = bogieR.transform.GetChild(0);
-                orig.parent = null;
-                Destroy(orig.gameObject);
-
-                var bogie = Instantiate(rearBogie, bogieR.transform);
-                bogie.name = Constants.BogieName;
-
-                ModIntegrations.Gauge.RegaugeBogie(bogieR);
-            }
-
-            // Get brake renderers. Includes those at the default path, and custom ones within the bogies
-            // as defined by the components.
-            // Needs to check if it exist as some cars may not have it (caboose).
-            if (car.gameObject.TryGetComponentInChildren(out BrakesOverheatingController overheat))
-            {
-                List<Renderer> brakes = new List<Renderer>();
-
-                var padsF = bogieF.transform.Find(Constants.BogieBrakePadsPath);
-                var padsR = bogieR.transform.Find(Constants.BogieBrakePadsPath);
-
-                if (padsF)
-                {
-                    brakes.AddRange(padsF.GetComponentsInChildren<Renderer>());
-                }
-                if (padsR)
-                {
-                    brakes.AddRange(padsR.GetComponentsInChildren<Renderer>());
-                }
-
-                brakes.AddRange(bogieF.GetComponentsInChildren<ExtraBrakeRenderer>().Select(x => x.GetRenderer()));
-                brakes.AddRange(bogieR.GetComponentsInChildren<ExtraBrakeRenderer>().Select(x => x.GetRenderer()));
-
-                overheat.brakeRenderers = brakes.ToArray();
-            }
-
-            // Wheel sparks too.
-            List<Transform> sparks = new List<Transform>();
-
-            var contactsF = bogieF.transform.Find(Constants.BogieContactPointsPath);
-            var contactsR = bogieR.transform.Find(Constants.BogieContactPointsPath);
-
-            if (contactsF)
-            {
-                // Get children but not self.
-                foreach (Transform t in contactsF)
-                {
-                    sparks.Add(t);
-                }
-            }
-            if (contactsR)
-            {
-                foreach (Transform t in contactsR)
-                {
-                    sparks.Add(t);
-                }
-            }
-
-            car.GetComponentInChildren<WheelSlideSparksController>().sparkAnchors = sparks.ToArray();
-
-            // Finally, update the wheel rotation.
-            // This method only works on unpowered vehicles, since powered use a different thing.
-            // For those a separate method is used to update.
-            var wheelRotation = car.GetComponentInChildren<WheelRotationViaCode>();
-
-            if (wheelRotation != null)
-            {
-                wheelRotation.wheelRadius = radius ?? wheelRotation.wheelRadius;
-
-                Transform[] transformsToRotate = bogies.SelectMany((Bogie b) => b.Axles.Select((Bogie.AxleInfo a) => a.transform)).ToArray();
-                wheelRotation.transformsToRotate = transformsToRotate;
-            }
-        }
-
-        public static void MakeBogiesPowered(TrainCar car, IList<PoweredWheel.State> wheelStates, float? radius)
-        {
-            var wheelRotation = car.GetComponentInChildren<PoweredWheelRotationViaCode>();
-            var manager = car.GetComponentInChildren<PoweredWheelsManager>();
-
-            // Can't make them powered in this case.
-            if (!wheelRotation || !manager) return;
-
-            wheelRotation.wheelRadius = radius ?? wheelRotation.wheelRadius;
-
-            // Get all axles, ordered by position in relation to the car for consistency.
-            var axles = car.Bogies.SelectMany(x => x.Axles).Select(x => x.transform).OrderBy(x => car.transform.InverseTransformPoint(x.position).z);
-            int i = 0;
-            List<PoweredWheel> powered = new List<PoweredWheel>();
-
-            foreach (var item in axles)
-            {
-                if (item.TryGetComponent<PoweredWheel>(out var wheel))
-                {
-                    wheel.state = wheelStates[i++];
-                    powered.Add(wheel);
-                    continue;
-                }
-
-                if (item.TryGetComponent<PoweredAxle>(out var axle))
-                {
-                    wheel = item.gameObject.AddComponent<PoweredWheel>();
-                    wheel.wheelTransform = item;
-                    wheel.localRotationAxis = axle.Axis;
-                    wheel.state = wheelStates[i++];
-                    powered.Add(wheel);
-                    Destroy(axle);
-                    continue;
-                }
-            }
-
-            manager.poweredWheels = powered.ToArray();
-
-            var wheelSlip = car.GetComponentInChildren<WheelslipSparksController>();
-
-            if (wheelSlip)
-            {
-                var sparks = car.GetComponentInChildren<WheelSlideSparksController>().sparkAnchors;
-                var anchors = new List<WheelslipSparksController.WheelSparksDefinition>();
-
-                if (sparks != null && sparks.Length > 1)
-                {
-                    foreach (var item in powered)
-                    {
-                        // Find the 2 closest anchors to the axle. If set up properly, they are the right ones.
-                        // Order them by their X coordinate for left/right.
-                        var axleAnchors = sparks.OrderBy(x => (item.wheelTransform.position - x.position).sqrMagnitude)
-                            .Take(2).OrderBy(x => x.position.x);
-
-                        var definition = new WheelslipSparksController.WheelSparksDefinition
-                        {
-                            poweredWheel = item,
-                            sparksLeftAnchor = axleAnchors.ElementAt(0),
-                            sparksRightAnchor = axleAnchors.ElementAt(1)
-                        };
-
-                        definition.Init();
-                        anchors.Add(definition);
-                    }
-                }
-                else
-                {
-                    CarChangerMod.Error("Wheel contact points were not setup correctly! Wheel slip sparks will not work.");
-                }
-
-                wheelSlip.wheelSparks = anchors.ToArray();
-            }
-        }
 
         private void ChangeBody(GameObject? body, bool hideOriginal)
         {
@@ -621,32 +435,7 @@ namespace CarChanger.Game.Components
 
         private void ResetBogies()
         {
-            if (!_bogiesChanged) return;
-
-            // States must be extracted before changing the bogies, and reapplied after
-            // the new bogies are instanced. Thus the mess.
-            PoweredWheel.State[] wheelStates = null!;
-
-            if (_bogiesPowered)
-            {
-                wheelStates = TrainCar.Bogies.SelectMany(x => x.Axles)
-                    .Select(x => x.transform)
-                    .OrderBy(x => TrainCar.transform.InverseTransformPoint(x.position).z)
-                    .Select(x => x.GetComponent<PoweredWheel>().state).ToArray();
-            }
-
-            var bogies = TrainCar.carLivery.prefab.GetComponentsInChildren<Bogie>()
-                .OrderBy(x => x.transform.position.z)
-                .Select(x => x.transform.GetChild(0).gameObject);
-            ChangeBogies(TrainCar, bogies.ElementAt(1), bogies.ElementAt(0), TrainCar.carLivery.parentType.wheelRadius);
-
-            if (_bogiesPowered)
-            {
-                MakeBogiesPowered(TrainCar, wheelStates, TrainCar.carLivery.parentType.wheelRadius);
-            }
-
-            _bogiesChanged = false;
-            _bogiesPowered = false;
+            _bogieChanger?.Reset();
         }
 
         private void ResetBody()

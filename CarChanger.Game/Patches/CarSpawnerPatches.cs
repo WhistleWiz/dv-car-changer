@@ -1,7 +1,10 @@
 ﻿using CarChanger.Common;
 using CarChanger.Game.Components;
 using DV;
+using DV.CabControls.Spec;
+using DV.Customization;
 using HarmonyLib;
+using LocoSim.Definitions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +23,15 @@ namespace CarChanger.Game.Patches
 
         private static void SpawnSequence(TrainCar car)
         {
+            //if (CarChangerMod.Settings.TendersPowered &&
+            //    car.carLivery.parentType.kind.id == "Tender" &&
+            //    !car.TryGetComponent(out TrainCarCustomization comp)
+            //    && car.gameObject.TryGetComponentInChildren<IndependentFusesDefinition>(out var fuses))
+            //{
+            //    comp = car.gameObject.AddComponent<TrainCarCustomization>();
+            //    comp.electronicsFuseID = $"{fuses.ID}.{fuses.fuses[0].id}";
+            //}
+
             // If the car already has changes applied here, skip changing them.
             if (car.TryGetComponent<AppliedChange>(out _))
             {

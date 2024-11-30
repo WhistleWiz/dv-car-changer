@@ -15,6 +15,7 @@ namespace CarChanger.Game
                 "DoorsWindows/C_DoorR/ext cab_door1a").GetComponent<Renderer>().material.mainTexture);
 
         public TrainCar Car;
+
         public Material Body = null!;
         public Material Interior = null!;
         public Material Windows = null!;

@@ -49,8 +49,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
@@ -71,8 +70,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
@@ -96,8 +94,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
@@ -132,13 +129,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                _bogiesPowered = true;
-
-                var wheelStates = GetCurrentPoweredWheelStates();
-
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
-                MakeBogiesPowered(TrainCar, wheelStates, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
@@ -188,13 +179,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                _bogiesPowered = true;
-
-                var wheelStates = GetCurrentPoweredWheelStates();
-
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
-                MakeBogiesPowered(TrainCar, wheelStates, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
@@ -238,13 +223,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                _bogiesPowered = true;
-
-                var wheelStates = GetCurrentPoweredWheelStates();
-
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
-                MakeBogiesPowered(TrainCar, wheelStates, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
@@ -326,13 +305,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                _bogiesPowered = true;
-
-                var wheelStates = GetCurrentPoweredWheelStates();
-
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
-                MakeBogiesPowered(TrainCar, wheelStates, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
@@ -447,8 +420,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
@@ -484,13 +456,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                _bogiesPowered = true;
-
-                var wheelStates = GetCurrentPoweredWheelStates();
-
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
-                MakeBogiesPowered(TrainCar, wheelStates, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
@@ -524,13 +490,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                _bogiesPowered = true;
-
-                var wheelStates = GetCurrentPoweredWheelStates();
-
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
-                MakeBogiesPowered(TrainCar, wheelStates, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
@@ -561,13 +521,7 @@ namespace CarChanger.Game.Components
 
             if (config.UseCustomBogies)
             {
-                _bogiesChanged = true;
-                _bogiesPowered = true;
-
-                var wheelStates = GetCurrentPoweredWheelStates();
-
-                ChangeBogies(TrainCar, config.FrontBogie, config.RearBogie, config.WheelRadius);
-                MakeBogiesPowered(TrainCar, wheelStates, config.WheelRadius);
+                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
             }
 
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);

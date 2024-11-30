@@ -250,5 +250,10 @@ namespace CarChanger.Game
 
             return (DV.Customization.CustomizationPlacementMeshes.GadgetColliderHolder)m.Invoke(meshes, new object[] { car });
         }
+
+        public static IEnumerable<TrainCarLivery> GetCarLiveriesOfKind(TrainCarKind kind)
+        {
+            return Globals.G.Types.Liveries.Where(x => x.parentType.kind == kind);
+        }
     }
 }

@@ -38,7 +38,7 @@
             public const int Other = 1000;
         }
 
-        private static string[] s_materialNames = new[]
+        private static string[] s_materialNames =
         {
             "AmpLimiter",
             "AntiWheelslipComputer",
@@ -165,7 +165,7 @@
             "Explosion2",
             "ExplosionSmokeBlack",
             "FactorySmoke",
-            "FarmTractor",
+            "FarmTractorNew",
             "FeeInventory",
             "FillerGun",
             "Fire",
@@ -548,6 +548,15 @@
             "WispyCloudWhite",
             "WoodChips"
         };
+        private static string[] s_paintNames =
+        {
+            "DVRT",
+            "DVRT_New",
+            "Relic",
+            "Relic_Rusty",
+            "Null"
+        };
         public static string[] MaterialNames => s_materialNames;
+        public static string[] PaintNames => s_paintNames;
     }
 }

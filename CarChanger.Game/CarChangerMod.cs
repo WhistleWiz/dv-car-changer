@@ -25,6 +25,7 @@ namespace CarChanger.Game
             Instance = modEntry;
             Translations = new TranslationInjector(Guid);
             Settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
+            Settings.Initialise();
 
             Instance.OnGUI += Settings.DrawGUI;
             Instance.OnSaveGUI += Settings.Save;
