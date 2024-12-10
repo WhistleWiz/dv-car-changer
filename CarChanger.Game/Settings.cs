@@ -1,6 +1,4 @@
-﻿using DV.Customization;
-using DV.ThingTypes;
-using LocoSim.Definitions;
+﻿using DV.ThingTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +12,6 @@ namespace CarChanger.Game
     {
         private const float IndentWidth = 30.0f;
 
-        // Base game tenders to power.
-        private static List<string> s_tenders = new List<string>()
-        {
-            "LocoS282B"
-        };
-
-        [Draw("Allow Tenders To Power Gadgets", Tooltip = "If true, the S282's tender will power gadgets (like lights)")]
-        public bool TendersPowered = true;
         [Draw("Spawn With No Modification Chance", Tooltip = "The chance for a car to spawn without any modification\n" +
             "Does not apply to cars with a default modification set", Min = 0.0, Max = 1.0)]
         public float NoModificationChance = 0.0f;
@@ -30,16 +20,9 @@ namespace CarChanger.Game
         private static int s_selectedLivery = 0;
         private static Dictionary<DefaultConfigSettings.LiveryConfig, int> s_selectedConfigs = new Dictionary<DefaultConfigSettings.LiveryConfig, int>();
 
-        internal void Initialise()
-        {
-            PowerBaseTenders();
-        }
-
         public override void Save(UnityModManager.ModEntry modEntry)
         {
             Save(this, modEntry);
-
-            PowerBaseTenders();
         }
 
         public void OnChange() { }
@@ -207,35 +190,6 @@ namespace CarChanger.Game
             GUI.enabled = true;
 
             GUILayout.EndHorizontal();
-        }
-
-        private void PowerBaseTenders()
-        {
-            if (TendersPowered)
-            {
-                foreach (var item in s_tenders)
-                {
-                    if (DV.Globals.G.Types.TryGetLivery(item, out var livery))
-                    {
-                        if (!livery.prefab.TryGetComponent<TrainCarCustomization>(out var comp))
-                        {
-                            comp = livery.prefab.AddComponent<TrainCarCustomization>();
-                        }
-
-                        comp.electronicsFuseID = $"fuseboxDummy.ELECTRONICS_MAIN";
-                    }
-                }
-            }
-            else
-            {
-                foreach (var item in s_tenders)
-                {
-                    if (DV.Globals.G.Types.TryGetLivery(item, out var livery))
-                    {
-                        Helpers.DestroyIfNotNull(livery.prefab.GetComponent<TrainCarCustomization>());
-                    }
-                }
-            }
         }
     }
 }

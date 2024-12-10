@@ -82,8 +82,17 @@ namespace CarChanger.Game
             _originalF.gameObject.SetActive(true);
             _originalR.gameObject.SetActive(true);
 
-            Helpers.DestroyIfNotNull(_newF);
-            Helpers.DestroyIfNotNull(_newR);
+            if (_newF != null)
+            {
+                _newF.name = "[destroyed]";
+                Object.Destroy(_newF);
+            }
+            if (_newR != null)
+            {
+                _newR.name = "[destroyed]";
+                Object.Destroy(_newR);
+            }
+
             Helpers.InvalidateBogieCache(bogieF);
             Helpers.InvalidateBogieCache(bogieR);
 
