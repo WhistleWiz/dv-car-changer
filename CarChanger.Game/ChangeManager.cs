@@ -119,7 +119,7 @@ namespace CarChanger.Game
                         AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoDE6Slug].parentType, item);
                         continue;
                     case LocoHandcarConfig _:
-                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.LocoShunter].parentType, item);
+                        AddToCarType(DV.Globals.G.Types.TrainCarType_to_v2[TrainCarType.HandCar].parentType, item);
                         continue;
 
                     case ModificationGroupConfig group:

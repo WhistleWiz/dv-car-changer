@@ -69,6 +69,6 @@ namespace CarChanger.Common
         Green = 601,
         Blue = 602,
         FirstClass = 1000,
-        SecondClass
+        SecondClass = 1001
     }
 }

@@ -297,8 +297,10 @@ namespace CarChanger.Game
             {
                 foreach (var item in colliders)
                 {
-                    Object.Destroy(item);
+                    Helpers.DestroyIfNotNull(item);
                 }
+
+                colliders.Clear();
             };
 
             GameObject Create(MeshFilter filter)
