@@ -10,6 +10,7 @@ namespace CarChanger.Game
     [Serializable]
     public class Settings : UnityModManager.ModSettings, IDrawable
     {
+        private const float TabWidth = 400.0f;
         private const float IndentWidth = 30.0f;
 
         [Draw("Spawn With No Modification Chance", Tooltip = "The chance for a car to spawn without any modification\n" +
@@ -36,7 +37,7 @@ namespace CarChanger.Game
         private void DrawConfigs()
         {
             // Begin by setting a vertical group, that way everything inside lines up.
-            GUILayout.BeginVertical(GUILayout.MinWidth(400), GUILayout.ExpandWidth(false));
+            GUILayout.BeginVertical(GUILayout.MinWidth(TabWidth), GUILayout.ExpandWidth(false));
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Presets",
                 "Allows changing which configs will spawn by default for each car livery"), UnityModManager.UI.h2);
@@ -115,7 +116,47 @@ namespace CarChanger.Game
             }
 
             GUILayout.EndHorizontal();
+            GUILayout.Space(10);
+            GUILayout.Label("Sort Configs");
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("By Name", GUILayout.Width(TabWidth / 3)))
+            {
+                DefaultConfigSettings.Configs = DefaultConfigSettings.Configs.OrderBy(x => x.LiveryName).ToList();
+            }
+
+            if (GUILayout.Button("By Type", GUILayout.Width(TabWidth / 3)))
+            {
+                DefaultConfigSettings.Configs = DefaultConfigSettings.Configs.OrderBy(x => IdToCarTypeId(x.LiveryName)).ToList();
+            }
+
+            if (GUILayout.Button("By Kind", GUILayout.Width(TabWidth / 3)))
+            {
+                DefaultConfigSettings.Configs = DefaultConfigSettings.Configs.OrderBy(x => IdToKind(x.LiveryName)).ToList();
+            }
+
+            GUILayout.EndHorizontal();
             GUILayout.EndVertical();
+        }
+
+        private static string IdToCarTypeId(string liveryName)
+        {
+            if (DV.Globals.G.Types.TryGetLivery(liveryName, out var livery))
+            {
+                return livery.parentType.id;
+            }
+
+            return string.Empty;
+        }
+
+        private static string IdToKind(string liveryName)
+        {
+            if (DV.Globals.G.Types.TryGetLivery(liveryName, out var livery))
+            {
+                return livery.parentType.kind.id;
+            }
+
+            return string.Empty;
         }
 
         private static void DrawConfigEntries(DefaultConfigSettings.LiveryConfig config, bool hasLivery, TrainCarLivery livery)
