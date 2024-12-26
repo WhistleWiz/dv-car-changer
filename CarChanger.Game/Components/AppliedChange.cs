@@ -508,14 +508,14 @@ namespace CarChanger.Game.Components
 
         private void LogChange()
         {
-            CarChangerMod.Log($"Applying change {Config!.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+            CarChangerMod.LogVerbose($"Applying change {Config!.ModificationId} to [{TrainCar.ID}|{TrainCar.carLivery.id}]");
         }
 
         internal void ForceApplyChange(string? reason, int delay = 1)
         {
             if (!string.IsNullOrEmpty(reason))
             {
-                CarChangerMod.Log($"Forcing change application due to: {reason}");
+                CarChangerMod.LogVerbose($"Forcing change application due to: {reason}");
             }
 
             StartCoroutine(ApplyChangeRoutine(delay));

@@ -66,6 +66,14 @@ namespace CarChanger.Game
             Instance.Logger.Log(message);
         }
 
+        public static void LogVerbose(string message)
+        {
+            if (Settings.UseVerboseLogging)
+            {
+                Instance.Logger.Log(message);
+            }
+        }
+
         public static void Warning(string message)
         {
             Instance.Logger.Warning(message);

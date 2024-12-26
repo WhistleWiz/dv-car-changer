@@ -16,6 +16,9 @@ namespace CarChanger.Game
         [Draw("Spawn With No Modification Chance", Tooltip = "The chance for a car to spawn without any modification\n" +
             "Does not apply to cars with a default modification set", Min = 0.0, Max = 1.0)]
         public float NoModificationChance = 0.0f;
+        [Draw("Use Verbose Logging", Tooltip = "Logs a lot more information\n" +
+            "Useful if you are experiencing bugs")]
+        public bool UseVerboseLogging = false;
         public DefaultConfigSettings DefaultConfigSettings = new DefaultConfigSettings();
 
         private static int s_selectedLivery = 0;
