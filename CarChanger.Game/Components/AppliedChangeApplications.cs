@@ -40,8 +40,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyWagon(WagonConfig config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material
@@ -59,8 +57,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyPassenger(PassengerConfig config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
@@ -81,8 +77,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyCaboose(CabooseConfig config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
@@ -106,8 +100,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyDE2480(LocoDE2480Config config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
@@ -156,8 +148,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyDE6860(LocoDE6860Config config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
@@ -204,8 +194,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyDH4670(LocoDH4670Config config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
@@ -248,8 +236,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyDM3540(LocoDM3540Config config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
@@ -289,8 +275,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyDM1U150(LocoDM1U150Config config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
@@ -330,8 +314,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyS060440(LocoS060440Config config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
@@ -373,8 +355,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyS282730A(LocoS282730AConfig config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
@@ -404,8 +384,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyS282730B(LocoS282730BConfig config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = TrainCar.transform.Find(
@@ -437,8 +415,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyBE2260(LocoBE2260Config config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material,
@@ -481,8 +457,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyDE6860Slug(LocoDE6860SlugConfig config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material
@@ -512,8 +486,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyHandcar(LocoHandcarConfig config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar)
             {
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material
@@ -531,8 +503,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyCustomCar(CustomCarConfig config)
         {
-            LogChange();
-
             MatHolder = new MaterialHolder(TrainCar);
             ChangeBody(config.BodyPrefab, false);
             ChangeInteriorLod(config.InteriorLODPrefab, false);
@@ -543,8 +513,6 @@ namespace CarChanger.Game.Components
 
         private void ApplyGroup(ModificationGroupConfig config)
         {
-            LogChange();
-
             foreach (var item in config.ModificationsToActivate)
             {
                 gameObject.AddComponent<AppliedChange>().Config = item;

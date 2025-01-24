@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
@@ -37,6 +38,12 @@ namespace CarChanger.Common.Configs
         private bool _resetHeadlight;
 
         private void ResetHeadlights() => BeamPosition = OriginalBeamPosition;
+        
+        public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (WaterHatch != null) yield return WaterHatch;
+        }
 
         public override bool DoValidation(out string error)
         {

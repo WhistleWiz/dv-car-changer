@@ -255,5 +255,16 @@ namespace CarChanger.Game
         {
             return Globals.G.Types.Liveries.Where(x => x.parentType.kind == kind);
         }
+
+        public static IEnumerable<MeshRenderer> AllMeshRenderers(ModelConfig config, bool includeExploded)
+        {
+            foreach (var obj in config.GetAllPrefabs(includeExploded))
+            {
+                foreach (var renderer in obj.GetComponentsInChildren<MeshRenderer>())
+                {
+                    yield return renderer;
+                }
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CarChanger.Common.Configs
@@ -6,6 +7,8 @@ namespace CarChanger.Common.Configs
     [CreateAssetMenu(menuName = "DVCarChanger/S282-730A Modification", order = Constants.MenuOrderConstants.Steam + 1)]
     public class LocoS282730AConfig : CarWithInteriorConfig
     {
+        public static readonly Vector3 ModelOffset = new Vector3(0, 0, 4.880929f);
+
         [Flags]
         public enum ChangeRegions
         {
@@ -58,6 +61,17 @@ namespace CarChanger.Common.Configs
         public ChangeRegions BlockedRegions = ChangeRegions.None;
 
         public void ResetHeadlights() => BeamPosition = OriginalBeamPosition;
+
+        public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (LeftWindow != null) yield return LeftWindow;
+            if (RightWindow != null) yield return RightWindow;
+            if (ToolboxLid != null) yield return ToolboxLid;
+            if (includeExploded && LeftWindowExploded != null) yield return LeftWindowExploded;
+            if (includeExploded && RightWindowExploded != null) yield return RightWindowExploded;
+            if (includeExploded && ToolboxLidExploded != null) yield return ToolboxLidExploded;
+        }
 
         public override bool DoValidation(out string error)
         {

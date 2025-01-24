@@ -124,6 +124,8 @@ namespace CarChanger.Game.Components
                 yield return null;
             }
 
+            LogChange();
+
             _originalBody.Clear();
             _originalBody = GetOriginalBody();
             _originalInteriorLod.Clear();

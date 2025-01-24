@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
@@ -21,6 +22,11 @@ namespace CarChanger.Common.Configs
         public GameObject? ItemsCollider;
 
         public bool IncompatibleBodyHiding => HideOriginalBody || PreventBodyHiding;
+
+        public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            if (BodyPrefab != null) yield return BodyPrefab;
+        }
 
         public static bool CanCombine(CarConfig a, CarConfig b) => !(a.IncompatibleBodyHiding && b.IncompatibleBodyHiding);
     }

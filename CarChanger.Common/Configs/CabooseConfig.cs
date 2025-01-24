@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
@@ -9,6 +10,13 @@ namespace CarChanger.Common.Configs
         public GameObject? DoorFront;
         public GameObject? DoorRear;
         public bool HideOriginalDoors = false;
+
+        public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (DoorFront != null) yield return DoorFront;
+            if (DoorRear != null) yield return DoorRear;
+        }
 
         public static bool CanCombine(CabooseConfig a, CabooseConfig b) =>
             CarWithInteriorAndBogiesConfig.CanCombine(a, b) &&

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CarChanger.Common.Configs
@@ -134,6 +135,13 @@ namespace CarChanger.Common.Configs
             _rwh = RearSettings.WhiteTopMesh;
             _rwh = RearSettings.WhiteLowMesh;
             _rr = RearSettings.RedMesh;
+        }
+
+        public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (DoorRear != null) yield return DoorRear;
+            if (DoorInterior != null) yield return DoorInterior;
         }
 
         public override bool DoValidation(out string error)

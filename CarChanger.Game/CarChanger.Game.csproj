@@ -15,21 +15,21 @@
 		<Reference Include="Assembly-CSharp" />
 		<Reference Include="UnityModManager" />
 		<Reference Include="0Harmony" />
-    <Reference Include="Unity.TextMeshPro" />
-    <Reference Include="UnityEngine" />
-    <Reference Include="UnityEngine.AssetBundleModule" />
-    <Reference Include="UnityEngine.AudioModule" />
-    <Reference Include="UnityEngine.CoreModule" />
-    <Reference Include="UnityEngine.ImageConversionModule" />
-    <Reference Include="UnityEngine.IMGUIModule" />
-    <Reference Include="UnityEngine.PhysicsModule" />
+		<Reference Include="Unity.TextMeshPro" />
+		<Reference Include="UnityEngine" />
+		<Reference Include="UnityEngine.AssetBundleModule" />
+		<Reference Include="UnityEngine.AudioModule" />
+		<Reference Include="UnityEngine.CoreModule" />
+		<Reference Include="UnityEngine.ImageConversionModule" />
+		<Reference Include="UnityEngine.IMGUIModule" />
+		<Reference Include="UnityEngine.PhysicsModule" />
 		<Reference Include="UnityEngine.UI" />
 		<Reference Include="DVLangHelper.Data" />
 		<Reference Include="DVLangHelper.Runtime" />
 		<Reference Include="DV.Interaction" />
 		<Reference Include="DV.Localization" />
-    <Reference Include="DV.Simulation" />
-    <Reference Include="DV.ThingTypes" />
-    <Reference Include="DV.Utils" />
+		<Reference Include="DV.Simulation" />
+		<Reference Include="DV.ThingTypes" />
+		<Reference Include="DV.Utils" />
 	</ItemGroup>
 </Project>

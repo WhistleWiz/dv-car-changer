@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CarChanger.Common.Configs
@@ -156,6 +157,19 @@ namespace CarChanger.Common.Configs
             _fr = FrontSettings.RedMesh;
             _rw = RearSettings.WhiteMesh;
             _rr = RearSettings.RedMesh;
+        }
+
+        public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (CabDoorFront != null) yield return CabDoorFront;
+            if (CabDoorRear != null) yield return CabDoorRear;
+            if (EngineDoorLeft != null) yield return EngineDoorLeft;
+            if (EngineDoorRight != null) yield return EngineDoorRight;
+            if (includeExploded && CabDoorFrontExploded != null) yield return CabDoorFrontExploded;
+            if (includeExploded && CabDoorRearExploded != null) yield return CabDoorRearExploded;
+            if (includeExploded && EngineDoorLeftExploded != null) yield return EngineDoorLeftExploded;
+            if (includeExploded && EngineDoorRightExploded != null) yield return EngineDoorRightExploded;
         }
 
         public override bool DoValidation(out string error)

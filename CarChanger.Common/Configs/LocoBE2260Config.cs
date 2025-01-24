@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
@@ -47,6 +48,17 @@ namespace CarChanger.Common.Configs
         {
             RearMesh = null;
             RearBeamPosition = OriginalRearBeamPosition;
+        }
+
+        public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (Door != null) yield return Door;
+            if (WindowFront != null) yield return WindowFront;
+            if (WindowRear != null) yield return WindowRear;
+            if (includeExploded && DoorExploded != null) yield return DoorExploded;
+            if (includeExploded && WindowFrontExploded != null) yield return WindowFrontExploded;
+            if (includeExploded && WindowRearExploded != null) yield return WindowRearExploded;
         }
 
         public override bool DoValidation(out string error)

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
@@ -34,6 +35,15 @@ namespace CarChanger.Common.Configs
         [Tooltip("The prefab to load on the interior LOD\n" +
             "This is the part of the interior shown while the interior itself is unloaded")]
         public GameObject? InteriorLODPrefab;
+
+        public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (BodyPrefab != null) yield return BodyPrefab;
+            if (InteriorLODPrefab != null) yield return InteriorLODPrefab;
+            if (InteriorPrefab != null) yield return InteriorPrefab;
+            if (includeExploded && InteriorPrefabExploded != null) yield return InteriorPrefabExploded;
+        }
 
         public override bool DoValidation(out string error)
         {

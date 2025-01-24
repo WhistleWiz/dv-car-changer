@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
@@ -31,6 +32,14 @@ namespace CarChanger.Common.Configs
         public bool IncompatibleInteriorLODHiding => HideOriginalInteriorLOD || PreventInteriorLODHiding;
 
         public bool CanExplode() => CanExplode(this);
+
+        public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (InteriorLODPrefab != null) yield return InteriorLODPrefab;
+            if (InteriorPrefab != null) yield return InteriorPrefab;
+            if (includeExploded && InteriorPrefabExploded != null) yield return InteriorPrefabExploded;
+        }
 
         public static bool CanCombine(CarWithInteriorConfig a, CarWithInteriorConfig b) =>
             CarConfig.CanCombine(a, b) &&

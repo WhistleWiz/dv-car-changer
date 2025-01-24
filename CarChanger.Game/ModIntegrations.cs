@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using UnityEngine;
 using UnityModManagerNet;
 
 namespace CarChanger.Game
@@ -8,6 +10,7 @@ namespace CarChanger.Game
     internal static class ModIntegrations
     {
         public const BindingFlags FlagsStaticPrivate = BindingFlags.Static | BindingFlags.NonPublic;
+        public const BindingFlags FlagsStaticPublic = BindingFlags.Static | BindingFlags.Public;
 
         public static bool IsModActive(string modId)
         {
@@ -152,6 +155,27 @@ namespace CarChanger.Game
                 }
 
                 s_method?.Invoke(null, new[] { bogie });
+            }
+        }
+
+        public static class SkinManager
+        {
+            public const string Id = "SkinManagerMod";
+
+            private static MethodInfo? s_method;
+
+            public static Dictionary<string, string> GetRendererTextureNames(IEnumerable<MeshRenderer> renderers)
+            {
+                if (s_method == null)
+                {
+                    string path = $"{Directory.GetCurrentDirectory()}\\Mods\\SkinManagerMod\\SkinManagerMod.dll";
+
+                    Assembly assembly = Assembly.LoadFile(path);
+                    var t = assembly.GetType("SkinManagerMod.TextureUtility");
+                    s_method = t.GetMethod("GetRendererTextureNames", FlagsStaticPublic);
+                }
+
+                return (Dictionary<string, string>)s_method.Invoke(null, new[] { renderers });
             }
         }
     }

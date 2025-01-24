@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CarChanger.Common.Configs
 {
@@ -28,6 +29,13 @@ namespace CarChanger.Common.Configs
             WheelRadius = OriginalRadius;
             FrontBogie = null;
             RearBogie = null;
+        }
+
+        public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (FrontBogie != null) yield return FrontBogie;
+            if (RearBogie != null) yield return RearBogie;
         }
 
         public override bool DoValidation(out string error)

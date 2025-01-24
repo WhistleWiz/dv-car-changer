@@ -57,6 +57,11 @@ namespace CarChanger.Common
 
         public string LocalizationKey => $"carchanger/{ModificationId.ToLower()}";
 
+        public virtual IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
+        {
+            yield break;
+        }
+
         public virtual void OnBeforeSerialize()
         {
             _jsonName = ModificationName.ToJson();
