@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace CarChanger.Unity.Inspector
 {
-    [CustomEditor(typeof(LocoS282730AConfig))]
+    [CustomEditor(typeof(LocoS282730AConfig)), CanEditMultipleObjects]
     internal class LocoS282730AConfigEditor : Editor
     {
         public override void OnInspectorGUI()
