@@ -24,6 +24,7 @@ namespace CarChanger.Game.Components
             }
 
             ResetBogies();
+            ResetBuffers();
             ResetBody();
             ResetInteriorLod();
             ResetHeadlights();
@@ -45,11 +46,8 @@ namespace CarChanger.Game.Components
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius);
-            }
-
+            ChangeBuffers(config);
+            ChangeBogies(config);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
 
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
@@ -64,11 +62,8 @@ namespace CarChanger.Game.Components
                     "CarPassenger/CarPassengerWindowsSide").GetComponent<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius);
-            }
-
+            ChangeBuffers(config);
+            ChangeBogies(config);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(null, config.HideOriginalInterior);
 
@@ -86,11 +81,8 @@ namespace CarChanger.Game.Components
                     "CarCaboose_exterior/CabooseWindowsStatic/CabooseWindowsStatic01").GetComponent<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius);
-            }
-
+            ChangeBuffers(config);
+            ChangeBogies(config);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, "CabooseInterior"));
             ChangeInteractables(new CabooseInteractablesChanger(config, MatHolder));
@@ -119,11 +111,8 @@ namespace CarChanger.Game.Components
                     "Deck").GetComponent<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
-            }
-
+            ChangeBuffers(config);
+            ChangeBogies(config, true);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder,
@@ -167,11 +156,8 @@ namespace CarChanger.Game.Components
                     "EngineBay").GetComponent<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
-            }
-
+            ChangeBuffers(config);
+            ChangeBogies(config, true);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
@@ -209,11 +195,8 @@ namespace CarChanger.Game.Components
                     "LocoDH4_Body/windows broken").GetComponent<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
-            }
-
+            ChangeBuffers(config);
+            ChangeBogies(config, true);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
@@ -251,6 +234,7 @@ namespace CarChanger.Game.Components
                     "LocoDM3_Body/broken_windows").GetComponent<Renderer>().material
             };
 
+            ChangeBuffers(config);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder,
@@ -287,11 +271,8 @@ namespace CarChanger.Game.Components
                     "LocoDM1U_Body/broken_windows").GetComponent<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
-            }
-
+            ChangeBuffers(config);
+            ChangeBogies(config, true);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new DM1U150InteriorChanger(config, MatHolder));
@@ -333,6 +314,7 @@ namespace CarChanger.Game.Components
                     "LocoS060_Body/broken_windows").GetComponent<Renderer>().material
             };
 
+            ChangeBuffers(config);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, new[] { "Static/s060_cab", "Static/s060_cab_extras" }));
@@ -368,6 +350,7 @@ namespace CarChanger.Game.Components
                     "Static/Cab").GetComponent<Renderer>().material
             };
 
+            ChangeBuffers(config);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, new[] { "Static/Cab", "Static/Things" }));
@@ -396,11 +379,8 @@ namespace CarChanger.Game.Components
                     "Coal&Water/I_TenderWater/tender_water_scaler/tender_water").GetComponent<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius);
-            }
-
+            ChangeBuffers(config);
+            ChangeBogies(config);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteractables(new LocoS282730BInteractablesChanger(config, MatHolder));
 
@@ -430,11 +410,8 @@ namespace CarChanger.Game.Components
                     "LocoMicroshunter_Body/windows broken").GetComponent<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
-            }
-
+            ChangeBuffers(config);
+            ChangeBogies(config, true);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, "Cab"));
@@ -462,11 +439,8 @@ namespace CarChanger.Game.Components
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
-            }
-
+            ChangeBuffers(config);
+            ChangeBogies(config, true);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
 
             if (config.UseCustomFrontHeadlights)
@@ -491,11 +465,7 @@ namespace CarChanger.Game.Components
                 Body = _originalBody[0].GetComponentInChildren<Renderer>().material
             };
 
-            if (config.UseCustomBogies)
-            {
-                _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, true);
-            }
-
+            ChangeBogies(config, true);
             ChangeBody(config.BodyPrefab, config.HideOriginalBody);
 
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);

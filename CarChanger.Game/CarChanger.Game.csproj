@@ -26,7 +26,9 @@
 		<Reference Include="UnityEngine.UI" />
 		<Reference Include="DVLangHelper.Data" />
 		<Reference Include="DVLangHelper.Runtime" />
+		<Reference Include="DV.CabControls.Spec" />
 		<Reference Include="DV.Interaction" />
+		<Reference Include="DV.Layers" />
 		<Reference Include="DV.Localization" />
 		<Reference Include="DV.Simulation" />
 		<Reference Include="DV.ThingTypes" />

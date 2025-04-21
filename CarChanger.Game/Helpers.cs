@@ -266,5 +266,11 @@ namespace CarChanger.Game
                 }
             }
         }
+
+        public static TrainCarLivery IdToLivery(string id)
+        {
+            Globals.G.Types.TryGetLivery(id, out var livery);
+            return livery;
+        }
     }
 }

@@ -1,13 +1,9 @@
 ﻿using CarChanger.Common;
-using CarChanger.Common.Components;
 using CarChanger.Common.Configs;
 using CarChanger.Game.HeadlightChanges;
 using CarChanger.Game.InteractablesChanges;
 using CarChanger.Game.InteriorChanges;
 using DV.Customization.Paint;
-using DV.Simulation.Brake;
-using DV.Wheels;
-using LocoSim.Implementations.Wheels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +36,7 @@ namespace CarChanger.Game.Components
         private ExplosionModelHandler? _explosionHandlerInteriorLod = null;
         private ColliderHolder? _colliderHolder = null;
         private BogieChanger? _bogieChanger = null;
+        private BufferChanger? _bufferChanger = null;
 
         private void Awake()
         {
@@ -73,7 +70,7 @@ namespace CarChanger.Game.Components
         {
             // In case the whole object is killed, don't bother with
             // removing the actual modification.
-            if (!TrainCar || !gameObject)
+            if (!TrainCar || !gameObject || UnloadWatcher.isUnloading)
             {
                 return;
             }
@@ -431,6 +428,27 @@ namespace CarChanger.Game.Components
             TrainCar.ExternalInteractableLoaded += _interactables.Apply;
         }
 
+        private void ChangeBogies(CarWithBogiesConfig config, bool powered = false)
+        {
+            if (!config.UseCustomBogies) return;
+
+            _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, powered);
+        }
+
+        private void ChangeBogies(CarWithInteriorAndBogiesConfig config, bool powered = false)
+        {
+            if (!config.UseCustomBogies) return;
+
+            _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, powered);
+        }
+
+        private void ChangeBuffers(CarConfig config)
+        {
+            if (config.BufferType == BufferType.Original) return;
+
+            _bufferChanger = new BufferChanger(config, TrainCar);
+        }
+
         #endregion
 
         #region Resets
@@ -438,6 +456,11 @@ namespace CarChanger.Game.Components
         private void ResetBogies()
         {
             _bogieChanger?.Reset();
+        }
+
+        private void ResetBuffers()
+        {
+            _bufferChanger?.Reset();
         }
 
         private void ResetBody()

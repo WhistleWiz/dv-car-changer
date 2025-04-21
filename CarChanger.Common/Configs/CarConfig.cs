@@ -13,6 +13,11 @@ namespace CarChanger.Common.Configs
         [Tooltip("Whether to prevent other modifications that hide the body from working with this one or not")]
         public bool PreventBodyHiding = false;
 
+        [Header("Buffers")]
+        public BufferType BufferType = BufferType.Original;
+        public Mesh? CustomBuffer;
+        public Material? CustomBufferMaterial;
+
         [Header("Colliders")]
         [Tooltip("The colliders of the car with the world")]
         public GameObject? CollisionCollider;
@@ -22,12 +27,15 @@ namespace CarChanger.Common.Configs
         public GameObject? ItemsCollider;
 
         public bool IncompatibleBodyHiding => HideOriginalBody || PreventBodyHiding;
+        public bool ImcompatibleBuffers => BufferType != BufferType.Original;
 
         public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
         {
             if (BodyPrefab != null) yield return BodyPrefab;
         }
 
-        public static bool CanCombine(CarConfig a, CarConfig b) => !(a.IncompatibleBodyHiding && b.IncompatibleBodyHiding);
+        public static bool CanCombine(CarConfig a, CarConfig b) =>
+            !(a.IncompatibleBodyHiding && b.IncompatibleBodyHiding) &&
+            !(a.ImcompatibleBuffers && b.ImcompatibleBuffers);
     }
 }
