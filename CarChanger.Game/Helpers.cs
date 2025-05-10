@@ -243,12 +243,12 @@ namespace CarChanger.Game
             return null;
         }
 
-        public static DV.Customization.CustomizationPlacementMeshes.GadgetColliderHolder GetCustomizationRoot(TrainCar car,
+        public static DV.Customization.GadgetColliderHolder GetCustomizationRoot(TrainCar car,
             DV.Customization.CustomizationPlacementMeshes meshes)
         {
             var m = typeof(DV.Customization.CustomizationPlacementMeshes).GetMethod("FindRoot", Flags);
 
-            return (DV.Customization.CustomizationPlacementMeshes.GadgetColliderHolder)m.Invoke(meshes, new object[] { car });
+            return (DV.Customization.GadgetColliderHolder)m.Invoke(meshes, new object[] { car });
         }
 
         public static IEnumerable<TrainCarLivery> GetCarLiveriesOfKind(TrainCarKind kind)
