@@ -1,5 +1,6 @@
 ﻿using CarChanger.Common;
 using CarChanger.Common.Configs;
+using CarChanger.Game.AdditionalChanges;
 using CarChanger.Game.HeadlightChanges;
 using CarChanger.Game.InteractablesChanges;
 using CarChanger.Game.InteriorChanges;
@@ -37,6 +38,7 @@ namespace CarChanger.Game.Components
         private ColliderHolder? _colliderHolder = null;
         private BogieChanger? _bogieChanger = null;
         private BufferChanger? _bufferChanger = null;
+        private List<IAdditionalChange>? _additionalChanges = null;
 
         private void Awake()
         {
@@ -527,6 +529,16 @@ namespace CarChanger.Game.Components
 
             _colliderHolder.Unapply();
             _colliderHolder = null;
+        }
+
+        private void ResetAdditional()
+        {
+            if (_additionalChanges == null) return;
+
+            foreach (var item in _additionalChanges)
+            {
+                item.Reset();
+            }
         }
 
         #endregion

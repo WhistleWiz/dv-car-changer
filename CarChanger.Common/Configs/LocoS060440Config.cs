@@ -70,6 +70,12 @@ namespace CarChanger.Common.Configs
             public Vector3 RightGlarePosition;
         }
 
+        [Header("Wheels")]
+        public bool UseCustomDrivers;
+        public GameObject? Driver1;
+        public GameObject? Driver2;
+        public GameObject? Driver3;
+
         [Header("Doors and Windows")]
         public GameObject? DoorLeft;
         public GameObject? DoorRight;
@@ -217,6 +223,7 @@ namespace CarChanger.Common.Configs
 
         public static bool CanCombine(LocoS060440Config a, LocoS060440Config b) =>
             CarWithInteriorConfig.CanCombine(a, b) &&
+            !(a.UseCustomDrivers && b.UseCustomDrivers) &&
             !(a.HideOriginalDoors && b.HideOriginalDoors) &&
             !(a.HideOriginalWindows && b.HideOriginalWindows) &&
             !(a.HideOriginalSunroof && b.HideOriginalSunroof) &&

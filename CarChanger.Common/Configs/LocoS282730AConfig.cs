@@ -38,6 +38,17 @@ namespace CarChanger.Common.Configs
 
         private static readonly Vector3 OriginalBeamPosition = new Vector3(-0.00146591f, 3.579122f, 10.98136f);
 
+        [Header("Wheels")]
+        public bool UseCustomFrontAxle;
+        public GameObject? FrontAxle;
+        public bool UseCustomDrivers;
+        public GameObject? Driver1;
+        public GameObject? Driver2;
+        public GameObject? Driver3;
+        public GameObject? Driver4;
+        public bool UseCustomRearAxle;
+        public GameObject? RearAxle;
+
         [Header("Doors and Windows")]
         public GameObject? LeftWindow;
         public GameObject? RightWindow;
@@ -82,6 +93,9 @@ namespace CarChanger.Common.Configs
 
         public static bool CanCombine(LocoS282730AConfig a, LocoS282730AConfig b) =>
             CarWithInteriorConfig.CanCombine(a, b) &&
+            !(a.UseCustomFrontAxle && b.UseCustomFrontAxle) &&
+            !(a.UseCustomDrivers && b.UseCustomDrivers) &&
+            !(a.UseCustomRearAxle && b.UseCustomRearAxle) &&
             !(a.HideOriginalWindows && b.HideOriginalWindows) &&
             !(a.HideOriginalToolboxLid && !b.HideOriginalToolboxLid) &&
             !(a.UseCustomHeadlights && b.UseCustomHeadlights) &&

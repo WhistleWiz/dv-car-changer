@@ -1,7 +1,9 @@
 ﻿using CarChanger.Common.Configs;
+using CarChanger.Game.AdditionalChanges;
 using CarChanger.Game.HeadlightChanges;
 using CarChanger.Game.InteractablesChanges;
 using CarChanger.Game.InteriorChanges;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CarChanger.Game.Components
@@ -31,6 +33,7 @@ namespace CarChanger.Game.Components
             ResetInterior();
             ResetInteractables();
             ResetColliders();
+            ResetAdditional();
 
             Helpers.DestroyGameObjectIfNotNull(_explosionHandler);
             Helpers.DestroyGameObjectIfNotNull(_explosionHandlerInteriorLod);
@@ -320,6 +323,9 @@ namespace CarChanger.Game.Components
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, new[] { "Static/s060_cab", "Static/s060_cab_extras" }));
             ChangeInteractables(new LocoS060440InteractablesChanger(config, MatHolder));
 
+            _additionalChanges = new List<IAdditionalChange>()
+                { new ChangeDriversS060440(TrainCar, config, MatHolder) };
+
             if (config.UseCustomFrontHeadlights)
             {
                 _frontHeadlights = new LocoS060440HeadlightChanger(config, TrainCar, HeadlightDirection.Front);
@@ -355,6 +361,9 @@ namespace CarChanger.Game.Components
             ChangeInteriorLod(config.InteriorLODPrefab, config.HideOriginalInteriorLOD);
             ChangeInterior(new BasicInteriorChanger(config, MatHolder, new[] { "Static/Cab", "Static/Things" }));
             ChangeInteractables(new LocoS282730AInteractablesChanger(config, MatHolder));
+
+            _additionalChanges = new List<IAdditionalChange>()
+                { new ChangeDriversS282730(TrainCar, config, MatHolder) };
 
             if (config.UseCustomHeadlights)
             {

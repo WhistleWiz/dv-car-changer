@@ -121,5 +121,23 @@ namespace CarChanger.Game
 
             return comp != null;
         }
+
+        public static IEnumerable<Transform> AllNonNullFind(this Transform root, params string[] paths)
+        {
+            return paths.Select(x => root.Find(x)).Where(x => x != null);
+        }
+
+        public static void SetChildrenActive(this GameObject go, bool active)
+        {
+            go.transform.SetChildrenActive(active);
+        }
+
+        public static void SetChildrenActive(this Transform t, bool active)
+        {
+            foreach (Transform child in t)
+            {
+                child.gameObject.SetActive(active);
+            }
+        }
     }
 }
