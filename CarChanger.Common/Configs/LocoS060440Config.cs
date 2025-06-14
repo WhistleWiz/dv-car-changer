@@ -184,6 +184,9 @@ namespace CarChanger.Common.Configs
         public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
         {
             foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (Driver1 != null) yield return Driver1;
+            if (Driver2 != null) yield return Driver2;
+            if (Driver3 != null) yield return Driver3;
             if (DoorLeft != null) yield return DoorLeft;
             if (DoorRight != null) yield return DoorRight;
             if (WindowLeft != null) yield return WindowLeft;

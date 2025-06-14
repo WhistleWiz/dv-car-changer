@@ -245,6 +245,9 @@ namespace CarChanger.Game.Components
                 ("GearPatternPlaque", config.HideGearPlaque)));
             ChangeInteractables(new LocoDM3540InteractablesChanger(config, MatHolder));
 
+            _additionalChanges = new List<IAdditionalChange>()
+                { new ChangeDriversDM3540(TrainCar, config, MatHolder) };
+
             if (config.UseCustomFrontHeadlights)
             {
                 _frontHeadlights = new LocoDM3540HeadlightChanger(config, TrainCar, HeadlightDirection.Front);

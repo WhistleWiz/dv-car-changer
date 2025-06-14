@@ -41,6 +41,7 @@ namespace CarChanger.Common.Configs
         [Header("Wheels")]
         public bool UseCustomFrontAxle;
         public GameObject? FrontAxle;
+        public GameObject? FrontSwivel;
         public bool UseCustomDrivers;
         public GameObject? Driver1;
         public GameObject? Driver2;
@@ -48,6 +49,7 @@ namespace CarChanger.Common.Configs
         public GameObject? Driver4;
         public bool UseCustomRearAxle;
         public GameObject? RearAxle;
+        public GameObject? RearSwivel;
 
         [Header("Doors and Windows")]
         public GameObject? LeftWindow;
@@ -77,6 +79,14 @@ namespace CarChanger.Common.Configs
         public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
         {
             foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (FrontAxle != null) yield return FrontAxle;
+            if (FrontSwivel != null) yield return FrontSwivel;
+            if (Driver1 != null) yield return Driver1;
+            if (Driver2 != null) yield return Driver2;
+            if (Driver3 != null) yield return Driver3;
+            if (Driver4 != null) yield return Driver4;
+            if (RearAxle != null) yield return RearAxle;
+            if (RearSwivel != null) yield return RearSwivel;
             if (LeftWindow != null) yield return LeftWindow;
             if (RightWindow != null) yield return RightWindow;
             if (ToolboxLid != null) yield return ToolboxLid;

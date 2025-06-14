@@ -46,6 +46,12 @@ namespace CarChanger.Common.Configs
             public Vector3 RedGlarePosition;
         }
 
+        [Header("Wheels")]
+        public bool UseCustomDrivers;
+        public GameObject? DriverF;
+        public GameObject? DriverC;
+        public GameObject? DriverR;
+
         [Header("Doors and Windows")]
         public GameObject? DoorLeft;
         public GameObject? DoorRight;
@@ -125,6 +131,9 @@ namespace CarChanger.Common.Configs
         public override IEnumerable<GameObject> GetAllPrefabs(bool includeExploded)
         {
             foreach (var item in base.GetAllPrefabs(includeExploded)) yield return item;
+            if (DriverF != null) yield return DriverF;
+            if (DriverC != null) yield return DriverC;
+            if (DriverR != null) yield return DriverR;
             if (DoorLeft != null) yield return DoorLeft;
             if (DoorRight != null) yield return DoorRight;
             if (WindowLeft != null) yield return WindowLeft;
@@ -143,6 +152,7 @@ namespace CarChanger.Common.Configs
 
         public static bool CanCombine(LocoDM3540Config a, LocoDM3540Config b) =>
             CarWithInteriorConfig.CanCombine(a, b) &&
+            !(a.UseCustomDrivers && b.UseCustomDrivers) &&
             !(a.HideOriginalDoors && b.HideOriginalDoors) &&
             !(a.HideOriginalWindows && b.HideOriginalWindows) &&
             !(a.UseCustomFrontHeadlights && b.UseCustomFrontHeadlights) &&

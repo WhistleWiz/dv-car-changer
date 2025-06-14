@@ -15,6 +15,8 @@ namespace CarChanger.Game.AdditionalChanges
         private IEnumerable<Renderer>? _ogAxlesF;
         private IEnumerable<Renderer>? _ogAxlesR;
         private List<GameObject> _custom;
+        private ChangeObject? _swivelF;
+        private ChangeObject? _swivelR;
 
         private IEnumerable<Renderer> AllOriginalAxles
         {
@@ -112,6 +114,9 @@ namespace CarChanger.Game.AdditionalChanges
                 InstantiateChild(rotation.transformsToRotate, config.RearAxle);
             }
 
+            _swivelF = new ChangeObject(car.transform.Find("Axle_F/bogie_car"), config.FrontSwivel, new GameObject[0], false, mats);
+            _swivelR = new ChangeObject(car.transform.Find("Axle_R/bogie_car"), config.RearSwivel, new GameObject[0], false, mats);
+
             void Instantiate(IEnumerable<Renderer> renderers, GameObject? toInstantiate)
             {
                 foreach (var item in renderers)
@@ -158,6 +163,9 @@ namespace CarChanger.Game.AdditionalChanges
             {
                 Helpers.DestroyIfNotNull(item);
             }
+
+            _swivelF?.Clear();
+            _swivelR?.Clear();
         }
     }
 }
