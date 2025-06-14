@@ -1,5 +1,6 @@
 ﻿using CarChanger.Common;
 using CarChanger.Common.Components;
+using CarChanger.Game.Components;
 using DV.Simulation.Brake;
 using DV.Wheels;
 using LocoSim.Implementations.Wheels;
@@ -18,6 +19,7 @@ namespace CarChanger.Game
         private GameObject? _newR;
         private bool _powered;
         private float _radius;
+        private ExplosionModelHandler? _explosionHandler;
 
         private TrainCar Car => _matHolder.Car;
 
@@ -69,6 +71,28 @@ namespace CarChanger.Game
             {
                 CommonPoweredProcedure(_radius);
             }
+
+            var disableGos = new List<DisableGameObjectOnExplosion>();
+            var goSwaps = new List<SwapGameObjectOnExplosion>();
+            var matSwaps = new List<SwapMaterialOnExplosion>();
+
+            if (_newF != null)
+            {
+                CarChangerExplosionManager.GetEntries(_newF, out var disableGosTemp, out var goSwapsTemp, out var matSwapsTemp);
+                disableGos.AddRange(disableGosTemp);
+                goSwaps.AddRange(goSwapsTemp);
+                matSwaps.AddRange(matSwapsTemp);
+            }
+
+            if (_newR != null)
+            {
+                CarChangerExplosionManager.GetEntries(_newR, out var disableGosTemp, out var goSwapsTemp, out var matSwapsTemp);
+                disableGos.AddRange(disableGosTemp);
+                goSwaps.AddRange(goSwapsTemp);
+                matSwaps.AddRange(matSwapsTemp);
+            }
+
+            _explosionHandler = CarChangerExplosionManager.PrepareExplosionHandlerFromEntries(holder, disableGos, goSwaps, matSwaps);
         }
 
         public void Reset()
@@ -102,6 +126,8 @@ namespace CarChanger.Game
             {
                 CommonPoweredProcedure(Car.carLivery.parentType.wheelRadius);
             }
+
+            Helpers.DestroyGameObjectIfNotNull(_explosionHandler);
         }
 
         private void CommonProcedure(Bogie bogieF, Bogie bogieR, float radius)

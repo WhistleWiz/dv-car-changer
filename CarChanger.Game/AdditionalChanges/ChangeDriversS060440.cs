@@ -1,4 +1,6 @@
-﻿using CarChanger.Common.Configs;
+﻿using CarChanger.Common.Components;
+using CarChanger.Common.Configs;
+using CarChanger.Game.Components;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,6 +13,7 @@ namespace CarChanger.Game.AdditionalChanges
         private IEnumerable<Renderer>? _ogDrivers2;
         private IEnumerable<Renderer>? _ogDrivers3;
         private List<GameObject> _custom;
+        private ExplosionModelHandler? _explosionHandler;
 
         private IEnumerable<Renderer> AllOriginalAxles
         {
@@ -40,7 +43,7 @@ namespace CarChanger.Game.AdditionalChanges
             }
         }
 
-        public ChangeDriversS060440(TrainCar car, LocoS060440Config config, MaterialHolder mats)
+        public ChangeDriversS060440(TrainCar car, LocoS060440Config config, MaterialHolder holder)
         {
             _custom = new List<GameObject>();
 
@@ -64,6 +67,22 @@ namespace CarChanger.Game.AdditionalChanges
                 Instantiate(_ogDrivers3, config.Driver3);
             }
 
+            // Explosion.
+            var disableGos = new List<DisableGameObjectOnExplosion>();
+            var goSwaps = new List<SwapGameObjectOnExplosion>();
+            var matSwaps = new List<SwapMaterialOnExplosion>();
+
+            foreach (var item in _custom)
+            {
+                CarChangerExplosionManager.GetEntries(item, out var disableGosTemp, out var goSwapsTemp, out var matSwapsTemp);
+                disableGos.AddRange(disableGosTemp);
+                goSwaps.AddRange(goSwapsTemp);
+                matSwaps.AddRange(matSwapsTemp);
+            }
+
+            _explosionHandler = CarChangerExplosionManager.PrepareExplosionHandlerFromEntries(holder, disableGos, goSwaps, matSwaps);
+
+            // Locals.
             void Instantiate(IEnumerable<Renderer> renderers, GameObject? toInstantiate)
             {
                 foreach (var item in renderers)
@@ -75,7 +94,7 @@ namespace CarChanger.Game.AdditionalChanges
                     {
                         var instance = Object.Instantiate(toInstantiate, item.transform);
                         instance.transform.ResetLocal();
-                        ComponentProcessor.ProcessComponentsMinimal(instance, mats);
+                        ComponentProcessor.ProcessComponentsMinimal(instance, holder);
                         _custom.Add(instance);
                     }
                 }
@@ -94,6 +113,8 @@ namespace CarChanger.Game.AdditionalChanges
             {
                 Helpers.DestroyIfNotNull(item);
             }
+
+            Helpers.DestroyGameObjectIfNotNull(_explosionHandler);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using CarChanger.Common.Configs;
+﻿using CarChanger.Common.Components;
+using CarChanger.Common.Configs;
+using CarChanger.Game.Components;
 using DV.Wheels;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,7 @@ namespace CarChanger.Game.AdditionalChanges
         private List<GameObject> _custom;
         private ChangeObject? _swivelF;
         private ChangeObject? _swivelR;
+        private ExplosionModelHandler? _explosionHandler;
 
         private IEnumerable<Renderer> AllOriginalAxles
         {
@@ -67,10 +70,11 @@ namespace CarChanger.Game.AdditionalChanges
             }
         }
 
-        public ChangeDriversS282730(TrainCar car, LocoS282730AConfig config, MaterialHolder mats)
+        public ChangeDriversS282730(TrainCar car, LocoS282730AConfig config, MaterialHolder holder)
         {
             _custom = new List<GameObject>();
 
+            // Drivers.
             if (config.UseCustomDrivers)
             {
                 _ogDrivers1 = car.transform.AllNonNullFind(
@@ -96,6 +100,7 @@ namespace CarChanger.Game.AdditionalChanges
                 Instantiate(_ogDrivers4, config.Driver4);
             }
 
+            // Front and rear axles.
             var rotations = car.GetComponentsInChildren<WheelRotationViaCode>(true);
 
             if (config.UseCustomFrontAxle)
@@ -114,9 +119,25 @@ namespace CarChanger.Game.AdditionalChanges
                 InstantiateChild(rotation.transformsToRotate, config.RearAxle);
             }
 
-            _swivelF = new ChangeObject(car.transform.Find("Axle_F/bogie_car"), config.FrontSwivel, new GameObject[0], false, mats);
-            _swivelR = new ChangeObject(car.transform.Find("Axle_R/bogie_car"), config.RearSwivel, new GameObject[0], false, mats);
+            _swivelF = new ChangeObject(car.transform.Find("Axle_F/bogie_car"), config.FrontSwivel, new GameObject[0], false, holder);
+            _swivelR = new ChangeObject(car.transform.Find("Axle_R/bogie_car"), config.RearSwivel, new GameObject[0], false, holder);
 
+            // Explosion.
+            var disableGos = new List<DisableGameObjectOnExplosion>();
+            var goSwaps = new List<SwapGameObjectOnExplosion>();
+            var matSwaps = new List<SwapMaterialOnExplosion>();
+
+            foreach (var item in _custom)
+            {
+                CarChangerExplosionManager.GetEntries(item, out var disableGosTemp, out var goSwapsTemp, out var matSwapsTemp);
+                disableGos.AddRange(disableGosTemp);
+                goSwaps.AddRange(goSwapsTemp);
+                matSwaps.AddRange(matSwapsTemp);
+            }
+
+            _explosionHandler = CarChangerExplosionManager.PrepareExplosionHandlerFromEntries(holder, disableGos, goSwaps, matSwaps);
+
+            // Locals.
             void Instantiate(IEnumerable<Renderer> renderers, GameObject? toInstantiate)
             {
                 foreach (var item in renderers)
@@ -128,7 +149,7 @@ namespace CarChanger.Game.AdditionalChanges
                     {
                         var instance = Object.Instantiate(toInstantiate, item.transform);
                         instance.transform.ResetLocal();
-                        ComponentProcessor.ProcessComponentsMinimal(instance, mats);
+                        ComponentProcessor.ProcessComponentsMinimal(instance, holder);
                         _custom.Add(instance);
                     }
                 }
@@ -144,7 +165,7 @@ namespace CarChanger.Game.AdditionalChanges
                     {
                         var instance = Object.Instantiate(toInstantiate, item);
                         instance.transform.ResetLocal();
-                        ComponentProcessor.ProcessComponentsMinimal(instance, mats);
+                        ComponentProcessor.ProcessComponentsMinimal(instance, holder);
                         _custom.Add(instance);
                     }
                 }
@@ -166,6 +187,8 @@ namespace CarChanger.Game.AdditionalChanges
 
             _swivelF?.Clear();
             _swivelR?.Clear();
+
+            Helpers.DestroyGameObjectIfNotNull(_explosionHandler);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CarChanger.Common.Components;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -69,21 +70,31 @@ namespace CarChanger.Game.Components
 
         public static ExplosionModelHandler? PrepareExplosionHandler(GameObject gameObject, MaterialHolder holder)
         {
-            var disableGos = gameObject.GetComponentsInChildren<DisableGameObjectOnExplosion>();
-            var goSwaps = gameObject.GetComponentsInChildren<SwapGameObjectOnExplosion>();
-            var matSwaps = gameObject.GetComponentsInChildren<SwapMaterialOnExplosion>();
+            GetEntries(gameObject, out var disableGos, out var goSwaps, out var matSwaps);
+            return PrepareExplosionHandlerFromEntries(holder, disableGos, goSwaps, matSwaps);
+        }
 
-            if (disableGos.Length == 0 &&
-                goSwaps.Length == 0 &&
-                matSwaps.Length == 0)
+        public static ExplosionModelHandler? PrepareExplosionHandlerFromEntries(MaterialHolder holder,
+            IEnumerable<DisableGameObjectOnExplosion>? disableGameObjects = null,
+            IEnumerable<SwapGameObjectOnExplosion>? gameObjectsSwaps = null,
+            IEnumerable<SwapMaterialOnExplosion>? matSwaps = null)
+        {
+
+            if ((disableGameObjects == null || disableGameObjects.Count() == 0) &&
+                (gameObjectsSwaps == null || gameObjectsSwaps.Count() == 0) &&
+                (matSwaps == null || matSwaps.Count() == 0))
             {
                 return null;
             }
 
+            disableGameObjects ??= System.Array.Empty<DisableGameObjectOnExplosion>();
+            gameObjectsSwaps ??= System.Array.Empty<SwapGameObjectOnExplosion>();
+            matSwaps ??= System.Array.Empty<SwapMaterialOnExplosion>();
+
             var manager = GetOrCreateExplosionManager(holder.Car);
 
-            var handler = manager.CreateHandler(disableGos.Select(x => x.gameObject).ToArray(),
-                goSwaps.Select(x => ToData(x, holder)).ToArray(),
+            var handler = manager.CreateHandler(disableGameObjects.Select(x => x.gameObject).ToArray(),
+                gameObjectsSwaps.Select(x => ToData(x, holder)).ToArray(),
                 matSwaps.Select(x => ToData(x, holder)).ToArray());
 
             if (holder.Car.isExploded)
@@ -92,6 +103,15 @@ namespace CarChanger.Game.Components
             }
 
             return handler;
+        }
+
+        public static void GetEntries(GameObject go, out DisableGameObjectOnExplosion[] disableGameObjects,
+            out SwapGameObjectOnExplosion[] gameObjectsSwaps,
+            out SwapMaterialOnExplosion[] matSwaps)
+        {
+            disableGameObjects = go.GetComponentsInChildren<DisableGameObjectOnExplosion>();
+            gameObjectsSwaps = go.GetComponentsInChildren<SwapGameObjectOnExplosion>();
+            matSwaps = go.GetComponentsInChildren<SwapMaterialOnExplosion>();
         }
 
         private static ExplosionModelHandler.GameObjectSwapData ToData(SwapGameObjectOnExplosion comp, MaterialHolder holder)

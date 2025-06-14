@@ -8,6 +8,8 @@ namespace CarChanger.Game
         private GameObject[] _originals;
         private bool _hideOriginals;
 
+        public GameObject? Instanced => _instanced;
+
         public ChangeObject(Transform parent, GameObject? instance, GameObject[] originals, bool hideOriginals, MaterialHolder holder)
         {
             _instanced = Helpers.InstantiateIfNotNull(instance, parent);
