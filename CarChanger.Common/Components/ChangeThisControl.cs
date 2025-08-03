@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Change This Control")]
     [DisallowMultipleComponent]
     public class ChangeThisControl : MonoBehaviour
     {

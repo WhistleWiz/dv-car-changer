@@ -2,6 +2,7 @@
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Powered Axle")]
     public class PoweredAxle : MonoBehaviour
     {
         [Tooltip("The rotation axis for the axle")]

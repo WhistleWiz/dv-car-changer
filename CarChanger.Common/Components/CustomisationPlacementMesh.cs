@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Customization Placement Meshes")]
     public class CustomizationPlacementMeshes : MonoBehaviour
     {
         public MeshFilter[] CollisionMeshes = new MeshFilter[0];

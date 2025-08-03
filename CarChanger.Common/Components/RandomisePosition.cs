@@ -2,6 +2,7 @@
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Randomise Position")]
     public class RandomisePosition : MonoBehaviour
     {
         public Vector3 PositionRange;

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Hide Transforms On Change")]
     public class HideTransformsOnChange : MonoBehaviour
     {
         [Tooltip("The path to the transforms, if on the body it is relative to the car root, " +

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Value To Animation")]
     public class ValueToAnimation : MonoBehaviour
     {
         [Tooltip("The animator whose value will be affected")]

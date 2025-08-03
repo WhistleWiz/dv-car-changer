@@ -2,6 +2,7 @@
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Swap Material On Explosion")]
     public class SwapMaterialOnExplosion : MonoBehaviour
     {
         public Material Material = null!;

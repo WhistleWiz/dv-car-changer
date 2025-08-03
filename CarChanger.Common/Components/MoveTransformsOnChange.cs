@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Move Transforms On Change")]
     public class MoveTransformsOnChange : MonoBehaviour
     {
         private class OriginalTransform

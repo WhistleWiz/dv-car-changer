@@ -3,6 +3,7 @@ using static CarChanger.Common.Components.PaintMaterial;
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Use Default Material")]
     [RequireComponent(typeof(Renderer))]
     public class UseDefaultMaterial : MonoBehaviour
     {

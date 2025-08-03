@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Duplicate Transforms On Change")]
     public class DuplicateTransformsOnChange : MonoBehaviour
     {
         private const char Slash = '/';

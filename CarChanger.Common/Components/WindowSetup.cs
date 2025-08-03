@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Window Setup")]
     public class WindowSetup : MonoBehaviour
     {
         public Vector2 Size = Vector2.one;

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Value To Rotation")]
     public class ValueToRotation : MonoBehaviour
     {
         public Transform[] Transforms = new Transform[0];

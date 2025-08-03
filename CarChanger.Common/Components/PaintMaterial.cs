@@ -2,6 +2,7 @@
 
 namespace CarChanger.Common.Components
 {
+    [AddComponentMenu("Car Changer/Paint Material")]
     public class PaintMaterial : MonoBehaviour
     {
         public enum TargetArea : byte
