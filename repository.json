@@ -2,6 +2,11 @@
 	"Releases": [
 		{
 			"Id": "DVCarChanger",
+			"Version": "1.5.2",
+			"DownloadUrl": "https://github.com/WhistleWiz/dv-car-changer/releases/download/v1.5.2/DVCarChanger.zip"
+		},
+		{
+			"Id": "DVCarChanger",
 			"Version": "1.5.1",
 			"DownloadUrl": "https://github.com/WhistleWiz/dv-car-changer/releases/download/v1.5.1/DVCarChanger.zip"
 		},
