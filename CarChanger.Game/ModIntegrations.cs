@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 using UnityModManagerNet;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace CarChanger.Game
 {
@@ -20,7 +21,9 @@ namespace CarChanger.Game
         public static class ZCouplers
         {
             public const string Id = "ZCouplers";
+            public const string AltId = "ZCouplers_Updated";
 
+            private static UnityModManager.ModEntry s_entry;
             private static Type s_typeSettings;
             private static Type s_typeKnuckles;
             private static MethodInfo? s_toggleMMethod;
@@ -31,9 +34,7 @@ namespace CarChanger.Game
 
             static ZCouplers()
             {
-                string path = $"{Directory.GetCurrentDirectory()}\\Mods\\ZCouplers\\ZCouplers.dll";
-
-                if (!File.Exists(path))
+                if (!UnityModManager.modEntries.TryFind(x => x.Info.Id == Id || x.Info.Id == AltId, out s_entry))
                 {
                     CarChangerMod.Log($"ZCouplers is not installed, skipping integration.");
                     s_typeSettings = null!;
@@ -44,7 +45,7 @@ namespace CarChanger.Game
 
                 try
                 {
-                    Assembly assembly = Assembly.LoadFile(path);
+                    var assembly = s_entry.Assembly;
                     s_typeSettings = assembly.GetType("DvMod.ZCouplers.Settings");
                     s_typeKnuckles = assembly.GetType("DvMod.ZCouplers.KnuckleCouplers");
                     s_toggleMMethod = s_typeKnuckles.GetMethod("ToggleBuffers", FlagsStaticPrivate);
@@ -110,6 +111,7 @@ namespace CarChanger.Game
         {
             public const string Id = "Gauge";
 
+            private static UnityModManager.ModEntry s_entry;
             private static MethodInfo? s_method;
             private static bool s_loaded = false;
 
@@ -117,9 +119,7 @@ namespace CarChanger.Game
 
             static Gauge()
             {
-                string path = $"{Directory.GetCurrentDirectory()}\\Mods\\Gauge\\Gauge.dll";
-
-                if (!File.Exists(path))
+                if (!UnityModManager.modEntries.TryFind(x => x.Info.Id == Id, out s_entry))
                 {
                     CarChangerMod.Log($"Gauge is not installed, skipping integration.");
                     return;
@@ -127,8 +127,7 @@ namespace CarChanger.Game
 
                 try
                 {
-                    Assembly assembly = Assembly.LoadFile(path);
-                    var t = assembly.GetType("Gauge.Patches.Bogie_Start_Patch");
+                    var t = s_entry.Assembly.GetType("Gauge.Patches.Bogie_Start_Patch");
                     s_method = t.GetMethod("Postfix", FlagsStaticPrivate);
                 }
                 catch (Exception e)

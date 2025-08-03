@@ -17,11 +17,11 @@ namespace CarChanger.Game.Components
             {
                 if (Config != null)
                 {
-                    CarChangerMod.Log($"Removing change {Config.ModificationId} from [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+                    CarChangerMod.LogVerbose($"Removing change {Config.ModificationId} from [{TrainCar.ID}|{TrainCar.carLivery.id}]");
                 }
                 else
                 {
-                    CarChangerMod.Log($"Returning to default [{TrainCar.ID}|{TrainCar.carLivery.id}]");
+                    CarChangerMod.LogVerbose($"Returning to default [{TrainCar.ID}|{TrainCar.carLivery.id}]");
                 }
             }
 

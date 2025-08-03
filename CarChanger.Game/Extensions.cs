@@ -12,12 +12,7 @@ namespace CarChanger.Game
         {
             value = list.Find(match);
 
-            if (value == null)
-            {
-                return false;
-            }
-
-            return true;
+            return value != null;
         }
 
         public static void ForceRefreshLoadedPrefabs(this TrainCar car)
