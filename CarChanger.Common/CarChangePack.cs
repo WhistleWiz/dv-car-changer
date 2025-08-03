@@ -15,6 +15,8 @@ namespace CarChanger.Common
         public string Repository = string.Empty;
         [Tooltip("Additional mod IDs that are required for this mod to work")]
         public string[] AdditionalRequirements = new string[0];
+        [Tooltip("Additional mod IDs that are optional for this mod to work")]
+        public string[] OptionalRequirements = new string[0];
 
         public ModelConfig[] PackConfigs = new ModelConfig[0];
 
@@ -31,6 +33,7 @@ namespace CarChanger.Common
                 { "Author", Author },
                 { "ManagerVersion", "0.27.3" },
                 { "Requirements", JToken.FromObject(reqs.ToArray()) },
+                { "LoadAfter", JToken.FromObject(OptionalRequirements) },
             };
 
             // If a homepage was defined, also add the link.

@@ -179,6 +179,9 @@ namespace CarChanger.Game.Components
                     ApplyHandcar(handcar);
                     break;
 
+                case CustomCarWithBogiesConfig custom:
+                    ApplyCustomCarWithBogies(custom);
+                    break;
                 case CustomCarConfig custom:
                     ApplyCustomCar(custom);
                     break;
@@ -442,6 +445,13 @@ namespace CarChanger.Game.Components
             if (!config.UseCustomBogies) return;
 
             _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, powered);
+        }
+
+        private void ChangeBogies(CustomCarWithBogiesConfig config)
+        {
+            if (!config.UseCustomBogies) return;
+
+            _bogieChanger = new BogieChanger(MatHolder, config.FrontBogie, config.RearBogie, config.WheelRadius, config.Powered);
         }
 
         private void ChangeBuffers(CarConfig config)

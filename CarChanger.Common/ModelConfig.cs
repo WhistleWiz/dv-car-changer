@@ -150,9 +150,13 @@ namespace CarChanger.Common
                     if (b is LocoHandcarConfig handcarB) return CarWithBogiesConfig.CanCombine(handcarA, handcarB);
                     else return false;
 
+                case CustomCarWithBogiesConfig customBogiesA:
+                    if (b is CustomCarWithBogiesConfig customBogiesB) return CustomCarWithBogiesConfig.CanCombine(customBogiesA, customBogiesB);
+                    else return false;
                 case CustomCarConfig _:
                     if (b is CustomCarConfig) return true;
                     else return false;
+
                 default:
                     // If the types didn't match, fail.
                     return false;

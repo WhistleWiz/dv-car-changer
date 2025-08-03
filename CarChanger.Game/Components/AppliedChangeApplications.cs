@@ -493,6 +493,12 @@ namespace CarChanger.Game.Components
             _colliderHolder = new ColliderHolder(TrainCar, config.CollisionCollider, config.WalkableCollider, config.ItemsCollider);
         }
 
+        private void ApplyCustomCarWithBogies(CustomCarWithBogiesConfig config)
+        {
+            ApplyCustomCar(config);
+            ChangeBogies(config);
+        }
+
         private void ApplyGroup(ModificationGroupConfig config)
         {
             foreach (var item in config.ModificationsToActivate)
