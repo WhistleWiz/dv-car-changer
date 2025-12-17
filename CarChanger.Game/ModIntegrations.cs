@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 using UnityModManagerNet;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace CarChanger.Game
 {

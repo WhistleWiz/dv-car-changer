@@ -305,10 +305,10 @@ namespace CarChanger.Game
 
             GameObject Create(MeshFilter filter)
             {
-                GameObject obj = new GameObject("[GadgetMeshCollider][" + filter.name + "]");
+                var obj = new GameObject("[GadgetMeshCollider][" + filter.name + "]");
                 obj.transform.SetParent(root.holder.transform, worldPositionStays: false);
-                Vector3 position = meshes.transform.InverseTransformPoint(filter.transform.position);
-                Quaternion rotation = Quaternion.Inverse(meshes.transform.rotation) * filter.transform.rotation;
+                var position = meshes.transform.InverseTransformPoint(filter.transform.position);
+                var rotation = Quaternion.Inverse(meshes.transform.rotation) * filter.transform.rotation;
                 obj.transform.position = root.holder.transform.TransformPoint(position);
                 obj.transform.rotation = root.holder.transform.rotation * rotation;
                 obj.layer = layer;

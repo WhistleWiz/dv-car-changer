@@ -49,6 +49,8 @@ namespace CarChanger.Game.Components
                 Debug.LogError("Could not find TrainCar for AppliedChange! This should never happen BTW.");
                 Destroy(this);
             }
+
+            TrainCar.OnCarAboutToBeDestroyed += RemoveChange;
         }
 
         private void Start()
@@ -70,26 +72,30 @@ namespace CarChanger.Game.Components
 
         private void OnDestroy()
         {
+            RemoveChange();
+        }
+
+        private void RemoveChange()
+        {
             // In case the whole object is killed, don't bother with
             // removing the actual modification.
-            if (!TrainCar || !gameObject || UnloadWatcher.isUnloading)
+            if (TrainCar == null || gameObject == null || UnloadWatcher.isUnloading)
             {
                 return;
             }
 
             ReturnToDefault();
 
-            if (TrainCar != null)
+            if (TrainCar.PaintExterior != null)
             {
-                if (TrainCar.PaintExterior != null)
-                {
-                    TrainCar.PaintExterior.OnThemeChanged -= ReapplyForPaint;
-                }
-                if (TrainCar.PaintInterior != null)
-                {
-                    TrainCar.PaintInterior.OnThemeChanged -= ReapplyForPaint;
-                }
+                TrainCar.PaintExterior.OnThemeChanged -= ReapplyForPaint;
             }
+            if (TrainCar.PaintInterior != null)
+            {
+                TrainCar.PaintInterior.OnThemeChanged -= ReapplyForPaint;
+            }
+
+            TrainCar.OnCarAboutToBeDestroyed -= RemoveChange;
         }
 
         private void ApplyChange()

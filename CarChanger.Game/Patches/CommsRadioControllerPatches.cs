@@ -22,7 +22,6 @@ namespace CarChanger.Game.Patches
 
             // Reactivate the GO with the new mode and refresh the controller.
             go.SetActive(true);
-            __instance.ReactivateModes();
         }
     }
 }
