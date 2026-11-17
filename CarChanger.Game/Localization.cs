@@ -13,6 +13,7 @@ namespace CarChanger.Game
         private const string RadioBeginKey = "carchanger/radio_begin";
         private const string IncompatibleModificationKey = "carchanger/incomp_mod";
         private const string NoModificationsKey = "carchanger/no_config";
+        private const string TooFarKey = "carchanger/too_far";
 
         public static string Enable => LocalizationAPI.L(EnableKey);
         public static string Disable => LocalizationAPI.L(DisableKey);
@@ -20,6 +21,7 @@ namespace CarChanger.Game
         public static string RadioBegin => LocalizationAPI.L(RadioBeginKey);
         public static string IncompatibleModification => LocalizationAPI.L(IncompatibleModificationKey);
         public static string NoModifications => LocalizationAPI.L(NoModificationsKey);
+        public static string TooFar => LocalizationAPI.L(TooFarKey);
 
         internal static void Inject()
         {
@@ -63,6 +65,8 @@ namespace CarChanger.Game
                 "Modification is incompatible with others");
             CarChangerMod.Translations.AddTranslation(NoModificationsKey, DVLanguage.English,
                 "No changes available");
+            CarChangerMod.Translations.AddTranslation(TooFarKey, DVLanguage.English,
+                "Too far away");
         }
 
         public static string GetLocalizedName(TrainCarLivery livery) => LocalizationAPI.L(livery.localizationKey);
